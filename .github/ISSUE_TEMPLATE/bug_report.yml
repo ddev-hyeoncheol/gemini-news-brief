@@ -1,0 +1,82 @@
+name: Bug Report
+description: Report a bug to help us improve
+title: "[Bug] "
+labels: ["type: fix", "priority: low"]
+assignees: []
+
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: 설명
+      description: 버그에 대한 명확하고 간결한 설명을 작성해 주세요.
+      placeholder: 어떤 버그가 발생했나요?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 재현 방법
+      description: 버그를 재현하는 단계를 작성해 주세요.
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 기대 동작
+      description: 어떤 동작을 기대했는지 작성해 주세요.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 실제 동작
+      description: 실제로 어떤 동작이 발생했는지 작성해 주세요.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: 심각도
+      description: 버그의 심각도를 선택해 주세요.
+      options:
+        - 낮음 - 사소한 문제
+        - 보통 - 일반적인 문제
+        - 높음 - 주요 기능에 영향
+        - 치명적 - 서비스 중단 수준
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: 운영체제
+      description: 사용 중인 운영체제를 입력해 주세요.
+      placeholder: "예: macOS 15.0, Windows 11, Ubuntu 24.04"
+    validations:
+      required: false
+
+  - type: input
+    id: version
+    attributes:
+      label: 버전
+      description: 문제가 발생한 소프트웨어 버전을 입력해 주세요.
+      placeholder: "예: v1.0.0"
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 추가 정보
+      description: 스크린샷, 로그, 기타 관련 정보를 첨부해 주세요.
+    validations:
+      required: false

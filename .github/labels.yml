@@ -1,0 +1,62 @@
+# Type 라벨 (Angular Git Convention 기반)
+- name: "type: build"
+  color: "e6b800"
+  description: "빌드 시스템 또는 외부 의존성 변경"
+
+- name: "type: ci"
+  color: "c2e0c6"
+  description: "CI/CD 설정 변경"
+
+- name: "type: docs"
+  color: "0075ca"
+  description: "문서 변경"
+
+- name: "type: feat"
+  color: "a2eeef"
+  description: "새로운 기능 추가"
+
+- name: "type: fix"
+  color: "d73a4a"
+  description: "버그 수정"
+
+- name: "type: perf"
+  color: "f0883e"
+  description: "성능 개선"
+
+- name: "type: refactor"
+  color: "d4c5f9"
+  description: "리팩토링"
+
+- name: "type: test"
+  color: "bfd4f2"
+  description: "테스트 추가 또는 수정"
+
+# 우선순위 라벨
+- name: "priority: critical"
+  color: "b60205"
+  description: "즉시 처리 필요"
+
+- name: "priority: high"
+  color: "d93f0b"
+  description: "높은 우선순위"
+
+- name: "priority: medium"
+  color: "fbca04"
+  description: "보통 우선순위"
+
+- name: "priority: low"
+  color: "0e8a16"
+  description: "낮은 우선순위"
+
+# 상태 라벨
+- name: "status: in progress"
+  color: "1d76db"
+  description: "작업 중"
+
+- name: "status: review"
+  color: "5319e7"
+  description: "리뷰 대기"
+
+- name: "status: blocked"
+  color: "b60205"
+  description: "차단됨"
