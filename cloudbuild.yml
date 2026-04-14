@@ -1,2 +1,19 @@
 steps:
-  - name: 'gcr.io/google.com/cloudsdk/cloud-sdk'
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    args:
+      - gcloud
+      - functions
+      - deploy
+      - gemini-news-brief-test
+      - --project=gemini-ddev-hyeoncheol-1
+      - --region=us-west1
+      - --runtime=python312
+      - --trigger=http
+      - --entry-point=main
+      - --source=.
+      - --allow-unauthenticated
+      - --memory=512MB
+      - --timeout=300s
+
+options:
+  logging: CLOUD_LOGGING_ONLY
