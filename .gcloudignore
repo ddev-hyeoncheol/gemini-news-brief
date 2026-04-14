@@ -1,26 +1,29 @@
-# ==============================================================================
-# GCLOUD IGNORE CONFIGURATION (Whitelist approach)
-# ==============================================================================
+# 1) Git/CI 메타 파일 제외
+.git/
+.gitignore
+.github/
 
-# 1. Ignore all files and directories by default
-*
-
-# 2. Allow specific files necessary for Cloud Functions deployment
-!main.py
-!requirements.txt
-!cloudbuild.yml
-
-# 3. Allow src directory and its essential python scripts
-!src/
-
-# 4. Optional: If you have a specific config file for production, allow it here
-# !config.json
-
-# ==============================================================================
-# EXCLUSIONS FROM WHITELIST
-# ==============================================================================
-
-# Ensure sensitive or local-only files are NEVER uploaded even if inside src/
-src/__pycache__/
-src/*.pyc
+# 2) 개발 환경/로컬 설정 파일 제외
+.vscode/
+.idea/
+.editorconfig
 .env
+.gcloudignore
+
+# 3) 문서 및 로컬 전용 파일 제외
+README.md
+LICENSE
+CLAUDE.md
+CONTRIBUTING.md
+environment.yml
+
+# 4) Python 캐시/빌드 산출물 제외
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+bin/
+lib/
+share/
+include/
