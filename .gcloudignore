@@ -11,6 +11,7 @@
 .gcloudignore
 
 # 3) 문서 및 로컬 전용 파일 제외
+docs/
 README.md
 LICENSE
 CLAUDE.md
