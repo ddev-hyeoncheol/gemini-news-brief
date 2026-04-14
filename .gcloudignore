@@ -1,0 +1,26 @@
+# ==============================================================================
+# GCLOUD IGNORE CONFIGURATION (Whitelist approach)
+# ==============================================================================
+
+# 1. Ignore all files and directories by default
+*
+
+# 2. Allow specific files necessary for Cloud Functions deployment
+!main.py
+!requirements.txt
+!cloudbuild.yml
+
+# 3. Allow src directory and its essential python scripts
+!src/
+
+# 4. Optional: If you have a specific config file for production, allow it here
+# !config.json
+
+# ==============================================================================
+# EXCLUSIONS FROM WHITELIST
+# ==============================================================================
+
+# Ensure sensitive or local-only files are NEVER uploaded even if inside src/
+src/__pycache__/
+src/*.pyc
+.env
