@@ -1,0 +1,2 @@
+steps:
+  - name: 'gcr.io/google.com/cloudsdk/cloud-sdk'
