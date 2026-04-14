@@ -8,7 +8,7 @@ steps:
       - --project=gemini-ddev-hyeoncheol-1
       - --region=us-west1
       - --runtime=python312
-      - --trigger=http
+      - --trigger-http
       - --entry-point=main
       - --source=.
       - --allow-unauthenticated
