@@ -1,20 +1,22 @@
-import functions_framework
-import google.generativeai as genai
+import os
 
-# from src.bigquery_client import save_to_bigquery
+from fastapi import FastAPI
+
+app = FastAPI(title="Gemini News Brief API")
 
 
-@functions_framework.http
-def main(request):
-    """
-    Test Entry Point to verify GitHub-GCP synchronization.
-    """
+@app.get("/health")
+async def health_check():
+    return {"status": "health", "version": "1.0.0"}
 
-    # 1. Check if the code is synchronized
-    message = "GitHub to GCP Sync Successful! v1.0"
 
-    # 2. Print to Cloud Logs (You can see this in GCP Console)
-    print(f"Log : {message}")
+@app.get("/")
+async def root():
+    return {"message": "Welcome to Gemini News Brief API"}
 
-    # 3. Return response to browser
-    return (message, 200)
+
+if __name__ == "__main__":
+    import uvicorn
+
+    port = int(os.environ.get("PORT", "8080"))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
