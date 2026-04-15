@@ -8,6 +8,9 @@
 .idea/
 .editorconfig
 .env
+.DS_Store
+.AppleDouble
+._*
 .gcloudignore
 
 # 3) 문서 및 로컬 전용 파일 제외
@@ -23,6 +26,18 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+dist/
+build/
+*.egg-info/
+.venv/
+env/
+ENV/
 venv/
 bin/
 lib/
