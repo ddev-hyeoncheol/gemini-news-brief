@@ -13,6 +13,9 @@ steps:
       args:
           - -c
           - |
+            python3 -m venv /tmp/venv
+            source /tmp/venv/bin/activate
+
             pip install google-cloud-bigquery
             export PYTHONPATH=src
             python3 -m bigquery.setup_table ${PROJECT_ID} ${_REGION}
