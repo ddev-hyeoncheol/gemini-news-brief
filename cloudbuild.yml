@@ -8,14 +8,11 @@ steps:
       args: ["push", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}"]
 
     # 3. Setup BigQuery Datasets & Tables
-    - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    - name: "python:3.12-slim"
       entrypoint: "bash"
       args:
           - -c
           - |
-            python3 -m venv /tmp/venv
-            source /tmp/venv/bin/activate
-
             pip install google-cloud-bigquery
             export PYTHONPATH=src
             python3 -m bigquery.setup_table ${PROJECT_ID} ${_REGION}
