@@ -25,6 +25,12 @@ SCHEMA = [
         description="뉴스 URL",
     ),
     bigquery.SchemaField(
+        name="image_url",
+        field_type="STRING",
+        mode="NULLABLE",
+        description="이미지 URL",
+    ),
+    bigquery.SchemaField(
         name="content",
         field_type="STRING",
         mode="NULLABLE",
@@ -59,5 +65,11 @@ SCHEMA = [
         field_type="TIMESTAMP",
         mode="REQUIRED",
         description="수집일시",
+    ),
+    bigquery.SchemaField(
+        name="metadata",
+        field_type="JSON",
+        mode="NULLABLE",
+        description="추가 메타데이터",
     ),
 ]
