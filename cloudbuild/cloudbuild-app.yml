@@ -1,0 +1,35 @@
+steps:
+    # 1-1. Deploy API Service to Cloud Run
+    - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+      args:
+          - gcloud
+          - run
+          - deploy
+          - ${_SERVICE_NAME}-api
+          - --image=gcr.io/${PROJECT_ID}/${_SERVICE_NAME}
+          - --region=${_REGION}
+          - --platform=managed
+          - --allow-unauthenticated
+          - --command=uvicorn
+          - --args=src.api.main:app,--host,0.0.0.0,--port,8080
+
+    # 1-2. Deploy Worker Service to Cloud Run
+    - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+      args:
+          - gcloud
+          - run
+          - deploy
+          - ${_SERVICE_NAME}-worker
+          - --image=gcr.io/${PROJECT_ID}/${_SERVICE_NAME}
+          - --region=${_REGION}
+          - --platform=managed
+          - --allow-unauthenticated
+          - --command=uvicorn
+          - --args=src.worker.main:app,--host,0.0.0.0,--port,8080
+
+substitutions:
+    _SERVICE_NAME: gemini-news-brief-fastapi
+    _REGION: us-west1
+
+options:
+    logging: CLOUD_LOGGING_ONLY

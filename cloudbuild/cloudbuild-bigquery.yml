@@ -1,0 +1,17 @@
+steps:
+    # Setup BigQuery Datasets & Tables
+    - name: "python:3.12-slim"
+      entrypoint: "bash"
+      args:
+          - -c
+          - |
+            pip install google-cloud-bigquery
+            export PYTHONPATH=src
+            python3 -m bigquery.setup_table ${PROJECT_ID} ${_REGION}
+
+substitutions:
+    _SERVICE_NAME: gemini-news-brief-fastapi
+    _REGION: us-west1
+
+options:
+    logging: CLOUD_LOGGING_ONLY
