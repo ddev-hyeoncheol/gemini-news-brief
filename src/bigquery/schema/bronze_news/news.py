@@ -13,6 +13,12 @@ SCHEMA = [
         description="뉴스 ID(Hash)",
     ),
     bigquery.SchemaField(
+        name="source",
+        field_type="STRING",
+        mode="REQUIRED",
+        description="출처",
+    ),
+    bigquery.SchemaField(
         name="title",
         field_type="STRING",
         mode="REQUIRED",
@@ -31,16 +37,16 @@ SCHEMA = [
         description="이미지 URL",
     ),
     bigquery.SchemaField(
+        name="thumbnail_url",
+        field_type="STRING",
+        mode="NULLABLE",
+        description="썸네일 URL",
+    ),
+    bigquery.SchemaField(
         name="content",
         field_type="STRING",
         mode="NULLABLE",
         description="본문",
-    ),
-    bigquery.SchemaField(
-        name="source",
-        field_type="STRING",
-        mode="NULLABLE",
-        description="출처",
     ),
     bigquery.SchemaField(
         name="category",
@@ -59,6 +65,12 @@ SCHEMA = [
         field_type="TIMESTAMP",
         mode="NULLABLE",
         description="발행일시",
+    ),
+    bigquery.SchemaField(
+        name="updated_at",
+        field_type="TIMESTAMP",
+        mode="NULLABLE",
+        description="수정일시",
     ),
     bigquery.SchemaField(
         name="collected_at",
