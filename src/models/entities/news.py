@@ -1,20 +1,27 @@
-from datetime import datetime
-
 from typing import Any
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict, AwareDatetime
 
 
 class BronzeNewsModel(BaseModel):
-    news_id: str = Field(..., description="뉴스 ID(Hash)")
-    source: str = Field(..., description="출처")
-    title: str = Field(..., description="제목")
-    url: str = Field(..., description="뉴스 URL")
-    image_url: str | None = Field(default=None, description="이미지 URL")
-    thumbnail_url: str | None = Field(default=None, description="썸네일 URL")
-    content: str | None = Field(default=None, description="본문")
-    category: str | None = Field(default=None, description="카테고리")
-    author: str | None = Field(default=None, description="작성자")
-    published_at: datetime | None = Field(default=None, description="발행일시")
-    updated_at: datetime | None = Field(default=None, description="수정일시")
-    collected_at: datetime = Field(..., description="수집일시")
-    metadata: dict[str, Any] | None = Field(default=None, description="추가 메타데이터")
+    model_config = ConfigDict(
+        str_strip_whitespace=True,
+        frozen=True,
+    )
+
+    news_id: str = Field(..., description="News ID (Hash)")
+    source: str = Field(..., description="Source")
+    title: str = Field(..., description="Title")
+    url: str = Field(..., description="News URL")
+    content: str | None = Field(default=None, description="Content")
+    author: str | None = Field(default=None, description="Author")
+    category: str | None = Field(default=None, description="Category")
+    image_url: str | None = Field(default=None, description="Image URL")
+    thumbnail_url: str | None = Field(default=None, description="Thumbnail URL")
+    published_at: AwareDatetime = Field(..., description="Published at")
+    updated_at: AwareDatetime | None = Field(default=None, description="Updated at")
+    executed_at: AwareDatetime = Field(..., description="Executed at")
+    # 'loaded_at' is excluded here to trigger BigQuery's server-side CURRENT_TIMESTAMP() default.
+    # Do not add to prevent null overrides.
+    metadata: dict[str, Any] | None = Field(
+        default=None, description="Additional metadata"
+    )
