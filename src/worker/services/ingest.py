@@ -6,7 +6,7 @@ from src.core.logger import get_logger
 from src.models.schemas.ingest import (
     IngestRequest,
     IngestResponse,
-    IngestSourceResult,
+    IngestLoadResult,
 )
 from src.worker.plugins.collect import CollectPlugin
 from src.worker.plugins.sources.yahoo_finance import YahooFinanceSource
@@ -22,7 +22,7 @@ class IngestService:
 
     async def run(self, request: IngestRequest) -> IngestResponse:
         """Run all plugins in parallel and aggregate results into CollectResponse."""
-        source_results: list[IngestSourceResult] = await asyncio.gather(
+        source_results: list[IngestLoadResult] = await asyncio.gather(
             *[self._run_plugin(plugin, request) for plugin in self.plugins]
         )
 
@@ -47,12 +47,12 @@ class IngestService:
 
     async def _run_plugin(
         self, plugin: CollectPlugin, request: IngestRequest
-    ) -> IngestSourceResult:
+    ) -> IngestLoadResult:
         """Run a single CollectPlugin and return its CollectSourceResult."""
         started_at = datetime.now(tz=timezone.utc)
         try:
             results = await plugin.execute(request)
-            return IngestSourceResult(
+            return IngestLoadResult(
                 name=plugin.source.source_name,
                 status="success",
                 total_count=len(results),
@@ -64,7 +64,7 @@ class IngestService:
             logger.exception(
                 "Collection failed for source=%s", plugin.source.source_name
             )
-            return IngestSourceResult(
+            return IngestLoadResult(
                 name=plugin.source.source_name,
                 status="failed",
                 total_count=0,

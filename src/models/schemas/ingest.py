@@ -2,6 +2,9 @@ from datetime import datetime, timezone
 
 from typing import Literal
 from pydantic import BaseModel, Field
+from pydantic.dataclasses import dataclass
+
+from src.models.entities.news import BronzeNewsModel
 
 
 class IngestRequest(BaseModel):
@@ -16,16 +19,24 @@ class IngestRequest(BaseModel):
     )
 
 
-class IngestSourceResult(BaseModel):
+@dataclass
+class IngestCollectResult:
+    source_name: str
+    items: list[BronzeNewsModel]
+    started_at: datetime
+    completed_at: datetime
+
+
+class IngestLoadResult(BaseModel):
     name: str = Field(description="News source name.")
     status: Literal["success", "failed"] = Field(
-        description="Collection status for this source."
+        description="Load status for this source."
     )
     total_count: int = Field(
         description="Total number of news items fetched from this source."
     )
     saved_count: int = Field(
-        description="Number of news items saved to BigQuery (duplicates excluded)."
+        description="Number of rows successfully sent to BigQuery without API errors. Deduplication is handled at query time."
     )
     started_at: datetime = Field(
         description="Timestamp when collection for this source started (UTC)."
@@ -35,7 +46,7 @@ class IngestSourceResult(BaseModel):
     )
     error_message: str | None = Field(
         default=None,
-        description="Error message if collection failed for this source; null if successful.",
+        description="Error message if load failed for this source; null if successful.",
     )
 
 
@@ -52,6 +63,4 @@ class IngestResponse(BaseModel):
     saved_count: int = Field(
         description="Total number of news items saved to BigQuery."
     )
-    sources: list[IngestSourceResult] = Field(
-        description="Per-source collection results."
-    )
+    sources: list[IngestLoadResult] = Field(description="Per-source load results.")
