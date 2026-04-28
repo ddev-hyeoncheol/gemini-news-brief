@@ -8,7 +8,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, ClassVar
 
 from src.models.entities.news import BronzeNewsModel
-from src.models.schemas.collect import CollectRequest
+from src.models.schemas.ingest import IngestRequest
 
 
 _USER_AGENT = "Mozilla/5.0 (compatible; GeminiNewsBrief/1.0; +https://github.com/ddev-hyeoncheol/gemini-news-brief)"
@@ -45,7 +45,7 @@ class SourceBase(ABC):
             if not isinstance(cls.__dict__.get(var), str):
                 raise TypeError(f"{cls.__name__} must define a '{var}' class variable")
 
-    def is_within_window(self, published_at: datetime, request: CollectRequest) -> bool:
+    def is_within_window(self, published_at: datetime, request: IngestRequest) -> bool:
         """Return True if published_at falls within the collection time window."""
         window_start = request.scheduled_at - timedelta(minutes=request.window)
         return window_start <= published_at <= request.scheduled_at
@@ -105,6 +105,6 @@ class SourceBase(ABC):
         return None
 
     @abstractmethod
-    async def parse(self, raw: Any, request: CollectRequest) -> list[BronzeNewsModel]:
+    async def parse(self, raw: Any, request: IngestRequest) -> list[BronzeNewsModel]:
         """Parse raw data into BronzeNewsModel list, filtered by time window."""
         ...

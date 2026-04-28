@@ -3,10 +3,10 @@ import asyncio
 from datetime import datetime, timezone
 
 from src.core.logger import get_logger
-from src.models.schemas.collect import (
-    CollectRequest,
-    CollectResponse,
-    CollectSourceResult,
+from src.models.schemas.ingest import (
+    IngestRequest,
+    IngestResponse,
+    IngestSourceResult,
 )
 from src.worker.plugins.collect import CollectPlugin
 from src.worker.plugins.sources.yahoo_finance import YahooFinanceSource
@@ -14,15 +14,15 @@ from src.worker.plugins.sources.yahoo_finance import YahooFinanceSource
 logger = get_logger(__name__)
 
 
-class CollectService:
+class IngestService:
     """Orchestrates parallel news collection across all registered CollectPlugins."""
 
     def __init__(self, plugins: list[CollectPlugin]) -> None:
         self.plugins = plugins
 
-    async def run(self, request: CollectRequest) -> CollectResponse:
+    async def run(self, request: IngestRequest) -> IngestResponse:
         """Run all plugins in parallel and aggregate results into CollectResponse."""
-        source_results: list[CollectSourceResult] = await asyncio.gather(
+        source_results: list[IngestSourceResult] = await asyncio.gather(
             *[self._run_plugin(plugin, request) for plugin in self.plugins]
         )
 
@@ -37,7 +37,7 @@ class CollectService:
         else:
             status = "partial"
 
-        return CollectResponse(
+        return IngestResponse(
             scheduled_at=request.scheduled_at,
             status=status,
             total_count=total_count,
@@ -46,13 +46,13 @@ class CollectService:
         )
 
     async def _run_plugin(
-        self, plugin: CollectPlugin, request: CollectRequest
-    ) -> CollectSourceResult:
+        self, plugin: CollectPlugin, request: IngestRequest
+    ) -> IngestSourceResult:
         """Run a single CollectPlugin and return its CollectSourceResult."""
         started_at = datetime.now(tz=timezone.utc)
         try:
             results = await plugin.execute(request)
-            return CollectSourceResult(
+            return IngestSourceResult(
                 name=plugin.source.source_name,
                 status="success",
                 total_count=len(results),
@@ -64,7 +64,7 @@ class CollectService:
             logger.exception(
                 "Collection failed for source=%s", plugin.source.source_name
             )
-            return CollectSourceResult(
+            return IngestSourceResult(
                 name=plugin.source.source_name,
                 status="failed",
                 total_count=0,
@@ -79,13 +79,13 @@ class CollectService:
 # Cloud Run scale-to-zero means each instance starts fresh,
 # so module-level state is safe and avoids lifespan overhead.
 _semaphore = asyncio.Semaphore(10)
-_collect_service = CollectService(
+_ingest_service = IngestService(
     plugins=[
         CollectPlugin(source=YahooFinanceSource(semaphore=_semaphore)),
     ]
 )
 
 
-def get_collect_service() -> CollectService:
-    """FastAPI dependency provider for CollectService."""
-    return _collect_service
+def get_ingest_service() -> IngestService:
+    """FastAPI dependency provider for IngestService."""
+    return _ingest_service

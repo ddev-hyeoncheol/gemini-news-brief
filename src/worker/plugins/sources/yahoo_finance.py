@@ -5,7 +5,7 @@ from typing import ClassVar
 
 from src.core.logger import get_logger
 from src.models.entities.news import BronzeNewsModel
-from src.models.schemas.collect import CollectRequest
+from src.models.schemas.ingest import IngestRequest
 from src.worker.plugins.sources.base import SourceBase
 
 logger = get_logger(__name__)
@@ -18,7 +18,7 @@ class YahooFinanceSource(SourceBase):
     RSS_URL: ClassVar[str] = "https://finance.yahoo.com/rss/"
 
     async def parse(
-        self, feed: feedparser.FeedParserDict, request: CollectRequest
+        self, feed: feedparser.FeedParserDict, request: IngestRequest
     ) -> list[BronzeNewsModel]:
         """Parse and enrich feed entries into BronzeNewsModel within the time window."""
         collected_at = self.now_utc()

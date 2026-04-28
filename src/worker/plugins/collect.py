@@ -1,6 +1,6 @@
 from src.core.logger import get_logger
 from src.models.entities.news import BronzeNewsModel
-from src.models.schemas.collect import CollectRequest
+from src.models.schemas.ingest import IngestRequest
 from src.worker.plugins.base import BasePlugin
 from src.worker.plugins.sources.base import SourceBase
 
@@ -18,7 +18,7 @@ class CollectPlugin(BasePlugin):
     def __init__(self, source: SourceBase) -> None:
         self.source = source
 
-    async def execute(self, request: CollectRequest) -> list[BronzeNewsModel]:
+    async def execute(self, request: IngestRequest) -> list[BronzeNewsModel]:
         """Run collect → parse flow and return results."""
         raw = await self.source.collect()
         results = await self.source.parse(raw, request)
