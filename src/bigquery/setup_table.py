@@ -38,29 +38,33 @@ def run_setup():
             try:
                 existing_table = client.get_table(table_ref)
                 existing_table.schema = table_module.SCHEMA
-                client.update_table(existing_table, ["schema"])
+                update_fields = ["schema"]
+
+                if hasattr(table_module, "CLUSTERING_FIELDS"):
+                    existing_table.clustering_fields = table_module.CLUSTERING_FIELDS
+                    update_fields.append("clustering_fields")
+
+                if hasattr(table_module, "TIME_PARTITIONING"):
+                    existing_table.time_partitioning = table_module.TIME_PARTITIONING
+                    update_fields.append("time_partitioning")
+
+                client.update_table(existing_table, update_fields)
                 print(f"✅ Update Table: {table_name}")
             except NotFound:
                 new_table = bigquery.Table(table_ref, schema=table_module.SCHEMA)
 
-                if hasattr(table_module, "PARTITION_FIELD"):
-                    p_type_str = getattr(table_module, "PARTITION_TYPE", "DAY").upper()
-
-                    p_type = (
-                        bigquery.TimePartitioningType.HOUR
-                        if p_type_str == "HOUR"
-                        else bigquery.TimePartitioningType.DAY
+                partition_msg = ""
+                if hasattr(table_module, "TIME_PARTITIONING"):
+                    new_table.time_partitioning = table_module.TIME_PARTITIONING
+                    partition_msg += (
+                        f" (PARTITIONED BY {table_module.TIME_PARTITIONING.field})"
                     )
 
-                    new_table.time_partitioning = bigquery.TimePartitioning(
-                        type_=p_type, field=table_module.PARTITION_FIELD
+                if hasattr(table_module, "CLUSTERING_FIELDS"):
+                    new_table.clustering_fields = table_module.CLUSTERING_FIELDS
+                    partition_msg += (
+                        f" (CLUSTERED BY {', '.join(table_module.CLUSTERING_FIELDS)})"
                     )
-
-                    partition_msg = (
-                        f"({p_type_str} PARTITIONED BY {table_module.PARTITION_FIELD})"
-                    )
-                else:
-                    partition_msg = ""
 
                 client.create_table(new_table)
                 print(f"✅ Create Table: {table_ref} {partition_msg}")
