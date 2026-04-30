@@ -1,5 +1,4 @@
 from datetime import datetime, timezone
-
 from typing import Literal
 from pydantic import BaseModel, Field
 
@@ -11,117 +10,121 @@ class IngestRequest(BaseModel):
         default_factory=lambda: datetime.now(tz=timezone.utc),
         description="Execution time (UTC). Defaults to current time if not provided.",
     )
-    window: int = Field(
-        default=10,
-        ge=1,
-        description="Time window in minutes. Only news published within this range will be collected.",
+
+
+class IngestPhaseResultBase(BaseModel):
+    """Base DTO for intermediate pipeline phases sharing common fields."""
+
+    source: str = Field(
+        description="News source name.",
     )
-
-
-class IngestCollectParseResult(BaseModel):
-    target_count: int = Field(
-        description="Number of candidates found within the time window."
+    item_count: int = Field(
+        default=0,
+        description="Number of items resulting from this phase.",
     )
     items: list[BronzeNewsModel] = Field(
-        default_factory=list, description="List of successfully parsed news items."
+        default_factory=list,
+        description="List of processed news items.",
     )
-
-
-class IngestCollectResult(BaseModel):
-    source: str = Field(description="News source name.")
-    status: Literal["success", "partial", "failed"] = Field(
-        description="Collection status for this source."
+    started_at: datetime = Field(
+        description="Timestamp when the phase started (UTC).",
     )
-    items: list[BronzeNewsModel] = Field(
-        default_factory=list, description="List of collected news items."
+    completed_at: datetime = Field(
+        description="Timestamp when the phase finished (UTC).",
     )
-    target_count: int = Field(
-        default=0,
-        description="Total number of items discovered within the time window.",
-    )
-    collected_count: int = Field(
-        default=0, description="Number of successfully collected news items."
-    )
-    started_at: datetime = Field(description="Timestamp when collection started (UTC).")
-    collected_at: datetime = Field(
-        description="Timestamp when collection finished (UTC)."
-    )
-    error_message: str | None = Field(
-        default=None, description="Error message if collection failed."
-    )
-
-
-class IngestLoadResult(BaseModel):
-    source: str = Field(description="News source name.")
-    status: Literal["success", "partial", "failed"] = Field(
-        description="Load status for this source."
-    )
-    target_count: int = Field(
-        default=0, description="Number of collected items attempted to be loaded."
-    )
-    loaded_count: int = Field(
-        default=0,
-        description="Number of successfully loaded news items (BigQuery dedup is handled at query time).",
-    )
-    started_at: datetime = Field(description="Timestamp when load started (UTC).")
-    loaded_at: datetime = Field(description="Timestamp when load finished (UTC).")
     error_message: str | None = Field(
         default=None,
-        description="Error message if load failed.",
+        description="Error message if the phase failed.",
+    )
+
+
+class IngestFetchResult(IngestPhaseResultBase):
+    status: Literal["success", "failed"] = Field(
+        description="Fetch status.",
+    )
+
+
+class IngestLookupResult(IngestPhaseResultBase):
+    status: Literal["success", "failed"] = Field(
+        description="Lookup status.",
+    )
+
+
+class IngestEnrichResult(IngestPhaseResultBase):
+    status: Literal["success", "partial", "failed"] = Field(
+        description="Enrichment status.",
+    )
+
+
+class IngestLoadResult(IngestPhaseResultBase):
+    status: Literal["success", "partial", "failed"] = Field(
+        description="Load status.",
     )
 
 
 class IngestSourceResult(BaseModel):
     source: str = Field(description="News source name.")
     status: Literal["success", "partial", "failed"] = Field(
-        description="Overall pipeline status for this source."
+        description="Overall pipeline status for this source.",
     )
-    target_count: int = Field(
+    fetched_count: int = Field(
         default=0,
-        description="Total number of items discovered within the time window.",
+        description="Total number of news items fetched from the source feed.",
     )
-    collected_count: int = Field(
-        default=0, description="Number of items successfully collected."
+    lookup_count: int = Field(
+        default=0,
+        description="Number of new or updated news items targeted for scraping after lookup.",
+    )
+    enriched_count: int = Field(
+        default=0,
+        description="Number of successfully enriched news items.",
     )
     loaded_count: int = Field(
-        default=0, description="Number of items successfully loaded."
+        default=0,
+        description="Number of successfully loaded or updated news items.",
     )
-    collect_started_at: datetime | None = Field(
-        default=None, description="Timestamp when collection started (UTC)."
+    started_at: datetime | None = Field(
+        default=None,
+        description="Timestamp when pipeline started for this source (UTC).",
     )
-    collected_at: datetime | None = Field(
-        default=None, description="Timestamp when collection finished (UTC)."
+    completed_at: datetime | None = Field(
+        default=None,
+        description="Timestamp when pipeline finished for this source (UTC).",
     )
-    load_started_at: datetime | None = Field(
-        default=None, description="Timestamp when load started (UTC)."
-    )
-    loaded_at: datetime | None = Field(
-        default=None, description="Timestamp when load finished (UTC)."
-    )
-    failed_phase: Literal["collect", "load"] | None = Field(
-        default=None, description="The pipeline phase where the failure occurred."
+    failed_phase: Literal["fetch", "lookup", "enrich", "load"] | None = Field(
+        default=None,
+        description="The pipeline phase where the failure occurred.",
     )
     error_message: str | None = Field(
-        default=None, description="Error message if collection or load failed."
+        default=None,
+        description="Error message if the pipeline failed for this source.",
     )
 
 
 class IngestResponse(BaseModel):
     executed_at: datetime = Field(
-        description="Execution time passed in the request (UTC)."
+        description="Execution time passed in the request (UTC).",
     )
     status: Literal["success", "partial", "failed"] = Field(
-        description="Overall ingestion status."
+        description="Overall ingestion status.",
     )
-    target_count: int = Field(
-        description="Total number of news items discovered across all sources within the time window."
+    fetched_count: int = Field(
+        default=0,
+        description="Total number of news items fetched from the source feeds across all sources.",
     )
-    collected_count: int = Field(
-        description="Total number of news items collected across all sources."
+    lookup_count: int = Field(
+        default=0,
+        description="Total number of new or updated news items targeted for scraping across all sources.",
+    )
+    enriched_count: int = Field(
+        default=0,
+        description="Total number of successfully enriched news items across all sources.",
     )
     loaded_count: int = Field(
-        description="Total number of news items loaded to BigQuery."
+        default=0,
+        description="Total number of successfully loaded or updated news items across all sources.",
     )
     sources: list[IngestSourceResult] = Field(
-        description="Per-source ingestion results."
+        default_factory=list,
+        description="Per-source ingestion results.",
     )
