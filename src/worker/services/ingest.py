@@ -6,31 +6,37 @@ from src.core.logger import get_logger
 from src.models.schemas.ingest import (
     IngestRequest,
     IngestResponse,
-    IngestLoadResult,
+    IngestSourceResult,
 )
 from src.worker.plugins.collect import CollectPlugin
+from src.worker.plugins.bigquery import BigQueryPlugin
 from src.worker.plugins.sources.yahoo_finance import YahooFinanceSource
 
 logger = get_logger(__name__)
 
 
 class IngestService:
-    """Orchestrates parallel news collection across all registered CollectPlugins."""
+    """Orchestrates parallel news collection and loading across all registered sources."""
 
-    def __init__(self, plugins: list[CollectPlugin]) -> None:
-        self.plugins = plugins
+    def __init__(
+        self, source_plugins: list[CollectPlugin], db_plugin: BigQueryPlugin
+    ) -> None:
+        """Initialize the service with a list of source plugins and a database plugin."""
+        self.source_plugins = source_plugins
+        self.db_plugin = db_plugin
 
     async def run(self, request: IngestRequest) -> IngestResponse:
-        """Run all plugins in parallel and aggregate results into CollectResponse."""
-        source_results: list[IngestLoadResult] = await asyncio.gather(
-            *[self._run_plugin(plugin, request) for plugin in self.plugins]
+        """Run all plugins in parallel and aggregate results into IngestResponse."""
+        source_results: list[IngestSourceResult] = await asyncio.gather(
+            *[self._run_pipeline(plugin, request) for plugin in self.source_plugins]
         )
 
-        total_count = sum(r.total_count for r in source_results)
-        saved_count = sum(r.saved_count for r in source_results)
-
+        target_count = sum(r.target_count for r in source_results)
+        collected_count = sum(r.collected_count for r in source_results)
+        loaded_count = sum(r.loaded_count for r in source_results)
         success_count = sum(1 for r in source_results if r.status == "success")
-        if success_count == len(source_results):
+
+        if not source_results or success_count == len(source_results):
             status = "success"
         elif success_count == 0:
             status = "failed"
@@ -38,51 +44,64 @@ class IngestService:
             status = "partial"
 
         return IngestResponse(
-            scheduled_at=request.scheduled_at,
+            executed_at=request.executed_at,
             status=status,
-            total_count=total_count,
-            saved_count=saved_count,
+            target_count=target_count,
+            collected_count=collected_count,
+            loaded_count=loaded_count,
             sources=list(source_results),
         )
 
-    async def _run_plugin(
+    async def _run_pipeline(
         self, plugin: CollectPlugin, request: IngestRequest
-    ) -> IngestLoadResult:
-        """Run a single CollectPlugin and return its CollectSourceResult."""
-        started_at = datetime.now(tz=timezone.utc)
-        try:
-            results = await plugin.execute(request)
-            return IngestLoadResult(
-                name=plugin.source.source_name,
-                status="success",
-                total_count=len(results),
-                saved_count=len(results),  # TODO: update after BigQuery dedup
-                started_at=started_at,
-                completed_at=datetime.now(tz=timezone.utc),
-            )
-        except Exception as e:
-            logger.exception(
-                "Collection failed for source=%s", plugin.source.source_name
-            )
-            return IngestLoadResult(
-                name=plugin.source.source_name,
+    ) -> IngestSourceResult:
+        """Process a single source pipeline (collect -> load), returning a combined IngestSourceResult."""
+        # 1. Collect Phase (Errors are handled internally by the plugin)
+        collect_result = await plugin.execute(request)
+
+        if collect_result.status == "failed":
+            return IngestSourceResult(
+                source=collect_result.source,
                 status="failed",
-                total_count=0,
-                saved_count=0,
-                started_at=started_at,
-                completed_at=datetime.now(tz=timezone.utc),
-                error_message=str(e),
+                target_count=collect_result.target_count,
+                collected_count=collect_result.collected_count,
+                collect_started_at=collect_result.started_at,
+                collected_at=collect_result.collected_at,
+                failed_phase="collect",
+                error_message=collect_result.error_message,
             )
+
+        # 2. Load Phase
+        load_result = await self.db_plugin.execute(
+            collect_result.source, collect_result.items
+        )
+
+        return IngestSourceResult(
+            source=collect_result.source,
+            status=load_result.status,
+            target_count=collect_result.target_count,
+            collected_count=collect_result.collected_count,
+            loaded_count=load_result.loaded_count,
+            collect_started_at=collect_result.started_at,
+            collected_at=collect_result.collected_at,
+            load_started_at=load_result.started_at,
+            loaded_at=load_result.loaded_at,
+            failed_phase="load" if load_result.status == "failed" else None,
+            error_message=load_result.error_message,
+        )
 
 
 # Module-level singleton: instantiated once at import time.
 # Cloud Run scale-to-zero means each instance starts fresh,
 # so module-level state is safe and avoids lifespan overhead.
-_semaphore = asyncio.Semaphore(10)
+_source_semaphore = asyncio.Semaphore(10)
+_db_semaphore = asyncio.Semaphore(10)
+
 _ingest_service = IngestService(
-    plugins=[
-        CollectPlugin(source=YahooFinanceSource(semaphore=_semaphore)),
-    ]
+    source_plugins=[
+        CollectPlugin(source=YahooFinanceSource(semaphore=_source_semaphore)),
+    ],
+    db_plugin=BigQueryPlugin(semaphore=_db_semaphore),
 )
 
 
