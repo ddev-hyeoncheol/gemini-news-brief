@@ -8,7 +8,7 @@ TIME_PARTITIONING = bigquery.TimePartitioning(
     field="executed_at",
 )
 
-# Clustering fields to improve query performance and reduce costs (Max 4)
+# Clustering fields to improve query performance and reduce costs (Max 4).
 CLUSTERING_FIELDS = ["source", "category"]
 
 SCHEMA = [
@@ -85,7 +85,7 @@ SCHEMA = [
         description="Executed at",
     ),
     # Database-managed timestamp. Do not provide a value in the ingestion layer.
-    # generated automatically on write.
+    # Generated automatically on write.
     bigquery.SchemaField(
         name="loaded_at",
         field_type="TIMESTAMP",
