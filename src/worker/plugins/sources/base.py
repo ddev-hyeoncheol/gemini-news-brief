@@ -8,7 +8,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, ClassVar
 
 from src.models.entities.news import BronzeNewsModel
-from src.models.schemas.ingest import IngestRequest
+from src.models.schemas.ingest import IngestRequest, IngestCollectParseResult
 
 
 _USER_AGENT = "Mozilla/5.0 (compatible; GeminiNewsBrief/1.0; +https://github.com/ddev-hyeoncheol/gemini-news-brief)"
@@ -19,14 +19,14 @@ class SourceBase(ABC):
     Independent base for all news source implementations.
 
     Provides shared utilities:
-    - source_name: identifies the news source
+    - source: identifies the news source
     - news_id generation, newspaper3k enrichment
     - RSS fetch, published_at parsing, image URL extraction
 
     Subclasses must implement parse() for source-specific field mapping.
     """
 
-    source_name: ClassVar[str]
+    source: ClassVar[str]
     RSS_URL: ClassVar[str]
 
     def __init__(self, semaphore: asyncio.Semaphore) -> None:
@@ -41,25 +41,21 @@ class SourceBase(ABC):
         super().__init_subclass__(**kwargs)
         if getattr(cls, "__abstractmethods__", None):
             return
-        for var in ("source_name", "RSS_URL"):
+        for var in ("source", "RSS_URL"):
             if not isinstance(cls.__dict__.get(var), str):
                 raise TypeError(f"{cls.__name__} must define a '{var}' class variable")
 
     def is_within_window(self, published_at: datetime, request: IngestRequest) -> bool:
         """Return True if published_at falls within the collection time window."""
-        window_start = request.scheduled_at - timedelta(minutes=request.window)
-        return window_start <= published_at <= request.scheduled_at
-
-    def now_utc(self) -> datetime:
-        """Return current UTC datetime for collected_at timestamps."""
-        return datetime.now(tz=timezone.utc)
+        window_start = request.executed_at - timedelta(minutes=request.window)
+        return window_start <= published_at <= request.executed_at
 
     def make_news_id(self, url: str) -> str:
-        """Generate a unique news ID by SHA-256 hashing the source name and article URL."""
-        salted = f"{self.source_name}:{url}"
+        """Generate a unique news ID by SHA-256 hashing the source and article URL."""
+        salted = f"{self.source}:{url}"
         return hashlib.sha256(salted.encode()).hexdigest()
 
-    async def enrich(self, url: str) -> dict:
+    async def enrich(self, url: str) -> dict[str, str | None]:
         """
         Fetch and parse full article content using newspaper3k.
 
@@ -70,7 +66,7 @@ class SourceBase(ABC):
         async with self._semaphore:
             return await asyncio.to_thread(self._parse_article, url)
 
-    def _parse_article(self, url: str) -> dict:
+    def _parse_article(self, url: str) -> dict[str, str | None]:
         """Download and parse a single article synchronously."""
         try:
             article = newspaper.Article(url, config=self._newspaper_config)
@@ -105,6 +101,6 @@ class SourceBase(ABC):
         return None
 
     @abstractmethod
-    async def parse(self, raw: Any, request: IngestRequest) -> list[BronzeNewsModel]:
-        """Parse raw data into BronzeNewsModel list, filtered by time window."""
+    async def parse(self, raw: Any, request: IngestRequest) -> IngestCollectParseResult:
+        """Parse raw data, filter by time window, enrich, and return an IngestCollectParseResult."""
         ...

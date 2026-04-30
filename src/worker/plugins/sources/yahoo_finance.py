@@ -5,7 +5,7 @@ from typing import ClassVar
 
 from src.core.logger import get_logger
 from src.models.entities.news import BronzeNewsModel
-from src.models.schemas.ingest import IngestRequest
+from src.models.schemas.ingest import IngestRequest, IngestCollectParseResult
 from src.worker.plugins.sources.base import SourceBase
 
 logger = get_logger(__name__)
@@ -14,14 +14,14 @@ logger = get_logger(__name__)
 class YahooFinanceSource(SourceBase):
     """News source for Yahoo Finance RSS feed (https://finance.yahoo.com/rss/)."""
 
-    source_name: ClassVar[str] = "yahoo_finance"
+    source: ClassVar[str] = "yahoo_finance"
     RSS_URL: ClassVar[str] = "https://finance.yahoo.com/rss/"
 
     async def parse(
         self, feed: feedparser.FeedParserDict, request: IngestRequest
-    ) -> list[BronzeNewsModel]:
-        """Parse and enrich feed entries into BronzeNewsModel within the time window."""
-        collected_at = self.now_utc()
+    ) -> IngestCollectParseResult:
+        """Parse and enrich feed entries into BronzeNewsModel within the time window, returning IngestCollectParseResult."""
+        executed_at = request.executed_at
 
         # Filter entries within the time window first
         candidates = []
@@ -31,6 +31,8 @@ class YahooFinanceSource(SourceBase):
                 published_at, request
             ):
                 candidates.append((entry, published_at))
+
+        target_count = len(candidates)
 
         # Enrich all candidates in parallel via newspaper3k
         enrichments = await asyncio.gather(
@@ -43,15 +45,15 @@ class YahooFinanceSource(SourceBase):
             results.append(
                 BronzeNewsModel(
                     news_id=self.make_news_id(entry.get("link", "")),
-                    source=self.source_name,
+                    source=self.source,
                     title=entry.get("title", ""),
                     url=entry.get("link", ""),
-                    image_url=self._parse_image_url(entry),
-                    thumbnail_url=enriched["thumbnail_url"],
                     content=enriched["content"],
                     author=enriched["author"],
+                    image_url=self._parse_image_url(entry),
+                    thumbnail_url=enriched["thumbnail_url"],
                     published_at=published_at,
-                    collected_at=collected_at,
+                    executed_at=executed_at,
                     metadata={
                         "original_source": original_source.get("value"),
                         "original_source_url": original_source.get("url"),
@@ -60,4 +62,4 @@ class YahooFinanceSource(SourceBase):
                 )
             )
 
-        return results
+        return IngestCollectParseResult(target_count=target_count, items=results)
