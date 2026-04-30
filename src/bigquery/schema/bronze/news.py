@@ -4,12 +4,12 @@ TABLE_NAME = "news"
 
 # Partitioning object for table creation/update
 TIME_PARTITIONING = bigquery.TimePartitioning(
-    type_=bigquery.TimePartitioningType.HOUR,
+    type_=bigquery.TimePartitioningType.DAY,
     field="executed_at",
 )
 
 # Clustering fields to improve query performance and reduce costs (Max 4).
-CLUSTERING_FIELDS = ["source", "category"]
+CLUSTERING_FIELDS = ["source", "category", "published_at"]
 
 SCHEMA = [
     bigquery.SchemaField(
