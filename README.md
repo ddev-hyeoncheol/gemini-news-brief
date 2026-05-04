@@ -79,12 +79,11 @@ src/
 
 ## 🛠️ 환경 변수 (Environment Variables)
 
-| 변수명        | 설명                                                                        | 기본값      |
-| ------------- | --------------------------------------------------------------------------- | ----------- |
-| `BQ_TABLE_ID` | 데이터를 적재할 BigQuery 테이블 ID (`project.dataset.table`)                | (미구현)    |
-| `PORT`        | FastAPI 서버 포트 (Cloud Run 자동 주입)                                     | `8080`      |
-| `LOG_LEVEL`   | 로깅 레벨 (`DEBUG`, `INFO`, `WARNING`, `ERROR`)                             | `INFO`      |
-| `K_SERVICE`   | Cloud Run이 자동 주입하는 서비스명. 값이 있으면 GCP JSON 로그 포맷으로 전환 | (자동 주입) |
+| 변수명      | 설명                                                                        | 기본값      |
+| ----------- | --------------------------------------------------------------------------- | ----------- |
+| `PORT`      | FastAPI 서버 포트 (Cloud Run 자동 주입)                                     | `8080`      |
+| `LOG_LEVEL` | 로깅 레벨 (`DEBUG`, `INFO`, `WARNING`, `ERROR`)                             | `INFO`      |
+| `K_SERVICE` | Cloud Run이 자동 주입하는 서비스명. 값이 있으면 GCP JSON 로그 포맷으로 전환 | (자동 주입) |
 
 ## 💻 로컬 실행 가이드 (Quick Start)
 
@@ -106,7 +105,7 @@ src/
 
     > 서버가 실행되면 `http://localhost:8080/docs`에서 Swagger UI를 확인할 수 있습니다.
 
-    > **참고**: 현재 `BigQueryPlugin`은 로컬 개발용 Mock으로, 실제 BigQuery 연결 없이도 파이프라인 전체 흐름을 테스트할 수 있습니다.
+    > **참고**: GCP 자격증명이 설정되지 않은 경우 `BigQueryPlugin`이 자동으로 Mock 모드로 전환되어, 실제 BigQuery 연결 없이도 파이프라인 전체 흐름을 테스트할 수 있습니다.
 
 ## 📝 API 사용 예시 (Usage Example)
 
@@ -192,6 +191,6 @@ curl -X POST "http://localhost:8080/ingest" \
             CollectPlugin(source=YahooFinanceSource(semaphore=source_semaphore)),
             CollectPlugin(source=CnbcSource(semaphore=source_semaphore)),  # 추가
         ],
-        db_plugin=BigQueryPlugin(semaphore=db_semaphore),
+        db_plugin=BigQueryPlugin(semaphore=db_semaphore, client=bigquery_client),
     )
     ```
