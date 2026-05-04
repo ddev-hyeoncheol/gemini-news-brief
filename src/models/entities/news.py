@@ -14,7 +14,7 @@ class BronzeNewsModel(BaseModel):
     url: str = Field(description="News URL")
     content: str | None = Field(default=None, description="Content")
     author: str | None = Field(default=None, description="Author")
-    category: str | None = Field(default=None, description="Category")
+    category: str | None = Field(default="finance", description="Category")
     image_url: str | None = Field(default=None, description="Image URL")
     thumbnail_url: str | None = Field(default=None, description="Thumbnail URL")
     published_at: AwareDatetime = Field(description="Published at")
