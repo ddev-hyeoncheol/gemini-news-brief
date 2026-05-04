@@ -1,6 +1,8 @@
 import asyncio
 
 from datetime import datetime, timezone
+from google.cloud import bigquery
+from google.auth.exceptions import DefaultCredentialsError
 
 from src.core.logger import get_logger
 from src.models.schemas.ingest import (
@@ -139,11 +141,19 @@ def get_ingest_service() -> IngestService:
         source_semaphore = asyncio.Semaphore(10)
         db_semaphore = asyncio.Semaphore(10)
 
+        try:
+            bigquery_client = bigquery.Client()
+        except DefaultCredentialsError:
+            logger.warning(
+                "GCP credentials not found. Running BigQuery operations in MOCK mode."
+            )
+            bigquery_client = None
+
         _ingest_service = IngestService(
             source_plugins=[
                 CollectPlugin(source=YahooFinanceSource(semaphore=source_semaphore)),
             ],
-            db_plugin=BigQueryPlugin(semaphore=db_semaphore),
+            db_plugin=BigQueryPlugin(semaphore=db_semaphore, client=bigquery_client),
         )
 
     return _ingest_service

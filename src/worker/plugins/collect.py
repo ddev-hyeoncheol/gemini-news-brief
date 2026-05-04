@@ -94,6 +94,13 @@ class CollectPlugin:
             elif failed_count > 0:
                 status = "partial"
 
+            logger.info(
+                "[%s] Enrichment completed: %d succeeded, %d failed.",
+                self.source.source,
+                len(enriched_items),
+                failed_count,
+            )
+
             return IngestEnrichResult(
                 source=self.source.source,
                 status=status,
