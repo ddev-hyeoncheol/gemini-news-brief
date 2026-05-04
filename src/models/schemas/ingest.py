@@ -1,12 +1,12 @@
 from datetime import datetime, timezone
 from typing import Literal
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, AwareDatetime
 
 from src.models.entities.news import BronzeNewsModel
 
 
 class IngestRequest(BaseModel):
-    executed_at: datetime = Field(
+    executed_at: AwareDatetime = Field(
         default_factory=lambda: datetime.now(tz=timezone.utc),
         description="Execution time (UTC). Defaults to current time if not provided.",
     )
@@ -26,10 +26,10 @@ class IngestPhaseResultBase(BaseModel):
         default_factory=list,
         description="List of processed news items.",
     )
-    started_at: datetime = Field(
+    started_at: AwareDatetime = Field(
         description="Timestamp when the phase started (UTC).",
     )
-    completed_at: datetime = Field(
+    completed_at: AwareDatetime = Field(
         description="Timestamp when the phase finished (UTC).",
     )
     error_message: str | None = Field(
@@ -85,11 +85,11 @@ class IngestSourceResult(BaseModel):
         default=0,
         description="Number of successfully loaded or updated news items.",
     )
-    started_at: datetime | None = Field(
+    started_at: AwareDatetime | None = Field(
         default=None,
         description="Timestamp when pipeline started for this source (UTC).",
     )
-    completed_at: datetime | None = Field(
+    completed_at: AwareDatetime | None = Field(
         default=None,
         description="Timestamp when pipeline finished for this source (UTC).",
     )
@@ -104,7 +104,7 @@ class IngestSourceResult(BaseModel):
 
 
 class IngestResponse(BaseModel):
-    executed_at: datetime = Field(
+    executed_at: AwareDatetime = Field(
         description="Execution time passed in the request (UTC).",
     )
     status: Literal["success", "partial", "failed"] = Field(

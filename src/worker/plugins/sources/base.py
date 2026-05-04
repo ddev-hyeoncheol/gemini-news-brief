@@ -81,17 +81,18 @@ class SourceBase(ABC):
 
     def _parse_article(self, url: str) -> dict[str, str | None]:
         """Download and parse a single article synchronously."""
-        try:
-            article = newspaper.Article(url, config=self._newspaper_config)
-            article.download()
-            article.parse()
-            return {
-                "content": article.text or None,
-                "author": ", ".join(article.authors) if article.authors else None,
-                "thumbnail_url": article.top_image or None,
-            }
-        except Exception:
-            return {"content": None, "author": None, "thumbnail_url": None}
+        article = newspaper.Article(url, config=self._newspaper_config)
+        article.download()
+        article.parse()
+
+        if not article.text:
+            raise ValueError("Failed to extract article content (empty text).")
+
+        return {
+            "content": article.text,
+            "author": ", ".join(article.authors) if article.authors else None,
+            "thumbnail_url": article.top_image or None,
+        }
 
     def _parse_published_at(self, entry: feedparser.FeedParserDict) -> datetime | None:
         """Parse published_at from feedparser time struct as UTC datetime."""
