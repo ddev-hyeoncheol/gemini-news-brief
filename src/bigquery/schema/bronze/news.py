@@ -2,13 +2,13 @@ from google.cloud import bigquery
 
 TABLE_NAME = "news"
 
-# Partitioning object for table creation/update
+# Partitioning object for table creation and update.
 TIME_PARTITIONING = bigquery.TimePartitioning(
     type_=bigquery.TimePartitioningType.DAY,
     field="executed_at",
 )
 
-# Clustering fields to improve query performance and reduce costs (Max 4).
+# Clustering fields to improve query performance and reduce costs (max 4).
 CLUSTERING_FIELDS = ["source", "category", "published_at"]
 
 SCHEMA = [

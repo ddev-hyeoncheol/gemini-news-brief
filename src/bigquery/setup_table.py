@@ -20,7 +20,7 @@ def run_setup():
     for dataset_id, table_modules in SCHEMA_CONFIG.items():
         dataset_ref = f"{project_id}.{dataset_id}"
 
-        # 1. Check Dataset Existence & Create if Not Exists
+        # 1. Check dataset existence and create if it does not exist.
         try:
             client.get_dataset(dataset_ref)
             print(f"✅ Dataset Exists: {dataset_id}")
@@ -30,7 +30,7 @@ def run_setup():
             client.create_dataset(new_dataset)
             print(f"✨ Created Dataset: '{dataset_id}' in {region}")
 
-        # 2. Loop through Tables in Dataset
+        # 2. Loop through tables in dataset.
         for table_module in table_modules:
             table_name = table_module.TABLE_NAME
             table_ref = f"{dataset_ref}.{table_name}"
@@ -40,13 +40,13 @@ def run_setup():
                 existing_table.schema = table_module.SCHEMA
                 update_fields = ["schema"]
 
-                if hasattr(table_module, "CLUSTERING_FIELDS"):
-                    existing_table.clustering_fields = table_module.CLUSTERING_FIELDS
-                    update_fields.append("clustering_fields")
-
                 if hasattr(table_module, "TIME_PARTITIONING"):
                     existing_table.time_partitioning = table_module.TIME_PARTITIONING
                     update_fields.append("time_partitioning")
+
+                if hasattr(table_module, "CLUSTERING_FIELDS"):
+                    existing_table.clustering_fields = table_module.CLUSTERING_FIELDS
+                    update_fields.append("clustering_fields")
 
                 client.update_table(existing_table, update_fields)
                 print(f"✅ Update Table: {table_name}")
