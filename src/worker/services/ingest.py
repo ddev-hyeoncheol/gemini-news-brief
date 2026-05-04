@@ -138,7 +138,7 @@ def get_ingest_service() -> IngestService:
 
     # Lazy initialization ensures semaphores are attached to the running event loop.
     if _ingest_service is None:
-        source_semaphore = asyncio.Semaphore(10)
+        source_semaphore = asyncio.Semaphore(20)
         db_semaphore = asyncio.Semaphore(10)
 
         try:
