@@ -63,7 +63,9 @@ class IngestLoadResult(IngestPhaseResultBase):
 
 
 class IngestSourceResult(BaseModel):
-    source: str = Field(description="News source name.")
+    source: str = Field(
+        description="News source name.",
+    )
     status: Literal["success", "partial", "failed"] = Field(
         description="Overall pipeline status for this source.",
     )

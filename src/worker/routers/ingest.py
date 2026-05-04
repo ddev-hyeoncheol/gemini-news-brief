@@ -34,14 +34,10 @@ async def ingest(
     """
     Trigger the news ingestion pipeline.
 
-    Executes collection and loading for all registered sources in parallel.
-    Adjusts the HTTP response status code based on the overall pipeline success.
+    Execute collection and loading for all registered sources in parallel.
+    Adjust the HTTP response status code based on the overall pipeline success.
     """
-    logger.info(
-        "Ingest triggered | executed_at=%s window=%dm",
-        request.executed_at.isoformat(),
-        request.window,
-    )
+    logger.info("Ingest triggered | executed_at=%s", request.executed_at.isoformat())
 
     result = await service.run(request)
 
@@ -51,10 +47,11 @@ async def ingest(
         response.status_code = status.HTTP_207_MULTI_STATUS
 
     logger.info(
-        "Ingest completed | status=%s target=%d collected=%d loaded=%d",
+        "Ingest completed | status=%s fetched=%d lookup=%d enriched=%d loaded=%d",
         result.status,
-        result.target_count,
-        result.collected_count,
+        result.fetched_count,
+        result.lookup_count,
+        result.enriched_count,
         result.loaded_count,
     )
 

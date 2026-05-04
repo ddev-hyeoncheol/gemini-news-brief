@@ -1,11 +1,8 @@
-import asyncio
-import feedparser
-
 from typing import ClassVar
 
 from src.core.logger import get_logger
 from src.models.entities.news import BronzeNewsModel
-from src.models.schemas.ingest import IngestRequest, IngestCollectParseResult
+from src.models.schemas.ingest import IngestRequest
 from src.worker.plugins.sources.base import SourceBase
 
 logger = get_logger(__name__)
@@ -17,30 +14,18 @@ class YahooFinanceSource(SourceBase):
     source: ClassVar[str] = "yahoo_finance"
     RSS_URL: ClassVar[str] = "https://finance.yahoo.com/rss/"
 
-    async def parse(
-        self, feed: feedparser.FeedParserDict, request: IngestRequest
-    ) -> IngestCollectParseResult:
-        """Parse and enrich feed entries into BronzeNewsModel within the time window, returning IngestCollectParseResult."""
+    async def fetch(self, request: IngestRequest) -> list[BronzeNewsModel]:
+        """Fetch raw RSS feed and map to BronzeNewsModel entities without enrichment."""
         executed_at = request.executed_at
 
-        # Filter entries within the time window first
-        candidates = []
-        for entry in feed.entries:
-            published_at = self._parse_published_at(entry)
-            if published_at is not None and self.is_within_window(
-                published_at, request
-            ):
-                candidates.append((entry, published_at))
-
-        target_count = len(candidates)
-
-        # Enrich all candidates in parallel via newspaper3k
-        enrichments = await asyncio.gather(
-            *[self.enrich(entry.get("link", "")) for entry, _ in candidates]
-        )
+        feed = await self._fetch_feed()
 
         results: list[BronzeNewsModel] = []
-        for (entry, published_at), enriched in zip(candidates, enrichments):
+        for entry in feed.entries:
+            published_at = self._parse_published_at(entry)
+            if published_at is None:
+                continue
+
             original_source = entry.get("source", {})
             results.append(
                 BronzeNewsModel(
@@ -48,18 +33,16 @@ class YahooFinanceSource(SourceBase):
                     source=self.source,
                     title=entry.get("title", ""),
                     url=entry.get("link", ""),
-                    content=enriched["content"],
-                    author=enriched["author"],
                     image_url=self._parse_image_url(entry),
-                    thumbnail_url=enriched["thumbnail_url"],
                     published_at=published_at,
+                    updated_at=published_at,
                     executed_at=executed_at,
                     metadata={
-                        "original_source": original_source.get("value"),
-                        "original_source_url": original_source.get("url"),
+                        "original_source": original_source.get("title"),
+                        "original_source_url": original_source.get("href"),
                         "guid": entry.get("id"),
                     },
                 )
             )
 
-        return IngestCollectParseResult(target_count=target_count, items=results)
+        return results
