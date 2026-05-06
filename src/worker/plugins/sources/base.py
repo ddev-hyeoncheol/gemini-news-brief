@@ -12,7 +12,7 @@ from typing import Any, ClassVar
 from src.models.entities.news import BronzeNewsModel
 from src.models.schemas.ingest import IngestRequest
 
-_USER_AGENT = "Mozilla/5.0 (compatible; GeminiNewsBrief/1.0; +https://github.com/ddev-hyeoncheol/gemini-news-brief)"
+_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 
 
 class SourceBase(ABC):
