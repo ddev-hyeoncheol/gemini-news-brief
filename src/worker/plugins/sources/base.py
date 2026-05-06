@@ -1,5 +1,6 @@
 import asyncio
 import hashlib
+import random
 
 import feedparser
 import httpx
@@ -63,35 +64,48 @@ class SourceBase(ABC):
         Return a dict with status_code, content, author, thumbnail_url, and error_message.
         Limit concurrent requests across all sources using the shared semaphore.
         """
-        async with self._semaphore:
-            status_code, html, error_message = await self._fetch_html(url)
+        max_retries = 2
+        result: dict[str, Any] = {}
 
-            # Define the default result structure.
-            result = {
-                "content": None,
-                "author": None,
-                "thumbnail_url": None,
-                "status_code": status_code,
-                "error_message": error_message,
-            }
+        for attempt in range(max_retries + 1):
+            async with self._semaphore:
+                # Add a random delay (jitter) between 0.1 and 0.5 seconds to prevent rate limiting.
+                await asyncio.sleep(random.uniform(0.1, 0.5))
+                status_code, html, error_message = await self._fetch_html(url)
 
-            # Attempt to parse only if the response is successful (200 OK) and HTML is present.
-            if status_code == 200 and html:
-                try:
-                    # Pass the downloaded HTML to newspaper3k parser.
-                    parsed = await asyncio.to_thread(
-                        self._parse_article_html, url, html
-                    )
-                    result.update(
-                        {
-                            "content": parsed.get("content"),
-                            "author": parsed.get("author"),
-                            "thumbnail_url": parsed.get("thumbnail_url"),
-                        }
-                    )
-                # Parsing failed but HTTP request was successful.
-                except Exception as e:
-                    result["error_message"] = f"Parsing failed: {str(e)}"
+                # Define the default result structure.
+                result = {
+                    "content": None,
+                    "author": None,
+                    "thumbnail_url": None,
+                    "status_code": status_code,
+                    "error_message": error_message,
+                }
+
+                # Attempt to parse only if the response is successful (200 OK) and HTML is present.
+                if status_code == 200 and html:
+                    try:
+                        # Pass the downloaded HTML to newspaper3k parser.
+                        parsed = await asyncio.to_thread(
+                            self._parse_article_html, url, html
+                        )
+                        result.update(
+                            {
+                                "content": parsed.get("content"),
+                                "author": parsed.get("author"),
+                                "thumbnail_url": parsed.get("thumbnail_url"),
+                            }
+                        )
+                    # Parsing failed but HTTP request was successful.
+                    except Exception as e:
+                        result["error_message"] = (
+                            f"Parsing failed: {type(e).__name__} - {str(e)}"
+                        )
+
+            # Check if we should retry (outside the semaphore lock).
+            if status_code in (0, 500, 502, 503, 504) and attempt < max_retries:
+                await asyncio.sleep(5.0)
+                continue
 
             return result
 
@@ -118,9 +132,9 @@ class SourceBase(ABC):
                     timeout=10.0,
                 )
                 return response.status_code, response.text, None
-        except httpx.RequestError as e:
-            # Network error before receiving an HTTP response (e.g., timeout, DNS).
-            return 0, None, str(e)
+        except Exception as e:
+            # Network error or unexpected exception before receiving an HTTP response.
+            return 0, None, f"Network error: {type(e).__name__} - {str(e)}"
 
     def _parse_article_html(self, url: str, html: str) -> dict[str, str | None]:
         """Extract text and metadata from raw HTML synchronously using newspaper3k."""
