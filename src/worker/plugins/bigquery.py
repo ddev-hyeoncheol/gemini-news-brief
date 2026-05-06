@@ -27,11 +27,11 @@ class BigQueryPlugin:
     ) -> None:
         """Initialize the BigQuery plugin with client and table config."""
         self._semaphore = semaphore
-        self.client = client
+        self._client = client
 
     def _run_query_sync(self, query: str, job_config: bigquery.QueryJobConfig) -> Any:
         """Execute a BigQuery job synchronously (to be wrapped in to_thread)."""
-        query_job = self.client.query(query, job_config=job_config)
+        query_job = self._client.query(query, job_config=job_config)
         return query_job.result()
 
     async def lookup(
@@ -48,7 +48,7 @@ class BigQueryPlugin:
                     completed_at=datetime.now(tz=timezone.utc),
                 )
 
-            if not self.client:
+            if not self._client:
                 logger.info(
                     "[%s] MOCK Lookup: Returning %d items as targets.",
                     source,
@@ -65,9 +65,10 @@ class BigQueryPlugin:
 
             news_ids = [item.news_id for item in items]
             query = f"""
-                SELECT news_id, updated_at
+                SELECT news_id, MAX(updated_at) AS updated_at
                 FROM `{self._TABLE_ID}`
                 WHERE news_id IN UNNEST(@news_ids)
+                GROUP BY news_id
             """
             job_config = bigquery.QueryJobConfig(
                 query_parameters=[
@@ -123,7 +124,7 @@ class BigQueryPlugin:
             )
 
     async def load(self, source: str, items: list[BronzeNewsModel]) -> IngestLoadResult:
-        """Upsert fully enriched items into BigQuery using a MERGE statement."""
+        """Append fully enriched items into BigQuery using an INSERT statement."""
         started_at = datetime.now(tz=timezone.utc)
         try:
             if not items:
@@ -134,7 +135,7 @@ class BigQueryPlugin:
                     completed_at=datetime.now(tz=timezone.utc),
                 )
 
-            if not self.client:
+            if not self._client:
                 logger.info(
                     "[%s] MOCK Load: Successfully bypassed loading %d items.",
                     source,
@@ -153,34 +154,26 @@ class BigQueryPlugin:
             payload_str = json.dumps([item.model_dump(mode="json") for item in items])
 
             query = f"""
-                MERGE `{self._TABLE_ID}` T
-                USING (
-                    SELECT
-                        JSON_VALUE(item, '$.news_id') AS news_id,
-                        JSON_VALUE(item, '$.source') AS source,
-                        JSON_VALUE(item, '$.title') AS title,
-                        JSON_VALUE(item, '$.url') AS url,
-                        JSON_VALUE(item, '$.content') AS content,
-                        JSON_VALUE(item, '$.author') AS author,
-                        JSON_VALUE(item, '$.category') AS category,
-                        JSON_VALUE(item, '$.image_url') AS image_url,
-                        JSON_VALUE(item, '$.thumbnail_url') AS thumbnail_url,
-                        CAST(JSON_VALUE(item, '$.published_at') AS TIMESTAMP) AS published_at,
-                        CAST(JSON_VALUE(item, '$.updated_at') AS TIMESTAMP) AS updated_at,
-                        CAST(JSON_VALUE(item, '$.executed_at') AS TIMESTAMP) AS executed_at,
-                        PARSE_JSON(JSON_EXTRACT(item, '$.metadata')) AS metadata
-                    FROM UNNEST(JSON_EXTRACT_ARRAY(@payload, '$')) AS item
-                ) S
-                ON T.news_id = S.news_id
-                WHEN MATCHED THEN
-                    UPDATE SET
-                        title = S.title, url = S.url, content = S.content,
-                        author = S.author, category = S.category, image_url = S.image_url,
-                        thumbnail_url = S.thumbnail_url, published_at = S.published_at,
-                        updated_at = S.updated_at, executed_at = S.executed_at, metadata = S.metadata
-                WHEN NOT MATCHED THEN
-                    INSERT (news_id, source, title, url, content, author, category, image_url, thumbnail_url, published_at, updated_at, executed_at, metadata)
-                    VALUES (S.news_id, S.source, S.title, S.url, S.content, S.author, S.category, S.image_url, S.thumbnail_url, S.published_at, S.updated_at, S.executed_at, S.metadata)
+                INSERT INTO `{self._TABLE_ID}` (
+                    news_id, source, title, url, content, author, category, image_url, thumbnail_url, published_at, updated_at, executed_at, status_code, metadata
+                )
+                SELECT
+                    JSON_VALUE(item, '$.news_id'),
+                    JSON_VALUE(item, '$.source'),
+                    JSON_VALUE(item, '$.title'),
+                    JSON_VALUE(item, '$.url'),
+                    JSON_VALUE(item, '$.content'),
+                    JSON_VALUE(item, '$.author'),
+                    JSON_VALUE(item, '$.category'),
+                    JSON_VALUE(item, '$.image_url'),
+                    JSON_VALUE(item, '$.thumbnail_url'),
+                    CAST(JSON_VALUE(item, '$.published_at') AS TIMESTAMP),
+                    CAST(JSON_VALUE(item, '$.updated_at') AS TIMESTAMP),
+                    CAST(JSON_VALUE(item, '$.executed_at') AS TIMESTAMP),
+                    CAST(JSON_VALUE(item, '$.status_code') AS INT64),
+                    PARSE_JSON(JSON_EXTRACT(item, '$.metadata'))
+                FROM
+                    UNNEST(JSON_EXTRACT_ARRAY(@payload, '$')) AS item
             """
 
             job_config = bigquery.QueryJobConfig(
@@ -193,7 +186,7 @@ class BigQueryPlugin:
                 await asyncio.to_thread(self._run_query_sync, query, job_config)
 
             logger.info(
-                "[%s] Load completed: %d items successfully upserted to BigQuery.",
+                "[%s] Load completed: %d items successfully appended to BigQuery.",
                 source,
                 len(items),
             )
