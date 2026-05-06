@@ -94,6 +94,12 @@ SCHEMA = [
         description="Loaded at",
     ),
     bigquery.SchemaField(
+        name="status_code",
+        field_type="INTEGER",
+        mode="NULLABLE",
+        description="HTTP status code",
+    ),
+    bigquery.SchemaField(
         name="metadata",
         field_type="JSON",
         mode="NULLABLE",

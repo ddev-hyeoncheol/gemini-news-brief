@@ -22,6 +22,7 @@ class BronzeNewsModel(BaseModel):
     executed_at: AwareDatetime = Field(description="Executed at")
     # 'loaded_at' is excluded here to trigger BigQuery's server-side CURRENT_TIMESTAMP() default.
     # Do not add to prevent null overrides.
+    status_code: int | None = Field(default=None, description="HTTP status code")
     metadata: dict[str, Any] | None = Field(
         default=None, description="Additional metadata"
     )
