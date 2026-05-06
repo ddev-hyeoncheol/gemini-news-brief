@@ -78,6 +78,10 @@ def configure_uvicorn_loggers() -> None:
         uvicorn_logger.handlers.clear()
         uvicorn_logger.propagate = True
 
+    # Suppress verbose httpx/httpcore INFO logs.
+    logging.getLogger("httpx").setLevel(logging.WARNING)
+    logging.getLogger("httpcore").setLevel(logging.WARNING)
+
 
 def get_logger(name: str) -> logging.Logger:
     """

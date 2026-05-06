@@ -74,37 +74,64 @@ class CollectPlugin:
             failed_count = 0
 
             for item, enriched in zip(items, enrichments):
+                new_metadata = dict(item.metadata) if item.metadata else {}
+
                 if isinstance(enriched, Exception):
                     logger.error("Failed to enrich url=%s: %s", item.url, enriched)
+                    content = author = thumbnail_url = None
+                    status_code = 500
+                    error_message = f"Pipeline crash: {str(enriched)}"
+                else:
+                    content = enriched.get("content")
+                    author = enriched.get("author")
+                    thumbnail_url = enriched.get("thumbnail_url")
+                    status_code = enriched.get("status_code")
+                    error_message = enriched.get("error_message")
+
+                    # Consider as failed if status is not 200 or content is missing.
+                    if status_code != 200 or not content:
+                        logger.warning(
+                            "Enrichment missed for url=%s (status: %s, error: %s)",
+                            item.url,
+                            status_code,
+                            error_message,
+                        )
+
+                if error_message:
+                    new_metadata["error_message"] = error_message
+
+                if status_code != 200 or not content:
                     failed_count += 1
-                    continue
 
                 enriched_item = item.model_copy(
                     update={
-                        "content": enriched.get("content"),
-                        "author": enriched.get("author"),
-                        "thumbnail_url": enriched.get("thumbnail_url"),
+                        "content": content,
+                        "author": author,
+                        "thumbnail_url": thumbnail_url,
+                        "status_code": status_code,
+                        "metadata": new_metadata,
                     }
                 )
                 enriched_items.append(enriched_item)
 
-            status = "success"
-            if failed_count == len(items):
-                status = "failed"
-            elif failed_count > 0:
-                status = "partial"
+            # Pipeline continuity: Even if all items failed to parse (e.g., 403 block),
+            # we captured the errors successfully. Return "partial" to ensure they are loaded to DB.
+            status = "success" if failed_count == 0 else "partial"
+
+            # Metric tracking: Only count items that actually successfully extracted content.
+            succeeded_count = len(items) - failed_count
 
             logger.info(
                 "[%s] Enrichment completed: %d succeeded, %d failed.",
                 self.source.source,
-                len(enriched_items),
+                succeeded_count,
                 failed_count,
             )
 
             return IngestEnrichResult(
                 source=self.source.source,
                 status=status,
-                item_count=len(enriched_items),
+                item_count=succeeded_count,  # Accurate funnel metric for 'enriched_count'.
                 items=enriched_items,
                 started_at=started_at,
                 completed_at=datetime.now(tz=timezone.utc),

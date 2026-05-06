@@ -1,6 +1,8 @@
 import asyncio
 import hashlib
+
 import feedparser
+import httpx
 import newspaper
 
 from abc import ABC, abstractmethod
@@ -9,7 +11,6 @@ from typing import Any, ClassVar
 
 from src.models.entities.news import BronzeNewsModel
 from src.models.schemas.ingest import IngestRequest
-
 
 _USER_AGENT = "Mozilla/5.0 (compatible; GeminiNewsBrief/1.0; +https://github.com/ddev-hyeoncheol/gemini-news-brief)"
 
@@ -34,8 +35,6 @@ class SourceBase(ABC):
         self._semaphore = semaphore
         self._user_agent = _USER_AGENT
         self._newspaper_config = newspaper.Config()
-        self._newspaper_config.browser_user_agent = self._user_agent
-        self._newspaper_config.request_timeout = 10
 
     def __init_subclass__(cls, **kwargs: Any) -> None:
         super().__init_subclass__(**kwargs)
@@ -55,16 +54,46 @@ class SourceBase(ABC):
         """Fetch raw RSS feed and map to BronzeNewsModel entities WITHOUT enrichment (content is None)."""
         ...
 
-    async def enrich(self, url: str) -> dict[str, str | None]:
+    async def enrich(self, url: str) -> dict[str, Any]:
         """
-        Fetch and parse full article content using newspaper3k.
+        Fetch and parse full article content.
 
-        Returns a dict with content, author, and thumbnail_url.
-        Runs in a thread pool to avoid blocking the event loop.
-        Concurrent requests across all sources are limited by the shared semaphore.
+        Use httpx for async I/O to get status_code and HTML,
+        then use newspaper3k for CPU-bound text extraction.
+        Return a dict with status_code, content, author, thumbnail_url, and error_message.
+        Limit concurrent requests across all sources using the shared semaphore.
         """
         async with self._semaphore:
-            return await asyncio.to_thread(self._parse_article, url)
+            status_code, html, error_message = await self._fetch_html(url)
+
+            # Define the default result structure.
+            result = {
+                "content": None,
+                "author": None,
+                "thumbnail_url": None,
+                "status_code": status_code,
+                "error_message": error_message,
+            }
+
+            # Attempt to parse only if the response is successful (200 OK) and HTML is present.
+            if status_code == 200 and html:
+                try:
+                    # Pass the downloaded HTML to newspaper3k parser.
+                    parsed = await asyncio.to_thread(
+                        self._parse_article_html, url, html
+                    )
+                    result.update(
+                        {
+                            "content": parsed.get("content"),
+                            "author": parsed.get("author"),
+                            "thumbnail_url": parsed.get("thumbnail_url"),
+                        }
+                    )
+                # Parsing failed but HTTP request was successful.
+                except Exception as e:
+                    result["error_message"] = f"Parsing failed: {str(e)}"
+
+            return result
 
     async def _fetch_feed(self) -> feedparser.FeedParserDict:
         """Helper method to fetch raw RSS feed using feedparser."""
@@ -79,10 +108,24 @@ class SourceBase(ABC):
             return None
         return media_content[0].get("url")
 
-    def _parse_article(self, url: str) -> dict[str, str | None]:
-        """Download and parse a single article synchronously."""
+    async def _fetch_html(self, url: str) -> tuple[int, str | None, str | None]:
+        """Fetch HTML content asynchronously using httpx."""
+        try:
+            async with httpx.AsyncClient(follow_redirects=True) as client:
+                response = await client.get(
+                    url,
+                    headers={"User-Agent": self._user_agent},
+                    timeout=10.0,
+                )
+                return response.status_code, response.text, None
+        except httpx.RequestError as e:
+            # Network error before receiving an HTTP response (e.g., timeout, DNS).
+            return 0, None, str(e)
+
+    def _parse_article_html(self, url: str, html: str) -> dict[str, str | None]:
+        """Extract text and metadata from raw HTML synchronously using newspaper3k."""
         article = newspaper.Article(url, config=self._newspaper_config)
-        article.download()
+        article.set_html(html)
         article.parse()
 
         if not article.text:
