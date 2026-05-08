@@ -29,14 +29,15 @@ class YahooFinanceSource(SourceBase):
             original_source = entry.get("source", {})
             results.append(
                 BronzeNewsModel(
+                    executed_at=executed_at,
                     news_id=self.make_news_id(entry.get("link", "")),
+                    category="finance",
                     source=self.source,
+                    published_at=published_at,
                     title=entry.get("title", ""),
                     url=entry.get("link", ""),
                     image_url=self._parse_image_url(entry),
-                    published_at=published_at,
                     updated_at=published_at,
-                    executed_at=executed_at,
                     metadata={
                         "original_source": original_source.get("title"),
                         "original_source_url": original_source.get("href"),
