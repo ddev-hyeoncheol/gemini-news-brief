@@ -13,16 +13,26 @@ resource "google_bigquery_table" "table-bronze-news" {
 
   deletion_protection      = true
 
-  clustering               = ["source", "category", "published_at"]
+  clustering               = ["category", "source", "published_at"]
   time_partitioning {
     field         = "executed_at"
     type          = "DAY"
   }
 
   schema = jsonencode([{
+    description = "Executed at"
+    mode        = "REQUIRED"
+    name        = "executed_at"
+    type        = "TIMESTAMP"
+    }, {
     description = "News ID (Hash)"
     mode        = "REQUIRED"
     name        = "news_id"
+    type        = "STRING"
+    }, {
+    description = "Category"
+    mode        = "REQUIRED"
+    name        = "category"
     type        = "STRING"
     }, {
     description = "Source"
@@ -30,9 +40,19 @@ resource "google_bigquery_table" "table-bronze-news" {
     name        = "source"
     type        = "STRING"
     }, {
+    description = "Published at"
+    mode        = "REQUIRED"
+    name        = "published_at"
+    type        = "TIMESTAMP"
+    }, {
     description = "Title"
     mode        = "REQUIRED"
     name        = "title"
+    type        = "STRING"
+    }, {
+    description = "Author"
+    mode        = "NULLABLE"
+    name        = "author"
     type        = "STRING"
     }, {
     description = "News URL"
@@ -45,16 +65,6 @@ resource "google_bigquery_table" "table-bronze-news" {
     name        = "content"
     type        = "STRING"
     }, {
-    description = "Author"
-    mode        = "NULLABLE"
-    name        = "author"
-    type        = "STRING"
-    }, {
-    description = "Category"
-    mode        = "NULLABLE"
-    name        = "category"
-    type        = "STRING"
-    }, {
     description = "Image URL"
     mode        = "NULLABLE"
     name        = "image_url"
@@ -65,19 +75,9 @@ resource "google_bigquery_table" "table-bronze-news" {
     name        = "thumbnail_url"
     type        = "STRING"
     }, {
-    description = "Published at"
-    mode        = "REQUIRED"
-    name        = "published_at"
-    type        = "TIMESTAMP"
-    }, {
     description = "Updated at"
     mode        = "NULLABLE"
     name        = "updated_at"
-    type        = "TIMESTAMP"
-    }, {
-    description = "Executed at"
-    mode        = "REQUIRED"
-    name        = "executed_at"
     type        = "TIMESTAMP"
     }, {
     # Database-managed timestamp. Do not provide a value in the ingestion layer.
@@ -88,15 +88,15 @@ resource "google_bigquery_table" "table-bronze-news" {
     name                   = "loaded_at"
     type                   = "TIMESTAMP"
     }, {
-    description = "HTTP status code"
-    mode        = "NULLABLE"
-    name        = "status_code"
-    type        = "INTEGER"
-    }, {
     description = "Additional metadata"
     mode        = "NULLABLE"
     name        = "metadata"
     type        = "JSON"
+    }, {
+    description = "HTTP status code"
+    mode        = "NULLABLE"
+    name        = "status_code"
+    type        = "INTEGER"
   }])
 }
 

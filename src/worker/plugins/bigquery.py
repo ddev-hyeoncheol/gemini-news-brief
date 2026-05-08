@@ -155,23 +155,23 @@ class BigQueryPlugin:
 
             query = f"""
                 INSERT INTO `{self._TABLE_ID}` (
-                    news_id, source, title, url, content, author, category, image_url, thumbnail_url, published_at, updated_at, executed_at, status_code, metadata
+                    executed_at, news_id, category, source, published_at, title, author, url, content, image_url, thumbnail_url, updated_at, metadata, status_code
                 )
                 SELECT
+                    CAST(JSON_VALUE(item, '$.executed_at') AS TIMESTAMP),
                     JSON_VALUE(item, '$.news_id'),
+                    JSON_VALUE(item, '$.category'),
                     JSON_VALUE(item, '$.source'),
+                    CAST(JSON_VALUE(item, '$.published_at') AS TIMESTAMP),
                     JSON_VALUE(item, '$.title'),
+                    JSON_VALUE(item, '$.author'),
                     JSON_VALUE(item, '$.url'),
                     JSON_VALUE(item, '$.content'),
-                    JSON_VALUE(item, '$.author'),
-                    JSON_VALUE(item, '$.category'),
                     JSON_VALUE(item, '$.image_url'),
                     JSON_VALUE(item, '$.thumbnail_url'),
-                    CAST(JSON_VALUE(item, '$.published_at') AS TIMESTAMP),
                     CAST(JSON_VALUE(item, '$.updated_at') AS TIMESTAMP),
-                    CAST(JSON_VALUE(item, '$.executed_at') AS TIMESTAMP),
-                    CAST(JSON_VALUE(item, '$.status_code') AS INT64),
-                    PARSE_JSON(JSON_EXTRACT(item, '$.metadata'))
+                    PARSE_JSON(JSON_EXTRACT(item, '$.metadata')),
+                    CAST(JSON_VALUE(item, '$.status_code') AS INT64)
                 FROM
                     UNNEST(JSON_EXTRACT_ARRAY(@payload, '$')) AS item
             """
