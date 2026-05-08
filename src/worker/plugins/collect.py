@@ -78,12 +78,12 @@ class CollectPlugin:
 
                 if isinstance(enriched, Exception):
                     logger.error("Failed to enrich url=%s: %s", item.url, enriched)
-                    content = author = thumbnail_url = None
+                    author = content = thumbnail_url = None
                     status_code = 500
                     error_message = f"Pipeline crash: {str(enriched)}"
                 else:
-                    content = enriched.get("content")
                     author = enriched.get("author")
+                    content = enriched.get("content")
                     thumbnail_url = enriched.get("thumbnail_url")
                     status_code = enriched.get("status_code")
                     error_message = enriched.get("error_message")
@@ -105,11 +105,11 @@ class CollectPlugin:
 
                 enriched_item = item.model_copy(
                     update={
-                        "content": content,
                         "author": author,
+                        "content": content,
                         "thumbnail_url": thumbnail_url,
-                        "status_code": status_code,
                         "metadata": new_metadata,
+                        "status_code": status_code,
                     }
                 )
                 enriched_items.append(enriched_item)

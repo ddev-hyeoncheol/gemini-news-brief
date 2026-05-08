@@ -61,7 +61,7 @@ class SourceBase(ABC):
 
         Use httpx for async I/O to get status_code and HTML,
         then use newspaper3k for CPU-bound text extraction.
-        Return a dict with status_code, content, author, thumbnail_url, and error_message.
+        Return a dict with author, content, thumbnail_url, status_code, and error_message.
         Limit concurrent requests across all sources using the shared semaphore.
         """
         max_retries = 2
@@ -75,8 +75,8 @@ class SourceBase(ABC):
 
                 # Define the default result structure.
                 result = {
-                    "content": None,
                     "author": None,
+                    "content": None,
                     "thumbnail_url": None,
                     "status_code": status_code,
                     "error_message": error_message,
@@ -91,8 +91,8 @@ class SourceBase(ABC):
                         )
                         result.update(
                             {
-                                "content": parsed.get("content"),
                                 "author": parsed.get("author"),
+                                "content": parsed.get("content"),
                                 "thumbnail_url": parsed.get("thumbnail_url"),
                             }
                         )
@@ -146,8 +146,8 @@ class SourceBase(ABC):
             raise ValueError("Failed to extract article content (empty text).")
 
         return {
-            "content": article.text,
             "author": ", ".join(article.authors) if article.authors else None,
+            "content": article.text,
             "thumbnail_url": article.top_image or None,
         }
 
