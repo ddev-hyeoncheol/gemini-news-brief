@@ -146,7 +146,7 @@ class SourceBase(ABC):
             raise ValueError("Failed to extract article content (empty text).")
 
         return {
-            "author": ", ".join(article.authors) if article.authors else None,
+            "author": "|".join(article.authors) if article.authors else None,
             "content": article.text,
             "thumbnail_url": article.top_image or None,
         }
