@@ -5,10 +5,16 @@ from pydantic import BaseModel, Field, AwareDatetime
 from src.models.entities.news import BronzeNewsModel
 
 
+def _floor_to_10min(dt: datetime) -> datetime:
+    """Floor a datetime to the nearest 10-minute boundary."""
+    floored = dt.replace(second=0, microsecond=0, minute=(dt.minute // 10) * 10)
+    return floored
+
+
 class IngestRequest(BaseModel):
     executed_at: AwareDatetime = Field(
-        default_factory=lambda: datetime.now(tz=timezone.utc),
-        description="Execution time (UTC). Defaults to current time if not provided.",
+        default_factory=lambda: _floor_to_10min(datetime.now(tz=timezone.utc)),
+        description="Execution time (UTC), floored to 10-minute intervals. Defaults to current time if not provided.",
     )
 
 
