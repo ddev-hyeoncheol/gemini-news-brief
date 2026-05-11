@@ -3,7 +3,7 @@ import asyncio
 from datetime import datetime, timezone
 
 from src.core.logger import get_logger
-from src.models.entities.news import BronzeNewsModel
+from src.models.entities.bronze_news import BronzeNewsModel
 from src.models.schemas.ingest import (
     IngestRequest,
     IngestFetchResult,

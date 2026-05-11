@@ -10,7 +10,7 @@ from abc import ABC, abstractmethod
 from datetime import datetime, timezone
 from typing import Any, ClassVar
 
-from src.models.entities.news import BronzeNewsModel
+from src.models.entities.bronze_news import BronzeNewsModel
 from src.models.schemas.ingest import IngestRequest
 
 _USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"

@@ -1,7 +1,7 @@
 from typing import ClassVar
 
 from src.core.logger import get_logger
-from src.models.entities.news import BronzeNewsModel
+from src.models.entities.bronze_news import BronzeNewsModel
 from src.models.schemas.ingest import IngestRequest
 from src.worker.plugins.sources.base import SourceBase
 

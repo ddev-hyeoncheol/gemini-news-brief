@@ -6,7 +6,7 @@ from google.cloud import bigquery
 from typing import Any
 
 from src.core.logger import get_logger
-from src.models.entities.news import BronzeNewsModel
+from src.models.entities.bronze_news import BronzeNewsModel
 from src.models.schemas.ingest import IngestLookupResult, IngestLoadResult
 
 logger = get_logger(__name__)

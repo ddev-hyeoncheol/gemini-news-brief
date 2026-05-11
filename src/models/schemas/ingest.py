@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from typing import Literal
 from pydantic import BaseModel, Field, AwareDatetime
 
-from src.models.entities.news import BronzeNewsModel
+from src.models.entities.bronze_news import BronzeNewsModel
 
 
 def _floor_to_10min(dt: datetime) -> datetime:
