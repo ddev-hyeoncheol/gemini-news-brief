@@ -3,6 +3,11 @@ from pydantic import BaseModel, Field, ConfigDict, AwareDatetime
 
 
 class BronzeNewsModel(BaseModel):
+    """
+    Entity model representing the Bronze tier news data.
+    Contains raw news articles collected directly from external sources.
+    """
+
     model_config = ConfigDict(
         str_strip_whitespace=True,
         frozen=True,
