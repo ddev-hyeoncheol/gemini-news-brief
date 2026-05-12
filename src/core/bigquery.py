@@ -14,16 +14,12 @@ def get_bigquery_client() -> bigquery.Client | None:
 
     if not is_gcp and not has_explicit_creds:
         logger.info(
-            "Local environment detected without GOOGLE_APPLICATION_CREDENTIALS. "
-            "Running BigQuery operations in MOCK mode."
+            "BigQuery client not initialized | reason: no GCP credentials found"
         )
         return None
 
     try:
         return bigquery.Client()
     except Exception as e:
-        logger.warning(
-            "Failed to initialize BigQuery client: %s. Running operations in MOCK mode.",
-            str(e),
-        )
+        logger.warning("BigQuery client initialization failed | error: %s", str(e))
         return None

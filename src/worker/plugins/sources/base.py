@@ -99,7 +99,7 @@ class SourceBase(ABC):
                     # Parsing failed but HTTP request was successful.
                     except Exception as e:
                         result["error_message"] = (
-                            f"Parsing failed: {type(e).__name__} - {str(e)}"
+                            f"Parsing failed::{type(e).__name__}::{e}"
                         )
 
             # Check if we should retry (outside the semaphore lock).
@@ -110,7 +110,7 @@ class SourceBase(ABC):
             return result
 
     async def _fetch_feed(self) -> feedparser.FeedParserDict:
-        """Helper method to fetch raw RSS feed using feedparser."""
+        """Fetch raw RSS feed using feedparser."""
         return await asyncio.to_thread(
             feedparser.parse, self.RSS_URL, agent=self._user_agent
         )
@@ -134,7 +134,7 @@ class SourceBase(ABC):
                 return response.status_code, response.text, None
         except Exception as e:
             # Network error or unexpected exception before receiving an HTTP response.
-            return 0, None, f"Network error: {type(e).__name__} - {str(e)}"
+            return 0, None, f"Network error::{type(e).__name__}::{e}"
 
     def _parse_article_html(self, url: str, html: str) -> dict[str, str | None]:
         """Extract text and metadata from raw HTML synchronously using newspaper3k."""

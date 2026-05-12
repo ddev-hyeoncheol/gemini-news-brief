@@ -37,7 +37,7 @@ async def ingest(
     Execute collection and loading for all registered sources in parallel.
     Adjust the HTTP response status code based on the overall pipeline success.
     """
-    logger.info("Ingest triggered | executed_at=%s", request.executed_at.isoformat())
+    logger.info("Ingest triggered | executed_at: %s", request.executed_at.isoformat())
 
     result = await service.run(request)
 
@@ -47,7 +47,7 @@ async def ingest(
         response.status_code = status.HTTP_207_MULTI_STATUS
 
     logger.info(
-        "Ingest completed | status=%s fetched=%d lookup=%d enriched=%d loaded=%d",
+        "Ingest completed | status: %s, fetched: %d, lookup: %d, enriched: %d, loaded: %d",
         result.status,
         result.fetched_count,
         result.lookup_count,
