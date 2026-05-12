@@ -34,7 +34,7 @@ class BronzeNewsModel(BaseModel):
     image_url: str | None = Field(default=None, description="Image URL")
     thumbnail_url: str | None = Field(default=None, description="Thumbnail URL")
     updated_at: AwareDatetime | None = Field(default=None, description="Updated at")
-    loaded_at: AwareDatetime | None = Field(default=None, description="Loaded at")
+    # 'loaded_at' is excluded from the model. StoreBase.execute_load_json injects it at load time.
     metadata: dict[str, Any] | None = Field(
         default=None, description="Additional metadata"
     )

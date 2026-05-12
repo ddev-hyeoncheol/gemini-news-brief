@@ -37,18 +37,14 @@ class StoreBase:
     ) -> Any:
         """Execute a BigQuery JSON load job asynchronously with semaphore concurrency control."""
 
-        # BigQuery Load API ignores defaultValueExpression (e.g. CURRENT_TIMESTAMP())
-        # when the field is absent or explicitly set to null in the payload.
-        # Inject 'loaded_at' here so it is applied consistently across all tables.
-        load_time = datetime.now(tz=timezone.utc).isoformat()
-        enriched_rows = [
-            {**row, "loaded_at": load_time} if not row.get("loaded_at") else row
-            for row in json_rows
-        ]
+        # BigQuery Load API does not evaluate defaultValueExpression at load time.
+        # Overwrite 'loaded_at' with the current UTC timestamp for every row.
+        loaded_at = datetime.now(tz=timezone.utc).isoformat()
+        json_rows = [{**row, "loaded_at": loaded_at} for row in json_rows]
 
         async with self._semaphore:
             return await asyncio.to_thread(
-                self._run_load_json_sync, enriched_rows, destination, job_config
+                self._run_load_json_sync, json_rows, destination, job_config
             )
 
     async def execute_delete_batch(self, table_id: str, executed_at: datetime) -> None:
