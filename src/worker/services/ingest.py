@@ -10,7 +10,8 @@ from src.models.schemas.ingest import (
     IngestResponse,
 )
 from src.worker.plugins.collect import CollectPlugin
-from src.worker.plugins.bigquery import BigQueryPlugin
+from src.worker.plugins.bigquery import IngestDbPlugin
+from src.worker.plugins.stores.bronze import BronzeStore
 from src.worker.plugins.sources.yahoo_finance import YahooFinanceSource
 
 logger = get_logger(__name__)
@@ -20,7 +21,7 @@ class IngestService:
     """Orchestrate parallel news collection and loading across all registered sources."""
 
     def __init__(
-        self, source_plugins: list[CollectPlugin], db_plugin: BigQueryPlugin
+        self, source_plugins: list[CollectPlugin], db_plugin: IngestDbPlugin
     ) -> None:
         """Initialize the service with a list of source plugins and a database plugin."""
         self.source_plugins = source_plugins
@@ -133,8 +134,10 @@ def get_ingest_service(request: Request) -> IngestService:
                 source=YahooFinanceSource(semaphore=request.app.state.source_semaphore)
             ),
         ],
-        db_plugin=BigQueryPlugin(
-            semaphore=request.app.state.db_semaphore,
-            client=request.app.state.bigquery_client,
+        db_plugin=IngestDbPlugin(
+            store=BronzeStore(
+                client=request.app.state.bigquery_client,
+                semaphore=request.app.state.db_semaphore,
+            )
         ),
     )

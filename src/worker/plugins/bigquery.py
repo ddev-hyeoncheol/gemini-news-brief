@@ -1,210 +1,49 @@
-import asyncio
-import json
-
-from datetime import datetime, timezone
-from google.cloud import bigquery
 from typing import Any
 
 from src.core.logger import get_logger
+from src.core.decorators import with_ingest_error_handling
 from src.models.entities.bronze_news import BronzeNewsModel
 from src.models.schemas.ingest import IngestLookupResult, IngestLoadResult
+from src.worker.plugins.stores.bronze import BronzeStore
 
 logger = get_logger(__name__)
 
 
-class BigQueryPlugin:
+class IngestDbPlugin:
     """
-    Plugin that handles database interactions with BigQuery (lookup and load).
-
-    Grouped by domain: Handles all interactions with the data warehouse,
-    analogous to how CollectPlugin handles external news websites.
+    Plugin that orchestrates database interactions for the ingestion pipeline.
+    Wraps the domain-specific BronzeStore to handle errors and format DTO results.
     """
 
-    _TABLE_ID = "bronze.news"
+    def __init__(self, store: BronzeStore) -> None:
+        """Initialize the DB plugin with an injected BronzeStore."""
+        self.store = store
 
-    def __init__(
-        self, semaphore: asyncio.Semaphore, client: bigquery.Client | None
-    ) -> None:
-        """Initialize the BigQuery plugin with client and table config."""
-        self._semaphore = semaphore
-        self._client = client
+    @with_ingest_error_handling(IngestLookupResult)
+    async def lookup(self, source: str, items: list[BronzeNewsModel]) -> dict[str, Any]:
+        """Filter out existing items using the injected store."""
+        if not items:
+            logger.info("[%s] Lookup skipped | reason: no items", source)
+            return {"items": []}
 
-    def _run_query_sync(self, query: str, job_config: bigquery.QueryJobConfig) -> Any:
-        """Execute a BigQuery job synchronously (to be wrapped in to_thread)."""
-        query_job = self._client.query(query, job_config=job_config)
-        return query_job.result()
+        target_items = await self.store.news_lookup(items)
 
-    async def lookup(
-        self, source: str, items: list[BronzeNewsModel]
-    ) -> IngestLookupResult:
-        """Query BigQuery to filter out existing items and return only new or updated targets."""
-        started_at = datetime.now(tz=timezone.utc)
-        try:
-            if not items:
-                return IngestLookupResult(
-                    source=source,
-                    status="success",
-                    started_at=started_at,
-                    completed_at=datetime.now(tz=timezone.utc),
-                )
+        logger.info(
+            "[%s] Lookup completed | targets: %d, total: %d",
+            source,
+            len(target_items),
+            len(items),
+        )
+        return {"items": target_items}
 
-            if not self._client:
-                logger.info(
-                    "[%s] MOCK Lookup: Returning %d items as targets.",
-                    source,
-                    len(items),
-                )
-                return IngestLookupResult(
-                    source=source,
-                    status="success",
-                    item_count=len(items),
-                    items=items,
-                    started_at=started_at,
-                    completed_at=datetime.now(tz=timezone.utc),
-                )
+    @with_ingest_error_handling(IngestLoadResult)
+    async def load(self, source: str, items: list[BronzeNewsModel]) -> dict[str, Any]:
+        """Append fully enriched items into the database using the injected store."""
+        if not items:
+            logger.info("[%s] Load skipped | reason: no items", source)
+            return {"items": []}
 
-            news_ids = [item.news_id for item in items]
-            query = f"""
-                SELECT news_id, MAX(updated_at) AS updated_at
-                FROM `{self._TABLE_ID}`
-                WHERE news_id IN UNNEST(@news_ids)
-                GROUP BY news_id
-            """
-            job_config = bigquery.QueryJobConfig(
-                query_parameters=[
-                    bigquery.ArrayQueryParameter("news_ids", "STRING", news_ids)
-                ]
-            )
+        await self.store.news_load(items)
 
-            async with self._semaphore:
-                results = await asyncio.to_thread(
-                    self._run_query_sync, query, job_config
-                )
-
-            existing_data = {row.news_id: row.updated_at for row in results}
-            target_items = []
-
-            for item in items:
-                existing_updated_at = existing_data.get(item.news_id)
-                if existing_updated_at:
-                    # Ensure existing_updated_at is timezone-aware (UTC).
-                    if existing_updated_at.tzinfo is None:
-                        existing_updated_at = existing_updated_at.replace(
-                            tzinfo=timezone.utc
-                        )
-                    # Skip if the existing record in DB is newer or the same as the feed item.
-                    item_updated_at = item.updated_at or item.published_at
-                    if item_updated_at <= existing_updated_at:
-                        continue
-                target_items.append(item)
-
-            logger.info(
-                "[%s] Lookup completed: %d out of %d items are targets.",
-                source,
-                len(target_items),
-                len(items),
-            )
-
-            return IngestLookupResult(
-                source=source,
-                status="success",
-                item_count=len(target_items),
-                items=target_items,
-                started_at=started_at,
-                completed_at=datetime.now(tz=timezone.utc),
-            )
-        except Exception as e:
-            logger.exception("BigQuery lookup failed for source=%s", source)
-            return IngestLookupResult(
-                source=source,
-                status="failed",
-                started_at=started_at,
-                completed_at=datetime.now(tz=timezone.utc),
-                error_message=str(e),
-            )
-
-    async def load(self, source: str, items: list[BronzeNewsModel]) -> IngestLoadResult:
-        """Append fully enriched items into BigQuery using an INSERT statement."""
-        started_at = datetime.now(tz=timezone.utc)
-        try:
-            if not items:
-                return IngestLoadResult(
-                    source=source,
-                    status="success",
-                    started_at=started_at,
-                    completed_at=datetime.now(tz=timezone.utc),
-                )
-
-            if not self._client:
-                logger.info(
-                    "[%s] MOCK Load: Successfully bypassed loading %d items.",
-                    source,
-                    len(items),
-                )
-                return IngestLoadResult(
-                    source=source,
-                    status="success",
-                    item_count=len(items),
-                    items=items,
-                    started_at=started_at,
-                    completed_at=datetime.now(tz=timezone.utc),
-                )
-
-            # Serialize items to a JSON string payload to pass to BigQuery safely.
-            payload_str = json.dumps([item.model_dump(mode="json") for item in items])
-
-            query = f"""
-                INSERT INTO `{self._TABLE_ID}` (
-                    executed_at, news_id, category, source, published_at, title, author, url, content, image_url, thumbnail_url, updated_at, metadata, status_code
-                )
-                SELECT
-                    CAST(JSON_VALUE(item, '$.executed_at') AS TIMESTAMP),
-                    JSON_VALUE(item, '$.news_id'),
-                    JSON_VALUE(item, '$.category'),
-                    JSON_VALUE(item, '$.source'),
-                    CAST(JSON_VALUE(item, '$.published_at') AS TIMESTAMP),
-                    JSON_VALUE(item, '$.title'),
-                    JSON_VALUE(item, '$.author'),
-                    JSON_VALUE(item, '$.url'),
-                    JSON_VALUE(item, '$.content'),
-                    JSON_VALUE(item, '$.image_url'),
-                    JSON_VALUE(item, '$.thumbnail_url'),
-                    CAST(JSON_VALUE(item, '$.updated_at') AS TIMESTAMP),
-                    PARSE_JSON(JSON_EXTRACT(item, '$.metadata')),
-                    CAST(JSON_VALUE(item, '$.status_code') AS INT64)
-                FROM
-                    UNNEST(JSON_EXTRACT_ARRAY(@payload, '$')) AS item
-            """
-
-            job_config = bigquery.QueryJobConfig(
-                query_parameters=[
-                    bigquery.ScalarQueryParameter("payload", "STRING", payload_str)
-                ]
-            )
-
-            async with self._semaphore:
-                await asyncio.to_thread(self._run_query_sync, query, job_config)
-
-            logger.info(
-                "[%s] Load completed: %d items successfully appended to BigQuery.",
-                source,
-                len(items),
-            )
-
-            return IngestLoadResult(
-                source=source,
-                status="success",
-                item_count=len(items),
-                items=items,
-                started_at=started_at,
-                completed_at=datetime.now(tz=timezone.utc),
-            )
-        except Exception as e:
-            logger.exception("BigQuery load failed for source=%s", source)
-            return IngestLoadResult(
-                source=source,
-                status="failed",
-                started_at=started_at,
-                completed_at=datetime.now(tz=timezone.utc),
-                error_message=str(e),
-            )
+        logger.info("[%s] Load completed | count: %d", source, len(items))
+        return {"items": items}
