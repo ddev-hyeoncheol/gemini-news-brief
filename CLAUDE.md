@@ -63,9 +63,9 @@ AI 코딩 어시스턴트는 코드를 작성/수정할 때 다음의 핵심 설
 
 ## 알려진 동작 특성 (Known Behaviors)
 
-- **`BigQueryPlugin` 자동 Mock 전환**: `src/core/bigquery.py`의 `get_bigquery_client()`는 `K_SERVICE`(Cloud Run 환경변수) 또는 `GOOGLE_APPLICATION_CREDENTIALS`가 없으면 `client=None`을 반환합니다. `BigQueryPlugin`은 `self._client is None`이면 실제 쿼리 없이 Mock 결과를 반환하므로, 로컬 환경에서도 GCP 자격증명 없이 전체 파이프라인 흐름을 테스트할 수 있습니다. 단, `gcloud auth application-default login`으로 설정된 ADC는 감지하지 않으므로 로컬에서 실제 BigQuery에 연결하려면 `GOOGLE_APPLICATION_CREDENTIALS`를 명시해야 합니다.
-- **`_TABLE_ID` 고정값**: `BigQueryPlugin._TABLE_ID`는 `"bronze.news"`로 고정되어 있습니다. `bigquery.Client()`의 기본 프로젝트가 사용되므로, 멀티 프로젝트 환경에서는 클라이언트 초기화 시 `project` 인자를 명시해야 합니다.
-- **`load()` INSERT의 `loaded_at` 처리**: 데이터의 모든 변경 이력을 보존하기 위해(Append-Only) `INSERT` 쿼리를 사용하며, `loaded_at` 필드를 쿼리에 명시하지 않아 BigQuery 스키마의 `CURRENT_TIMESTAMP()` 기본값이 자동 적용되도록 합니다.
+- **`BigQueryPlugin` 자격증명 없이 앱 시작 가능**: `src/core/bigquery.py`의 `get_bigquery_client()`는 GCP 자격증명(`K_SERVICE` 환경의 서비스 계정, 또는 로컬의 `GOOGLE_APPLICATION_CREDENTIALS` / `gcloud auth application-default login`)이 없으면 `None`을 반환합니다. 앱 자체는 정상 시작되지만, 파이프라인 실행 시 DB 단계에서 `RuntimeError`가 발생하여 `status="failed"`로 처리됩니다.
+- **`_BRONZE_NEWS` 고정값**: `BronzeStore._BRONZE_NEWS`는 `"bronze.news"`로 고정되어 있습니다. `bigquery.Client()`의 기본 프로젝트가 사용되므로, 멀티 프로젝트 환경에서는 클라이언트 초기화 시 `project` 인자를 명시해야 합니다.
+- **`news_load()`의 Load Job 방식 및 `loaded_at` 처리**: 데이터의 모든 변경 이력을 보존하기 위해(Append-Only) `load_table_from_json()` Load Job을 사용합니다. JSON 페이로드에 `loaded_at` 필드를 포함하지 않아 BigQuery 스키마의 `CURRENT_TIMESTAMP()` 기본값이 자동 적용되도록 합니다.
 - **단일 컨테이너 이중 서비스**: `Dockerfile`의 CMD는 `src.api.main:app`을 기본으로 가리키나, Cloud Run 배포 시 `cloudbuild.yml`이 `--command`/`--args`로 오버라이드하여 API 서비스와 Worker 서비스를 동일 이미지에서 별도로 실행합니다. 로컬에서 Worker를 실행하려면 `uvicorn src.worker.main:app ...`을 직접 사용합니다.
 - **`enrich()` Append-All 전략**: `CollectPlugin.enrich()`는 HTTP 오류(403 등)나 파싱 실패 항목도 `enriched_items`에 포함시켜 반환합니다. 모든 항목의 `status_code`와 `error_message`를 DB에 기록하는 것이 목적이기 때문입니다. 따라서 정상 흐름에서 `enrich()`는 최대 `"partial"`까지만 반환하며, `"failed"`는 `asyncio.gather` 자체가 크래시하는 예외적인 경우에만 반환됩니다. `enriched_count`는 실제 본문 추출에 성공한 항목 수만 집계하며, `loaded_count`는 이보다 크거나 같을 수 있습니다.
 - **`_parse_article_html` 예외 전파**: `SourceBase._parse_article_html()`은 newspaper3k 오류 또는 빈 본문 시 예외를 상위로 전파합니다. `CollectPlugin.enrich()`의 `asyncio.gather(..., return_exceptions=True)`가 이를 포착하여 해당 항목의 `status_code=500`과 `error_message`를 메타데이터에 기록한 뒤 `enriched_items`에 포함시킵니다.
