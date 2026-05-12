@@ -34,7 +34,7 @@ resource "google_bigquery_table" "table-silver-news" {
     { name = "updated_at",      type = "TIMESTAMP",   mode = "NULLABLE",    description = "Updated at" },
     # Database-managed timestamp. Do not provide a value in the ingestion layer.
     # Generated automatically on write.
-    { name = "loaded_at",       type = "TIMESTAMP",   mode = "REQUIRED",    description = "Loaded at",
+    { name = "loaded_at",       type = "TIMESTAMP",   mode = "NULLABLE",    description = "Loaded at",
       defaultValueExpression = "CURRENT_TIMESTAMP()" },
   ])
 }
@@ -64,7 +64,7 @@ resource "google_bigquery_table" "table-silver-news-augmented" {
     { name = "ai_sentiment",      type = "STRING",      mode = "NULLABLE",    description = "AI-determined sentiment" },
     # Database-managed timestamp. Do not provide a value in the ingestion layer.
     # Generated automatically on write.
-    { name = "loaded_at",         type = "TIMESTAMP",   mode = "REQUIRED",    description = "Loaded at",
+    { name = "loaded_at",         type = "TIMESTAMP",   mode = "NULLABLE",    description = "Loaded at",
       defaultValueExpression = "CURRENT_TIMESTAMP()" },
     { name = "status",            type = "STRING",      mode = "REQUIRED",    description = "Processing status" },
     { name = "error_message",     type = "STRING",      mode = "NULLABLE",    description = "Error message" },

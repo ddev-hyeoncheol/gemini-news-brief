@@ -34,7 +34,7 @@ resource "google_bigquery_table" "table-bronze-news" {
     { name = "updated_at",      type = "TIMESTAMP",   mode = "NULLABLE",    description = "Updated at" },
     # Database-managed timestamp. Do not provide a value in the ingestion layer.
     # Generated automatically on write.
-    { name = "loaded_at",       type = "TIMESTAMP",   mode = "REQUIRED",    description = "Loaded at",
+    { name = "loaded_at",       type = "TIMESTAMP",   mode = "NULLABLE",    description = "Loaded at",
       defaultValueExpression = "CURRENT_TIMESTAMP()" },
     { name = "metadata",        type = "JSON",        mode = "NULLABLE",    description = "Additional metadata" },
     { name = "status_code",     type = "INTEGER",     mode = "NULLABLE",    description = "HTTP status code" },
