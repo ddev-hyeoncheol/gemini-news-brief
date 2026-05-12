@@ -26,7 +26,7 @@ class IngestDbPlugin:
             logger.info("[%s] Lookup skipped | reason: no items", source)
             return {"items": []}
 
-        target_items = await self.store.news_lookup(items)
+        target_items = await self.store.lookup_bronze_news(items)
 
         logger.info(
             "[%s] Lookup completed | targets: %d, total: %d",
@@ -43,7 +43,7 @@ class IngestDbPlugin:
             logger.info("[%s] Load skipped | reason: no items", source)
             return {"items": []}
 
-        await self.store.news_load(items)
+        await self.store.load_bronze_news(items)
 
         logger.info("[%s] Load completed | count: %d", source, len(items))
         return {"items": items}

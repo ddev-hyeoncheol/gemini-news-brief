@@ -1,5 +1,4 @@
 from datetime import timezone
-
 from google.cloud import bigquery
 
 from src.core.logger import get_logger
@@ -17,14 +16,16 @@ class BronzeStore(StoreBase):
 
     _BRONZE_NEWS = "bronze.news"
 
-    _NEWS_LOOKUP_QUERY_TEMPLATE = """
+    _LOOKUP_BRONZE_NEWS_QUERY_TEMPLATE = """
         SELECT news_id, MAX(updated_at) AS updated_at
         FROM `{table_id}`
         WHERE news_id IN UNNEST(@news_ids)
         GROUP BY news_id
     """
 
-    async def news_lookup(self, items: list[BronzeNewsModel]) -> list[BronzeNewsModel]:
+    async def lookup_bronze_news(
+        self, items: list[BronzeNewsModel]
+    ) -> list[BronzeNewsModel]:
         """Query BigQuery to filter out existing news items and return only new or updated targets."""
         if not items:
             return []
@@ -36,7 +37,9 @@ class BronzeStore(StoreBase):
             ]
         )
 
-        query = self._NEWS_LOOKUP_QUERY_TEMPLATE.format(table_id=self._BRONZE_NEWS)
+        query = self._LOOKUP_BRONZE_NEWS_QUERY_TEMPLATE.format(
+            table_id=self._BRONZE_NEWS
+        )
         # execute_query inherits from StoreBase, applying semaphore automatically.
         results = await self.execute_query(query, job_config)
 
@@ -59,7 +62,7 @@ class BronzeStore(StoreBase):
 
         return target_items
 
-    async def news_load(self, items: list[BronzeNewsModel]) -> None:
+    async def load_bronze_news(self, items: list[BronzeNewsModel]) -> None:
         """Append fully enriched news items into BigQuery using a JSON load job."""
         if not items:
             return

@@ -34,8 +34,7 @@ class BronzeNewsModel(BaseModel):
     image_url: str | None = Field(default=None, description="Image URL")
     thumbnail_url: str | None = Field(default=None, description="Thumbnail URL")
     updated_at: AwareDatetime | None = Field(default=None, description="Updated at")
-    # 'loaded_at' is excluded here to trigger BigQuery's server-side CURRENT_TIMESTAMP() default.
-    # Do not add to prevent null overrides.
+    loaded_at: AwareDatetime | None = Field(default=None, description="Loaded at")
     metadata: dict[str, Any] | None = Field(
         default=None, description="Additional metadata"
     )
