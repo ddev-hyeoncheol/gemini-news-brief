@@ -1,9 +1,11 @@
 import os
+import asyncio
 
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
 from src.core.logger import configure_uvicorn_loggers, get_logger
+from src.core.bigquery import get_bigquery_client
 from src.worker.routers import ingest
 
 logger = get_logger(__name__)
@@ -17,6 +19,12 @@ async def lifespan(app: FastAPI):
     """
     configure_uvicorn_loggers()
     logger.info("Gemini News Brief Worker API Started")
+
+    # Initialize shared resources (semaphores and DB client) on startup.
+    app.state.source_semaphore = asyncio.Semaphore(10)
+    app.state.db_semaphore = asyncio.Semaphore(10)
+    app.state.bigquery_client = get_bigquery_client()
+
     yield
     logger.info("Gemini News Brief Worker API Shutdown")
 

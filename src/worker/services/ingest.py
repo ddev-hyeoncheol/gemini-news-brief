@@ -1,9 +1,8 @@
 import asyncio
 
 from datetime import datetime, timezone
-from google.cloud import bigquery
-from google.auth.exceptions import DefaultCredentialsError
 
+from fastapi import Request
 from src.core.logger import get_logger
 from src.models.schemas.ingest import (
     IngestRequest,
@@ -126,34 +125,16 @@ class IngestService:
         )
 
 
-# Module-level singleton: Lazily instantiated on the first API request.
-# Cloud Run scale-to-zero means each instance starts fresh,
-# so module-level state is safe and avoids lifespan overhead.
-_ingest_service: IngestService | None = None
-
-
-def get_ingest_service() -> IngestService:
+def get_ingest_service(request: Request) -> IngestService:
     """Provide FastAPI dependency for IngestService."""
-    global _ingest_service
-
-    # Lazy initialization ensures semaphores are attached to the running event loop.
-    if _ingest_service is None:
-        source_semaphore = asyncio.Semaphore(10)
-        db_semaphore = asyncio.Semaphore(10)
-
-        try:
-            bigquery_client = bigquery.Client()
-        except DefaultCredentialsError:
-            logger.warning(
-                "GCP credentials not found. Running BigQuery operations in MOCK mode."
-            )
-            bigquery_client = None
-
-        _ingest_service = IngestService(
-            source_plugins=[
-                CollectPlugin(source=YahooFinanceSource(semaphore=source_semaphore)),
-            ],
-            db_plugin=BigQueryPlugin(semaphore=db_semaphore, client=bigquery_client),
-        )
-
-    return _ingest_service
+    return IngestService(
+        source_plugins=[
+            CollectPlugin(
+                source=YahooFinanceSource(semaphore=request.app.state.source_semaphore)
+            ),
+        ],
+        db_plugin=BigQueryPlugin(
+            semaphore=request.app.state.db_semaphore,
+            client=request.app.state.bigquery_client,
+        ),
+    )
