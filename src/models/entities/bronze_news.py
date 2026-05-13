@@ -11,6 +11,8 @@ class BronzeNewsModel(BaseModel):
     model_config = ConfigDict(
         str_strip_whitespace=True,
         frozen=True,
+        # Silently ignore extra fields (e.g. 'loaded_at') returned by BigQuery queries.
+        extra="ignore",
     )
 
     # 1. Partition Key
