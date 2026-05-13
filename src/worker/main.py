@@ -1,9 +1,9 @@
-import os
 import asyncio
 
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
+from src.config.config import settings
 from src.core.logger import configure_uvicorn_loggers, get_logger
 from src.core.bigquery import get_bigquery_client
 from src.worker.routers import ingest, refine
@@ -50,6 +50,4 @@ async def health_check():
 if __name__ == "__main__":
     import uvicorn
 
-    # Cloud Run injects the PORT environment variable dynamically. Fallback to 8080 for local development.
-    port = int(os.environ.get("PORT", "8080"))
-    uvicorn.run("src.worker.main:app", host="0.0.0.0", port=port, reload=False)
+    uvicorn.run("src.worker.main:app", host="0.0.0.0", port=settings.port, reload=False)

@@ -1,8 +1,8 @@
-import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
+from src.config.config import settings
 from src.core.logger import configure_uvicorn_loggers, get_logger
 
 logger = get_logger(__name__)
@@ -32,5 +32,4 @@ async def health_check():
 if __name__ == "__main__":
     import uvicorn
 
-    port = int(os.environ.get("PORT", "8080"))
-    uvicorn.run("src.api.main:app", host="0.0.0.0", port=port, reload=False)
+    uvicorn.run("src.api.main:app", host="0.0.0.0", port=settings.port, reload=False)

@@ -1,12 +1,12 @@
-import os
 import json
 import logging
 
 from datetime import datetime, timezone
 
-# Cloud Run automatically sets K_SERVICE; use it to detect GCP environment.
-_IS_GCP = os.environ.get("K_SERVICE") is not None
-_LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO").upper()
+from src.config.config import settings
+
+_IS_GCP = settings.is_gcp
+_LOG_LEVEL = settings.log_level.upper()
 
 # Python level to GCP severity mapping.
 _SEVERITY_MAP = {

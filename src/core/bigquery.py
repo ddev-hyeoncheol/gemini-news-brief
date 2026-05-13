@@ -1,7 +1,6 @@
-import os
-
 from google.cloud import bigquery
 
+from src.config.config import settings
 from src.core.logger import get_logger
 
 logger = get_logger(__name__)
@@ -9,8 +8,8 @@ logger = get_logger(__name__)
 
 def get_bigquery_client() -> bigquery.Client | None:
     """Initialize and return a BigQuery client, or None if credentials are not found."""
-    is_gcp = os.environ.get("K_SERVICE") is not None
-    has_explicit_creds = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") is not None
+    is_gcp = settings.is_gcp
+    has_explicit_creds = settings.has_explicit_creds
 
     if not is_gcp and not has_explicit_creds:
         logger.info(
@@ -19,7 +18,9 @@ def get_bigquery_client() -> bigquery.Client | None:
         return None
 
     try:
-        return bigquery.Client()
+        client = bigquery.Client()
+        logger.info("BigQuery client initialized | project: %s", client.project)
+        return client
     except Exception as e:
         logger.warning("BigQuery client initialization failed | error: %s", str(e))
         return None
