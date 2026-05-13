@@ -1,5 +1,5 @@
+from datetime import datetime, timezone
 from typing import Literal, Generic, TypeVar
-
 from pydantic import BaseModel, Field, AwareDatetime
 
 from src.models.entities.bronze_news import BronzeNewsModel
@@ -14,11 +14,18 @@ T = TypeVar(
 )
 
 
+def _floor_to_10min(dt: datetime) -> datetime:
+    """Floor a datetime to the nearest 10-minute boundary."""
+    floored = dt.replace(second=0, microsecond=0, minute=(dt.minute // 10) * 10)
+    return floored
+
+
 class RefineRequest(BaseModel):
     """Request payload to trigger the refinement pipeline."""
 
     executed_at: AwareDatetime = Field(
-        description="Execution time passed in the request (UTC).",
+        default_factory=lambda: _floor_to_10min(datetime.now(tz=timezone.utc)),
+        description="Execution time (UTC), floored to 10-minute intervals. Defaults to current time if not provided.",
     )
     target_table: str = Field(
         description="Target BigQuery table name to process.",
