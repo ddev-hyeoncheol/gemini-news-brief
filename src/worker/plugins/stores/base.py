@@ -32,10 +32,13 @@ class StoreBase:
     async def execute_load_json(
         self,
         json_rows: list[dict[str, Any]],
-        destination: str,
+        table_id: str,
         job_config: bigquery.LoadJobConfig | None = None,
     ) -> Any:
         """Execute a BigQuery JSON load job asynchronously with semaphore concurrency control."""
+        if not json_rows:
+            logger.info("Batch load skipped | table: %s, reason: no items", table_id)
+            return None
 
         # BigQuery Load API does not evaluate defaultValueExpression at load time.
         # Overwrite 'loaded_at' with the current UTC timestamp for every row.
@@ -43,9 +46,16 @@ class StoreBase:
         json_rows = [{**row, "loaded_at": loaded_at} for row in json_rows]
 
         async with self._semaphore:
-            return await asyncio.to_thread(
-                self._run_load_json_sync, json_rows, destination, job_config
+            result = await asyncio.to_thread(
+                self._run_load_json_sync, json_rows, table_id, job_config
             )
+
+        logger.info(
+            "Batch load completed | table: %s, count: %d",
+            table_id,
+            len(json_rows),
+        )
+        return result
 
     async def execute_delete_batch(self, table_id: str, executed_at: datetime) -> None:
         """
@@ -59,12 +69,14 @@ class StoreBase:
             ]
         )
 
+        results = await self.execute_query(query, job_config)
+        deleted_count = getattr(results, "num_dml_affected_rows", 0) or 0
+
         logger.info(
-            "Batch delete started | table: %s, executed_at: %s",
+            "Batch delete completed | table: %s, deleted_count: %d",
             table_id,
-            executed_at.isoformat(),
+            deleted_count,
         )
-        await self.execute_query(query, job_config)
 
     def _get_client(self) -> bigquery.Client:
         """Return the BigQuery client, raising RuntimeError if not initialized."""
@@ -84,11 +96,11 @@ class StoreBase:
     def _run_load_json_sync(
         self,
         json_rows: list[dict[str, Any]],
-        destination: str,
+        table_id: str,
         job_config: bigquery.LoadJobConfig | None = None,
     ) -> Any:
         """Execute a BigQuery JSON load job synchronously."""
         load_job = self._get_client().load_table_from_json(
-            json_rows, destination, job_config=job_config
+            json_rows, destination=table_id, job_config=job_config
         )
         return load_job.result()

@@ -64,8 +64,5 @@ class BronzeStore(StoreBase):
 
     async def load_bronze_news(self, items: list[BronzeNewsModel]) -> None:
         """Append fully enriched news items into BigQuery using a JSON load job."""
-        if not items:
-            return
-
         json_rows = [item.model_dump(mode="json") for item in items]
-        await self.execute_load_json(json_rows, destination=self._BRONZE_NEWS)
+        await self.execute_load_json(json_rows, table_id=self._BRONZE_NEWS)
