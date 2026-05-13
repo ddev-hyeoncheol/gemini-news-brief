@@ -63,7 +63,7 @@ class IngestEnrichResult(IngestPhaseResultBase):
 
 
 class IngestLoadResult(IngestPhaseResultBase):
-    status: Literal["success", "partial", "failed"] = Field(
+    status: Literal["success", "failed"] = Field(
         description="Load status.",
     )
 
