@@ -4,10 +4,12 @@ from typing import Any, Callable, Coroutine, TypeVar
 
 from src.core.logger import get_logger
 from src.models.schemas.ingest import IngestPhaseResultBase
+from src.models.schemas.refine import RefinePhaseResultBase
 
 logger = get_logger(__name__)
 
 T = TypeVar("T", bound=IngestPhaseResultBase)
+R = TypeVar("R", bound=RefinePhaseResultBase)
 
 
 def with_ingest_error_handling(
@@ -68,6 +70,72 @@ def with_ingest_error_handling(
                 )
                 return dto_class(
                     source=source_name,
+                    status="failed",
+                    started_at=started_at,
+                    completed_at=datetime.now(tz=timezone.utc),
+                    error_message=f"{type(e).__name__}::{e}",
+                )
+
+        return wrapper
+
+    return decorator
+
+
+def with_refine_error_handling(
+    dto_class: type[R],
+) -> Callable[
+    [Callable[..., Coroutine[Any, Any, dict[str, Any]]]],
+    Callable[..., Coroutine[Any, Any, R]],
+]:
+    """
+    Decorate refine pipeline plugin methods to handle boilerplate:
+    1. Time tracking (started_at, completed_at)
+    2. Error isolation and logging
+    3. DTO instantiation mapping
+
+    The decorated async function must return a dictionary of fields.
+    If the dictionary contains a 'status' key (e.g., 'partial'), it overrides the default 'success'.
+    """
+
+    def decorator(
+        func: Callable[..., Coroutine[Any, Any, dict[str, Any]]],
+    ) -> Callable[..., Coroutine[Any, Any, R]]:
+        @functools.wraps(func)
+        async def wrapper(self: Any, *args: Any, **kwargs: Any) -> R:
+            started_at = datetime.now(tz=timezone.utc)
+
+            # Extract 'target_table' dynamically from the first positional argument.
+            target_table = "unknown"
+            if args:
+                if hasattr(args[0], "target_table"):
+                    target_table = args[0].target_table
+                elif isinstance(args[0], str):
+                    target_table = args[0]
+
+            try:
+                result_data = await func(self, *args, **kwargs)
+
+                status = result_data.pop("status", "success")
+                if "target_table" not in result_data:
+                    result_data["target_table"] = target_table
+
+                if "items" in result_data and "item_count" not in result_data:
+                    result_data["item_count"] = len(result_data["items"])
+
+                return dto_class(
+                    status=status,
+                    started_at=started_at,
+                    completed_at=datetime.now(tz=timezone.utc),
+                    **result_data,
+                )
+            except Exception as e:
+                logger.exception(
+                    "Phase failed | target_table: %s, phase: %s",
+                    target_table,
+                    func.__name__,
+                )
+                return dto_class(
+                    target_table=target_table,
                     status="failed",
                     started_at=started_at,
                     completed_at=datetime.now(tz=timezone.utc),
