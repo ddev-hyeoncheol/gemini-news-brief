@@ -1,3 +1,4 @@
+from typing import Literal
 from pydantic import BaseModel, Field, ConfigDict, AwareDatetime
 
 
@@ -10,6 +11,8 @@ class SilverNewsAugmentedModel(BaseModel):
     model_config = ConfigDict(
         str_strip_whitespace=True,
         frozen=True,
+        # Silently ignore extra fields (e.g. 'loaded_at') returned by BigQuery queries.
+        extra="ignore",
     )
 
     # 1. Partition Key
@@ -30,12 +33,10 @@ class SilverNewsAugmentedModel(BaseModel):
     ai_sentiment: str | None = Field(
         default=None, description="AI-determined sentiment"
     )
-
-    # 'loaded_at' is excluded here to trigger BigQuery's server-side CURRENT_TIMESTAMP() default.
-    # Do not add to prevent null overrides.
+    # 'loaded_at' is excluded from the model. StoreBase.execute_load_json injects it at load time.
 
     # 5. Pipeline Tracking & Metric Fields
-    status: str = Field(description="Processing status")
+    status: Literal["success", "failed"] = Field(description="Processing status")
     error_message: str | None = Field(default=None, description="Error message")
     prompt_tokens: int | None = Field(default=None, description="Prompt tokens")
     completion_tokens: int | None = Field(default=None, description="Completion tokens")
