@@ -1,0 +1,41 @@
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    """Application configuration settings mapped from environment variables."""
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
+
+    # Cloud Run injects the PORT environment variable dynamically. Fallback to 8080.
+    port: int = 8080
+    log_level: str = "INFO"
+
+    # Cloud Run automatically sets K_SERVICE; use it to detect GCP environment.
+    k_service: str | None = None
+
+    # GCP Credentials for local development or explicit service account.
+    google_application_credentials: str | None = None
+
+    @property
+    def is_gcp(self) -> bool:
+        """Return True if the application is running on GCP (Cloud Run)."""
+        return self.k_service is not None
+
+    @property
+    def has_explicit_creds(self) -> bool:
+        """Return True if explicit GCP credentials are configured via environment variable."""
+        return self.google_application_credentials is not None
+
+
+# 1. Global instance for infrastructure setup (loggers, app startup, lifespan)
+settings = Settings()
+
+
+# 2. Dependency injection for business logic (routers, services)
+def get_settings() -> Settings:
+    """Provide the shared Settings instance for FastAPI Dependency Injection."""
+    return settings
