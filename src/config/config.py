@@ -20,6 +20,10 @@ class Settings(BaseSettings):
     # GCP Credentials for local development or explicit service account.
     google_application_credentials: str | None = None
 
+    # Gemini API Keys (Injected via .env locally, or GCP Secret Manager in Cloud Run)
+    gemini_api_key_free: str | None = None
+    gemini_api_key_paid: str | None = None
+
     @property
     def is_gcp(self) -> bool:
         """Return True if the application is running on GCP (Cloud Run)."""
