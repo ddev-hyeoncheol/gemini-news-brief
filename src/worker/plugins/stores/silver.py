@@ -2,6 +2,8 @@ from datetime import datetime
 
 from google.cloud import bigquery
 
+# TODO(refactor): SilverStore handles both Bronze→Silver and Silver→Augmented extract paths.
+# Consider splitting into a BronzeReader and SilverReader to keep each store's responsibility narrow.
 from src.core.logger import get_logger
 from src.models.entities.bronze_news import BronzeNewsModel
 from src.models.entities.silver_news import SilverNewsModel
@@ -14,14 +16,15 @@ logger = get_logger(__name__)
 class SilverStore(StoreBase):
     """
     Store class for handling Silver tier data operations using a strict ETL pattern.
-    Responsible for fetching Bronze data into Python memory, and loading transformed Silver data.
+    Responsible for extracting Bronze and Silver tier data into Python memory,
+    and loading transformed results into the corresponding Silver tier tables.
     """
 
     _BRONZE_NEWS = "bronze.news"
     _SILVER_NEWS = "silver.news"
     _SILVER_NEWS_AUGMENTED = "silver.news_augmented"
 
-    _EXTRACT_BRONZE_NEWS_QUERY_TEMPLATE = """
+    _EXTRACT_QUERY_TEMPLATE = """
         SELECT *
         FROM `{table_id}`
         WHERE executed_at = @executed_at
@@ -38,13 +41,28 @@ class SilverStore(StoreBase):
             ]
         )
 
-        query = self._EXTRACT_BRONZE_NEWS_QUERY_TEMPLATE.format(
-            table_id=self._BRONZE_NEWS
-        )
+        query = self._EXTRACT_QUERY_TEMPLATE.format(table_id=self._BRONZE_NEWS)
         results = await self.execute_query(query, job_config)
 
-        # Map BigQuery RowIterator to Pydantic models
+        # Map BigQuery RowIterator to Pydantic models.
         return [BronzeNewsModel(**dict(row)) for row in results]
+
+    async def extract_silver_news(self, executed_at: datetime) -> list[SilverNewsModel]:
+        """
+        Extract structured news from the Silver tier for a specific batch execution time.
+        Bring data into Python memory for AI augmentation.
+        """
+        job_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("executed_at", "TIMESTAMP", executed_at)
+            ]
+        )
+
+        query = self._EXTRACT_QUERY_TEMPLATE.format(table_id=self._SILVER_NEWS)
+        results = await self.execute_query(query, job_config)
+
+        # Map BigQuery RowIterator to Pydantic models.
+        return [SilverNewsModel(**dict(row)) for row in results]
 
     async def load_silver_news(
         self, executed_at: datetime, items: list[SilverNewsModel]

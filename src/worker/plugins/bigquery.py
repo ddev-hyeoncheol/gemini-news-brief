@@ -67,11 +67,12 @@ class RefineDbPlugin:
 
     @with_refine_error_handling(RefineExtractResult)
     async def extract(self, request: RefineRequest) -> dict[str, Any]:
-        """Extract raw items from the Bronze tier for transformation."""
+        """Extract raw items from the source tier based on the target table."""
         if request.target_table == self.store._SILVER_NEWS:
             items = await self.store.extract_bronze_news(request.executed_at)
+        elif request.target_table == self.store._SILVER_NEWS_AUGMENTED:
+            items = await self.store.extract_silver_news(request.executed_at)
         else:
-            # For future expansion (e.g. extracting Silver data for Augmented tier)
             items = []
 
         logger.info(
