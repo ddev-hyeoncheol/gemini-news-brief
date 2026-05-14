@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field
 from typing import Literal
 
 AISectorType = Literal[
@@ -24,10 +24,6 @@ AIFormatType = Literal[
 
 class LLMAnalysisResult(BaseModel):
     """Structured output schema for LLM-based news analysis results."""
-
-    model_config = ConfigDict(
-        json_schema_extra={"version": "0.1"},
-    )
 
     news_id: str = Field(
         description="Exact unique identifier (News ID) from the provided <News> tag."
