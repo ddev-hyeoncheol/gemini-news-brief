@@ -26,19 +26,28 @@ class SilverNewsAugmentedModel(BaseModel):
     version: str = Field(description="LLM model version")
 
     # 4. AI Augmented Fields
-    ai_category: str | None = Field(default=None, description="AI-determined category")
-    ai_author: str | None = Field(default=None, description="AI-determined author")
-    ai_content_clean: str | None = Field(default=None, description="AI-cleaned content")
-    ai_summary: str | None = Field(default=None, description="AI-generated summary")
+    ai_sector: str | None = Field(
+        default=None, description="AI-determined economic sector"
+    )
+    ai_format: str | None = Field(
+        default=None, description="AI-determined article format"
+    )
     ai_sentiment: str | None = Field(
         default=None, description="AI-determined sentiment"
     )
+    ai_title: str | None = Field(
+        default=None, description="AI-translated title in Korean"
+    )
+    ai_author: list[str] = Field(
+        default_factory=list, description="AI-determined authors"
+    )
+    ai_summary: str | None = Field(
+        default=None, description="AI-generated summary in Korean"
+    )
+    ai_content_clean: str | None = Field(default=None, description="AI-cleaned content")
     # 'loaded_at' is excluded from the model. StoreBase.execute_load_json injects it at load time.
 
-    # 5. Pipeline Tracking & Metric Fields
+    # 5. Pipeline Tracking Fields
+    batch_id: str = Field(description="Batch ID (Hash of news IDs in the batch)")
     status: Literal["success", "failed"] = Field(description="Processing status")
     error_message: str | None = Field(default=None, description="Error message")
-    prompt_tokens: int | None = Field(default=None, description="Prompt tokens")
-    completion_tokens: int | None = Field(default=None, description="Completion tokens")
-    total_tokens: int | None = Field(default=None, description="Total tokens")
-    latency_ms: int | None = Field(default=None, description="API latency in ms")

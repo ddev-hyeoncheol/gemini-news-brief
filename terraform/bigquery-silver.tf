@@ -57,20 +57,19 @@ resource "google_bigquery_table" "table-silver-news-augmented" {
     { name = "news_id",           type = "STRING",      mode = "REQUIRED",    description = "News ID (Hash)" },
     { name = "model",             type = "STRING",      mode = "REQUIRED",    description = "LLM model name" },
     { name = "version",           type = "STRING",      mode = "REQUIRED",    description = "LLM model version" },
-    { name = "ai_category",       type = "STRING",      mode = "NULLABLE",    description = "AI-determined category" },
-    { name = "ai_author",         type = "STRING",      mode = "NULLABLE",    description = "AI-determined author" },
-    { name = "ai_content_clean",  type = "STRING",      mode = "NULLABLE",    description = "AI-cleaned content" },
-    { name = "ai_summary",        type = "STRING",      mode = "NULLABLE",    description = "AI-generated summary" },
+    { name = "ai_sector",         type = "STRING",      mode = "NULLABLE",    description = "AI-determined economic sector" },
+    { name = "ai_format",         type = "STRING",      mode = "NULLABLE",    description = "AI-determined article format" },
     { name = "ai_sentiment",      type = "STRING",      mode = "NULLABLE",    description = "AI-determined sentiment" },
+    { name = "ai_title",          type = "STRING",      mode = "NULLABLE",    description = "AI-translated title in Korean" },
+    { name = "ai_author",         type = "STRING",      mode = "REPEATED",    description = "AI-determined authors" },
+    { name = "ai_summary",        type = "STRING",      mode = "NULLABLE",    description = "AI-generated summary in Korean" },
+    { name = "ai_content_clean",  type = "STRING",      mode = "NULLABLE",    description = "AI-cleaned content" },
     # Database-managed timestamp. Do not provide a value in the ingestion layer.
     # Generated automatically on write.
     { name = "loaded_at",         type = "TIMESTAMP",   mode = "NULLABLE",    description = "Loaded at",
       defaultValueExpression = "CURRENT_TIMESTAMP()" },
+    { name = "batch_id",          type = "STRING",      mode = "REQUIRED",    description = "Batch ID (Hash of news IDs in the batch)" },
     { name = "status",            type = "STRING",      mode = "REQUIRED",    description = "Processing status" },
     { name = "error_message",     type = "STRING",      mode = "NULLABLE",    description = "Error message" },
-    { name = "prompt_tokens",     type = "INTEGER",     mode = "NULLABLE",    description = "Prompt tokens" },
-    { name = "completion_tokens", type = "INTEGER",     mode = "NULLABLE",    description = "Completion tokens" },
-    { name = "total_tokens",      type = "INTEGER",     mode = "NULLABLE",    description = "Total tokens" },
-    { name = "latency_ms",        type = "INTEGER",     mode = "NULLABLE",    description = "API latency in ms" },
   ])
 }
