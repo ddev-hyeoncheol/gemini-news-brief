@@ -56,7 +56,9 @@ class TransformPlugin:
 
         elif request.target_table == SilverStore._SILVER_NEWS_AUGMENTED:
             transformed_items = await self._transform_augmented(request, items)
-            success_count = sum(1 for item in transformed_items if item.status == "success")
+            success_count = sum(
+                1 for item in transformed_items if item.status == "success"
+            )
 
             logger.info(
                 "[%s] Transform completed | success: %d, total: %d",
@@ -68,7 +70,11 @@ class TransformPlugin:
             # Signal partial when any item failed, so RefineService and the response reflect reality.
             # The load phase still runs to persist both success and failed records.
             if success_count < len(transformed_items):
-                return {"items": transformed_items, "item_count": success_count, "status": "partial"}
+                return {
+                    "items": transformed_items,
+                    "item_count": success_count,
+                    "status": "partial",
+                }
             return {"items": transformed_items, "item_count": success_count}
 
         return {"items": transformed_items}
@@ -77,19 +83,38 @@ class TransformPlugin:
         self, request: RefineRequest, items: list[SilverNewsModel]
     ) -> list[SilverNewsAugmentedModel]:
         """Split items into chunks and call the LLM provider in parallel, then map results."""
-        news_ids = [item.news_id for item in items]
-        batch_id = hashlib.sha256(",".join(sorted(news_ids)).encode()).hexdigest()[:16]
+        # Sort by news_id for deterministic chunking — same inputs always produce the same batch_ids.
+        sorted_items = sorted(items, key=lambda item: item.news_id)
 
         # Split into fixed-size chunks and call LLM concurrently.
-        chunks = [items[i : i + _CHUNK_SIZE] for i in range(0, len(items), _CHUNK_SIZE)]
+        chunks = [
+            sorted_items[i : i + _CHUNK_SIZE]
+            for i in range(0, len(sorted_items), _CHUNK_SIZE)
+        ]
         chunk_results = await asyncio.gather(
             *[self.gemini.generate_content(chunk) for chunk in chunks]
         )
 
-        # Merge chunk results into a unified map; track news_ids from failed chunks.
+        # Compute a batch_id per chunk by hashing the concatenated news_ids of that chunk.
+        # Chunks are already in sorted order, so concatenation is deterministic.
+        # Mirrors the news_id generation approach: sha256(raw_key).hexdigest().
+        chunk_batch_ids = [
+            hashlib.sha256("".join(item.news_id for item in chunk).encode()).hexdigest()
+            for chunk in chunks
+        ]
+
+        # Build per-item lookups: news_id → batch_id, news_id → LLMAnalysisResult.
+        # failed_ids tracks news_ids whose entire chunk failed (generate_result is None).
+        item_batch_id: dict[str, str] = {}
         result_map: dict[str, LLMAnalysisResult] = {}
         failed_ids: set[str] = set()
-        for chunk, generate_result in zip(chunks, chunk_results):
+
+        for chunk, generate_result, batch_id in zip(
+            chunks, chunk_results, chunk_batch_ids
+        ):
+            for item in chunk:
+                item_batch_id[item.news_id] = batch_id
+
             if generate_result is None:
                 for item in chunk:
                     failed_ids.add(item.news_id)
@@ -108,6 +133,8 @@ class TransformPlugin:
 
         augmented: list[SilverNewsAugmentedModel] = []
         for item in items:
+            batch_id = item_batch_id[item.news_id]
+
             if item.news_id in failed_ids:
                 augmented.append(
                     SilverNewsAugmentedModel(
