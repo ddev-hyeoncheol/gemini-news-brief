@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from typing import Any
 from google.cloud import bigquery
 
+from src.providers.bigquery import BigQueryProvider
 from src.core.logger import get_logger
 
 logger = get_logger(__name__)
@@ -15,18 +16,15 @@ class StoreBase:
     Provides common utilities like asynchronous query execution and batch deletion.
     """
 
-    def __init__(
-        self, client: bigquery.Client | None, semaphore: asyncio.Semaphore
-    ) -> None:
-        """Initialize the store with a BigQuery client and a concurrency semaphore."""
-        self._client = client
-        self._semaphore = semaphore
+    def __init__(self, provider: BigQueryProvider) -> None:
+        """Initialize the store with a BigQuery provider."""
+        self._provider = provider
 
     async def execute_query(
         self, query: str, job_config: bigquery.QueryJobConfig | None = None
     ) -> Any:
         """Execute a BigQuery query asynchronously with semaphore concurrency control."""
-        async with self._semaphore:
+        async with self._provider.semaphore:
             return await asyncio.to_thread(self._run_query_sync, query, job_config)
 
     async def execute_load_json(
@@ -45,7 +43,7 @@ class StoreBase:
         loaded_at = datetime.now(tz=timezone.utc).isoformat()
         json_rows = [{**row, "loaded_at": loaded_at} for row in json_rows]
 
-        async with self._semaphore:
+        async with self._provider.semaphore:
             result = await asyncio.to_thread(
                 self._run_load_json_sync, json_rows, table_id, job_config
             )
@@ -80,11 +78,8 @@ class StoreBase:
 
     def _get_client(self) -> bigquery.Client:
         """Return the BigQuery client, raising RuntimeError if not initialized."""
-        if self._client is None:
-            raise RuntimeError(
-                "BigQuery client is not initialized. Check GCP credentials."
-            )
-        return self._client
+        # Delegate client retrieval to the provider.
+        return self._provider.get_client()
 
     def _run_query_sync(
         self, query: str, job_config: bigquery.QueryJobConfig | None = None

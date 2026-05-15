@@ -27,6 +27,9 @@ src/
 │           └── news.py          # news 테이블 스키마 (파티션·클러스터링 포함)
 ├── core/
 │   └── logger.py                # 로컬/GCP 환경 자동 전환 로거
+├── providers/
+│   ├── bigquery.py              # BigQuery 공급자 (클라이언트/세마포어 관리)
+│   └── gemini.py                # Gemini AI 공급자
 ├── models/
 │   ├── entities/
 │   │   └── news.py              # BronzeNewsModel (파이프라인 공통 엔티티)
