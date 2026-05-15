@@ -1,10 +1,11 @@
 from datetime import datetime, timezone
 from typing import Literal
-from fastapi import Depends, Request
+from fastapi import Depends
 
 from src.core.logger import get_logger
-from src.core.dependencies import get_bq_provider
+from src.core.dependencies import get_bigquery_provider, get_gemini_provider
 from src.providers.bigquery import BigQueryProvider
+from src.providers.gemini import GeminiProvider
 from src.models.schemas.refine import RefineRequest, RefineResponse
 from src.worker.plugins.bigquery import RefineDbPlugin
 from src.worker.plugins.transform import TransformPlugin
@@ -104,11 +105,13 @@ class RefineService:
 
 
 def get_refine_service(
-    request: Request,
-    bq_provider: BigQueryProvider = Depends(get_bq_provider),
+    bigquery_provider: BigQueryProvider = Depends(get_bigquery_provider),
+    gemini_provider: GeminiProvider = Depends(get_gemini_provider),
 ) -> RefineService:
     """Provide FastAPI dependency for RefineService."""
     return RefineService(
-        db_plugin=RefineDbPlugin(store=SilverStore(provider=bq_provider)),
-        transform_plugin=TransformPlugin(),
+        db_plugin=RefineDbPlugin(
+            store=SilverStore(bigquery_provider=bigquery_provider)
+        ),
+        transform_plugin=TransformPlugin(gemini_provider=gemini_provider),
     )

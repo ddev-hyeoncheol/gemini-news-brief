@@ -14,13 +14,13 @@ class BigQueryProvider:
     Handles initialization and provides a shared semaphore for resource throttling.
     """
 
-    def __init__(self, semaphore_limit: int = 10) -> None:
+    def __init__(self, semaphore: asyncio.Semaphore) -> None:
         """
-        Initialize the provider.
-        Note: This should be instantiated within an async context (e.g., lifespan)
-        to ensure the semaphore is bound to the correct event loop.
+        Initialize the provider with an injected semaphore.
+        The semaphore should be created within an async context (e.g., lifespan)
+        to ensure it is bound to the correct event loop.
         """
-        self.semaphore = asyncio.Semaphore(semaphore_limit)
+        self.semaphore = semaphore
         self.client = self._init_client()
 
     def _init_client(self) -> bigquery.Client | None:

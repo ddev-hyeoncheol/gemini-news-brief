@@ -26,9 +26,9 @@ class TransformPlugin:
     Handles data conversion and external AI model interactions.
     """
 
-    def __init__(self) -> None:
-        """Initialize the plugin and its required providers."""
-        self.gemini = GeminiProvider()
+    def __init__(self, gemini_provider: GeminiProvider) -> None:
+        """Initialize the plugin with an injected Gemini provider."""
+        self.gemini = gemini_provider
 
     @with_refine_error_handling(RefineTransformResult)
     async def transform(

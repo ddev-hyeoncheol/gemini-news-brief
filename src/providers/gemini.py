@@ -1,3 +1,4 @@
+import asyncio
 import http
 
 from google import genai
@@ -104,8 +105,13 @@ class GeminiProvider:
     Handle model initialization and asynchronous batch content generation.
     """
 
-    def __init__(self) -> None:
-        """Initialize the Gemini provider with API credentials from settings."""
+    def __init__(self, semaphore: asyncio.Semaphore) -> None:
+        """
+        Initialize the Gemini provider with API credentials and an injected semaphore.
+        The semaphore should be created within an async context (e.g., lifespan)
+        to ensure it is bound to the correct event loop.
+        """
+        self.semaphore = semaphore
         self.api_key = settings.gemini_api_key_free
         self.model_name = DEFAULT_MODEL_NAME
         self.model_version = DEFAULT_MODEL_VERSION
@@ -152,11 +158,13 @@ class GeminiProvider:
 
         @_retry
         async def _call() -> types.GenerateContentResponse:
-            return await self.client.aio.models.generate_content(
-                model=self.model_name,
-                contents=contents,
-                config=config,
-            )
+            # Acquire the semaphore inside the retry closure so the slot is released between retry attempts.
+            async with self.semaphore:
+                return await self.client.aio.models.generate_content(
+                    model=self.model_name,
+                    contents=contents,
+                    config=config,
+                )
 
         try:
             response = await _call()

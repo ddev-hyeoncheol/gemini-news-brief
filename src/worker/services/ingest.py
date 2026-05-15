@@ -1,7 +1,7 @@
 import asyncio
 
 from datetime import datetime, timezone
-from fastapi import Depends, Request
+from fastapi import Depends
 
 from src.core.logger import get_logger
 from src.models.schemas.ingest import (
@@ -9,7 +9,7 @@ from src.models.schemas.ingest import (
     IngestSourceResult,
     IngestResponse,
 )
-from src.core.dependencies import get_bq_provider
+from src.core.dependencies import get_bigquery_provider, get_source_semaphore
 from src.providers.bigquery import BigQueryProvider
 from src.worker.plugins.collect import CollectPlugin
 from src.worker.plugins.bigquery import IngestDbPlugin
@@ -129,15 +129,15 @@ class IngestService:
 
 
 def get_ingest_service(
-    request: Request,
-    bq_provider: BigQueryProvider = Depends(get_bq_provider),
+    bigquery_provider: BigQueryProvider = Depends(get_bigquery_provider),
+    source_semaphore: asyncio.Semaphore = Depends(get_source_semaphore),
 ) -> IngestService:
     """Provide FastAPI dependency for IngestService."""
     return IngestService(
         source_plugins=[
-            CollectPlugin(
-                source=YahooFinanceSource(semaphore=request.app.state.source_semaphore)
-            ),
+            CollectPlugin(source=YahooFinanceSource(semaphore=source_semaphore)),
         ],
-        db_plugin=IngestDbPlugin(store=BronzeStore(provider=bq_provider)),
+        db_plugin=IngestDbPlugin(
+            store=BronzeStore(bigquery_provider=bigquery_provider)
+        ),
     )

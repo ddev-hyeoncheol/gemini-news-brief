@@ -16,15 +16,15 @@ class StoreBase:
     Provides common utilities like asynchronous query execution and batch deletion.
     """
 
-    def __init__(self, provider: BigQueryProvider) -> None:
+    def __init__(self, bigquery_provider: BigQueryProvider) -> None:
         """Initialize the store with a BigQuery provider."""
-        self._provider = provider
+        self._bigquery_provider = bigquery_provider
 
     async def execute_query(
         self, query: str, job_config: bigquery.QueryJobConfig | None = None
     ) -> Any:
         """Execute a BigQuery query asynchronously with semaphore concurrency control."""
-        async with self._provider.semaphore:
+        async with self._bigquery_provider.semaphore:
             return await asyncio.to_thread(self._run_query_sync, query, job_config)
 
     async def execute_load_json(
@@ -43,7 +43,7 @@ class StoreBase:
         loaded_at = datetime.now(tz=timezone.utc).isoformat()
         json_rows = [{**row, "loaded_at": loaded_at} for row in json_rows]
 
-        async with self._provider.semaphore:
+        async with self._bigquery_provider.semaphore:
             result = await asyncio.to_thread(
                 self._run_load_json_sync, json_rows, table_id, job_config
             )
@@ -79,7 +79,7 @@ class StoreBase:
     def _get_client(self) -> bigquery.Client:
         """Return the BigQuery client, raising RuntimeError if not initialized."""
         # Delegate client retrieval to the provider.
-        return self._provider.get_client()
+        return self._bigquery_provider.get_client()
 
     def _run_query_sync(
         self, query: str, job_config: bigquery.QueryJobConfig | None = None

@@ -6,6 +6,7 @@ from contextlib import asynccontextmanager
 from src.config.config import settings
 from src.core.logger import configure_uvicorn_loggers, get_logger
 from src.providers.bigquery import BigQueryProvider
+from src.providers.gemini import GeminiProvider
 from src.worker.routers import ingest, refine
 
 logger = get_logger(__name__)
@@ -21,8 +22,10 @@ async def lifespan(app: FastAPI):
     logger.info("Gemini News Brief Worker API Started")
 
     # Initialize shared resources on startup.
-    app.state.bq_provider = BigQueryProvider(semaphore_limit=10)
+    # All semaphores are created here to ensure they are bound to the correct event loop.
     app.state.source_semaphore = asyncio.Semaphore(10)
+    app.state.bigquery_provider = BigQueryProvider(semaphore=asyncio.Semaphore(10))
+    app.state.gemini_provider = GeminiProvider(semaphore=asyncio.Semaphore(10))
 
     yield
     logger.info("Gemini News Brief Worker API Shutdown")
