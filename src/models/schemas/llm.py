@@ -98,8 +98,11 @@ class LLMAnalysisResult(BaseModel):
         description=(
             "Remove advertisements, promotional text, cookie notices, subscription prompts, "
             "navigation menus, and other boilerplate UI text from the provided Raw Content. "
-            "Do NOT paraphrase, rewrite, or alter any original sentence in any way. "
-            "Copy the remaining journalistic content exactly as written, preserving all original wording. "
+            "Do NOT paraphrase, rewrite, shorten, summarize, or alter any original sentence in any way. "
+            "Copy the remaining journalistic content exactly as written, preserving all original wording and sentence order. "
+            "Format the cleaned article into readable paragraphs when appropriate. "
+            "Insert line breaks between distinct topics, speaker changes, major context shifts, or logically separate sections to improve readability. "
+            "Do NOT insert unnecessary line breaks after every sentence. "
             "If ai_sector is 'Invalid', return an empty string ('')."
         ),
     )
