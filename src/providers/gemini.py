@@ -1,6 +1,9 @@
+import http
+
 from google import genai
 from google.genai import types
 from pydantic import TypeAdapter
+from tenacity import retry, retry_if_exception, stop_after_attempt, wait_exponential
 
 from src.config.config import settings
 from src.core.logger import get_logger
@@ -10,6 +13,26 @@ from src.models.schemas.llm import LLMAnalysisResult, LLMGenerateResult
 logger = get_logger(__name__)
 
 _RESULT_ADAPTER = TypeAdapter(list[LLMAnalysisResult])
+
+# Retry on transient server-side errors (503 overload, 429 rate limit).
+# Exponential backoff: 2s → 4s → 8s, up to 3 attempts total.
+_RETRYABLE_STATUS_CODES = (
+    http.HTTPStatus.TOO_MANY_REQUESTS,  # 429
+    http.HTTPStatus.SERVICE_UNAVAILABLE,  # 503
+)
+
+
+def _is_retryable(exc: BaseException) -> bool:
+    """Return True if the exception represents a transient server-side error worth retrying."""
+    return any(str(status.value) in str(exc) for status in _RETRYABLE_STATUS_CODES)
+
+
+_retry = retry(
+    retry=retry_if_exception(_is_retryable),
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=2, min=5, max=20),
+    reraise=True,
+)
 
 # Configuration constants.
 DEFAULT_MODEL_NAME = "gemini-3.1-flash-lite"
@@ -127,12 +150,16 @@ class GeminiProvider:
         contents = "\n".join(self._get_news_prompt(item) for item in items)
         config = generate_content_config or self.generate_default_config
 
-        try:
-            response = await self.client.aio.models.generate_content(
+        @_retry
+        async def _call() -> types.GenerateContentResponse:
+            return await self.client.aio.models.generate_content(
                 model=self.model_name,
                 contents=contents,
                 config=config,
             )
+
+        try:
+            response = await _call()
 
             usage = response.usage_metadata
             logger.info(
