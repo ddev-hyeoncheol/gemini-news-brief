@@ -16,38 +16,44 @@ class SilverNewsAugmentedModel(BaseModel):
     )
 
     # 1. Partition Key
-    executed_at: AwareDatetime = Field(description="Executed at")
+    executed_at: AwareDatetime = Field(description="Batch execution timestamp")
 
     # 2. Identification Keys
-    news_id: str = Field(description="News ID (Hash)")
+    news_id: str = Field(description="Stable unique news item identifier")
 
     # 3. Clustering Keys
     model: str = Field(description="LLM model name")
-    version: str = Field(description="LLM model version")
+    version: str = Field(description="LLM analysis schema version")
 
     # 4. AI Augmented Fields
     ai_sector: str | None = Field(
-        default=None, description="AI-determined economic sector"
+        default=None, description="AI-classified economic sector"
     )
     ai_format: str | None = Field(
-        default=None, description="AI-determined article format"
+        default=None, description="AI-classified news item format"
     )
     ai_sentiment: str | None = Field(
-        default=None, description="AI-determined sentiment"
+        default=None, description="AI-classified news item sentiment"
     )
     ai_title: str | None = Field(
-        default=None, description="AI-translated title in Korean"
+        default=None, description="Korean translation of the news item title"
     )
     ai_author: list[str] = Field(
-        default_factory=list, description="AI-determined authors"
+        default_factory=list, description="Normalized news item author names"
     )
     ai_summary: str | None = Field(
-        default=None, description="AI-generated summary in Korean"
+        default=None, description="Korean summary of the news item"
     )
-    ai_content_clean: str | None = Field(default=None, description="AI-cleaned content")
+    ai_content_clean: str | None = Field(
+        default=None, description="News item body text with boilerplate removed"
+    )
     # 'loaded_at' is excluded from the model. StoreBase.execute_load_json injects it at load time.
 
-    # 5. Pipeline Tracking Fields
-    batch_id: str = Field(description="Batch ID (Hash of news IDs in the batch)")
-    status: Literal["success", "failed"] = Field(description="Processing status")
-    error_message: str | None = Field(default=None, description="Error message")
+    # 5. Processing Status Fields
+    batch_id: str = Field(description="LLM request batch identifier")
+    status: Literal["success", "failed"] = Field(
+        description="AI augmentation processing status"
+    )
+    error_message: str | None = Field(
+        default=None, description="AI augmentation error message"
+    )

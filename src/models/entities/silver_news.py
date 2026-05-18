@@ -6,7 +6,7 @@ from src.models.entities.bronze_news import BronzeNewsModel
 class SilverNewsModel(BaseModel):
     """
     Entity model representing the Silver tier news data.
-    Contains structured news articles ready for analysis and AI augmentation.
+    Contains structured news items ready for analysis and AI augmentation.
     """
 
     model_config = ConfigDict(
@@ -17,32 +17,36 @@ class SilverNewsModel(BaseModel):
     )
 
     # 1. Partition Key
-    executed_at: AwareDatetime = Field(description="Executed at")
+    executed_at: AwareDatetime = Field(description="Batch execution timestamp")
 
     # 2. Identification Keys
-    news_id: str = Field(description="News ID (Hash)")
+    news_id: str = Field(description="Stable unique news item identifier")
 
     # 3. Clustering Keys (Order: Low Cardinality to High Cardinality)
-    category: str = Field(description="Category")
-    source: str = Field(description="Source")
-    published_at: AwareDatetime = Field(description="Published at")
+    category: str = Field(description="News item category")
+    source: str = Field(description="News source identifier")
+    published_at: AwareDatetime = Field(description="News item publication timestamp")
 
     # 4. Core Data Fields
-    title: str = Field(description="Title")
-    author_raw: str | None = Field(default=None, description="Raw Author")
-    url: str = Field(description="News URL")
-    content_raw: str = Field(description="Raw content")
+    title: str = Field(description="Original news item title")
+    author_raw: str | None = Field(default=None, description="Raw news item author")
+    url: str = Field(description="Source news item URL")
+    content_raw: str = Field(description="Raw news item body text")
 
     # 5. Supplementary Data Fields
-    image_url: str | None = Field(default=None, description="Image URL")
-    thumbnail_url: str | None = Field(default=None, description="Thumbnail URL")
-    updated_at: AwareDatetime | None = Field(default=None, description="Updated at")
+    image_url: str | None = Field(default=None, description="News feed image URL")
+    thumbnail_url: str | None = Field(
+        default=None, description="News item thumbnail URL"
+    )
+    updated_at: AwareDatetime | None = Field(
+        default=None, description="News item update timestamp"
+    )
     # 'loaded_at' is excluded from the model. StoreBase.execute_load_json injects it at load time.
 
     @classmethod
     def from_bronze_news(cls, bronze_news: BronzeNewsModel) -> "SilverNewsModel | None":
         """
-        Transform a Bronze tier news entity into a Silver tier entity.
+        Transform a Bronze tier news item into a Silver tier news item.
         Return None if the source item failed to fetch content (status_code != 200 or content is None).
         """
         if bronze_news.status_code != 200 or bronze_news.content is None:
@@ -68,8 +72,8 @@ class SilverNewsModel(BaseModel):
         cls, bronze_news_list: list[BronzeNewsModel]
     ) -> list["SilverNewsModel"]:
         """
-        Transform a list of Bronze tier entities into Silver tier entities.
-        Filter out items that failed to fetch content automatically.
+        Transform Bronze tier news items into Silver tier news items.
+        Filter out items that failed to fetch content.
         """
         return [
             silver
