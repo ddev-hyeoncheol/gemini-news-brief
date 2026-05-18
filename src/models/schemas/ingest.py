@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from enum import Enum
 from typing import Literal
 from pydantic import BaseModel, Field, AwareDatetime
 
@@ -11,10 +12,18 @@ def _floor_to_10min(dt: datetime) -> datetime:
     return floored
 
 
+class IngestTarget(str, Enum):
+    """Supported ingestion pipeline targets."""
+
+    NEWS = "news"
+
+
 class IngestRequest(BaseModel):
+    """Request payload to trigger the ingestion pipeline."""
+
     executed_at: AwareDatetime = Field(
         default_factory=lambda: _floor_to_10min(datetime.now(tz=timezone.utc)),
-        description="Execution time (UTC), floored to 10-minute intervals. Defaults to current time if not provided.",
+        description="Batch execution time (UTC), floored to 10-minute intervals. Defaults to current time if not provided.",
     )
 
 
@@ -26,11 +35,11 @@ class IngestPhaseResultBase(BaseModel):
     )
     item_count: int = Field(
         default=0,
-        description="Number of items resulting from this phase.",
+        description="Phase-specific news item count.",
     )
     items: list[BronzeNewsModel] = Field(
         default_factory=list,
-        description="List of processed news items.",
+        description="List of news items produced by this phase.",
     )
     started_at: AwareDatetime = Field(
         description="Timestamp when the phase started (UTC).",
@@ -45,30 +54,40 @@ class IngestPhaseResultBase(BaseModel):
 
 
 class IngestFetchResult(IngestPhaseResultBase):
+    """Result DTO for the feed fetch phase."""
+
     status: Literal["success", "failed"] = Field(
         description="Fetch status.",
     )
 
 
 class IngestLookupResult(IngestPhaseResultBase):
+    """Result DTO for the storage lookup phase."""
+
     status: Literal["success", "failed"] = Field(
         description="Lookup status.",
     )
 
 
 class IngestEnrichResult(IngestPhaseResultBase):
+    """Result DTO for the content enrichment phase."""
+
     status: Literal["success", "partial", "failed"] = Field(
         description="Enrichment status.",
     )
 
 
 class IngestLoadResult(IngestPhaseResultBase):
+    """Result DTO for the storage load phase."""
+
     status: Literal["success", "failed"] = Field(
         description="Load status.",
     )
 
 
 class IngestSourceResult(BaseModel):
+    """Aggregated ingestion result for a single news source."""
+
     source: str = Field(
         description="News source name.",
     )
@@ -89,7 +108,7 @@ class IngestSourceResult(BaseModel):
     )
     loaded_count: int = Field(
         default=0,
-        description="Number of successfully loaded or updated news items.",
+        description="Number of news items loaded into storage.",
     )
     started_at: AwareDatetime | None = Field(
         default=None,
@@ -110,8 +129,10 @@ class IngestSourceResult(BaseModel):
 
 
 class IngestResponse(BaseModel):
+    """Response payload for the ingestion pipeline execution."""
+
     executed_at: AwareDatetime = Field(
-        description="Execution time passed in the request (UTC).",
+        description="Batch execution time passed in the request (UTC).",
     )
     status: Literal["success", "partial", "failed"] = Field(
         description="Overall ingestion status.",
@@ -130,7 +151,7 @@ class IngestResponse(BaseModel):
     )
     loaded_count: int = Field(
         default=0,
-        description="Total number of successfully loaded or updated news items across all sources.",
+        description="Total number of news items loaded into storage across all sources.",
     )
     sources: list[IngestSourceResult] = Field(
         default_factory=list,
