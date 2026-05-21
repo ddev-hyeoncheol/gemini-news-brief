@@ -1,6 +1,7 @@
 import functools
+from collections.abc import Callable, Coroutine
 from datetime import datetime, timezone
-from typing import Any, Callable, Coroutine, TypeVar
+from typing import Any, TypeVar
 
 from src.core.logger import get_logger
 from src.models.schemas.ingest import IngestPhaseResultBase
@@ -19,13 +20,11 @@ def with_ingest_error_handling(
     Callable[..., Coroutine[Any, Any, T]],
 ]:
     """
-    Decorate ingest pipeline plugin methods to handle boilerplate:
-    1. Time tracking (started_at, completed_at)
-    2. Error isolation and logging
-    3. DTO instantiation mapping
+    Wrap an ingest plugin phase and return an ingest phase result DTO.
 
-    The decorated async function must return a dictionary of fields.
-    If the dictionary contains a 'status' key (e.g., 'partial'), it overrides the default 'success'.
+    The wrapped method must return DTO field values as a dictionary.
+    The plugin or call arguments must provide a source string before phase execution.
+    Exceptions raised by the wrapped method are converted into failed phase results.
     """
 
     def decorator(
@@ -34,23 +33,15 @@ def with_ingest_error_handling(
         @functools.wraps(func)
         async def wrapper(self: Any, *args: Any, **kwargs: Any) -> T:
             started_at = datetime.now(tz=timezone.utc)
-
-            # Extract 'source' dynamically based on different plugin patterns.
-            # Prefer an explicit 'source_name' property (e.g., CollectPlugin),
-            # then fall back to the first positional string argument (e.g., IngestDbPlugin).
-            source_name = "unknown"
-            if hasattr(self, "source_name"):
-                source_name = self.source_name
-            elif args and isinstance(args[0], str):
-                source_name = args[0]
+            source = _get_ingest_source(self, args, kwargs)
+            operation = _get_plugin_operation(func.__name__)
 
             try:
                 result_data = await func(self, *args, **kwargs)
 
                 # Allow inner function to explicitly set status (e.g., "partial"), otherwise default to "success".
                 status = result_data.pop("status", "success")
-                if "source" not in result_data:
-                    result_data["source"] = source_name
+                result_data["source"] = source
 
                 # Auto-calculate item_count if items are provided but item_count is omitted.
                 if "items" in result_data and "item_count" not in result_data:
@@ -64,12 +55,13 @@ def with_ingest_error_handling(
                 )
             except Exception as e:
                 logger.exception(
-                    "Phase failed | source: %s, phase: %s",
-                    source_name,
+                    "Plugin %s failed | source: %s, method: %s",
+                    operation,
+                    source,
                     func.__name__,
                 )
                 return dto_class(
-                    source=source_name,
+                    source=source,
                     status="failed",
                     started_at=started_at,
                     completed_at=datetime.now(tz=timezone.utc),
@@ -88,13 +80,10 @@ def with_refine_error_handling(
     Callable[..., Coroutine[Any, Any, R]],
 ]:
     """
-    Decorate refine pipeline plugin methods to handle boilerplate:
-    1. Time tracking (started_at, completed_at)
-    2. Error isolation and logging
-    3. DTO instantiation mapping
+    Wrap a refine plugin phase and return a refine phase result DTO.
 
-    The decorated async function must return a dictionary of fields.
-    If the dictionary contains a 'status' key (e.g., 'partial'), it overrides the default 'success'.
+    The wrapped method must return DTO field values as a dictionary.
+    Exceptions raised by the wrapped method are converted into failed phase results.
     """
 
     def decorator(
@@ -103,21 +92,12 @@ def with_refine_error_handling(
         @functools.wraps(func)
         async def wrapper(self: Any, *args: Any, **kwargs: Any) -> R:
             started_at = datetime.now(tz=timezone.utc)
-
-            # Extract 'target_table' dynamically from the first positional argument.
-            target_table = "unknown"
-            if args:
-                if hasattr(args[0], "target_table"):
-                    target_table = args[0].target_table
-                elif isinstance(args[0], str):
-                    target_table = args[0]
+            operation = _get_plugin_operation(func.__name__)
 
             try:
                 result_data = await func(self, *args, **kwargs)
 
                 status = result_data.pop("status", "success")
-                if "target_table" not in result_data:
-                    result_data["target_table"] = target_table
 
                 if "items" in result_data and "item_count" not in result_data:
                     result_data["item_count"] = len(result_data["items"])
@@ -130,12 +110,11 @@ def with_refine_error_handling(
                 )
             except Exception as e:
                 logger.exception(
-                    "Phase failed | target_table: %s, phase: %s",
-                    target_table,
+                    "Plugin %s failed | method: %s",
+                    operation,
                     func.__name__,
                 )
                 return dto_class(
-                    target_table=target_table,
                     status="failed",
                     started_at=started_at,
                     completed_at=datetime.now(tz=timezone.utc),
@@ -145,3 +124,24 @@ def with_refine_error_handling(
         return wrapper
 
     return decorator
+
+
+def _get_ingest_source(self: Any, args: tuple[Any, ...], kwargs: dict[str, Any]) -> str:
+    """Return the ingest source string from the plugin instance or call arguments."""
+    source = getattr(self, "source", None)
+    if isinstance(source, str):
+        return source
+
+    source = kwargs.get("source")
+    if isinstance(source, str):
+        return source
+
+    if args and isinstance(args[0], str):
+        return args[0]
+
+    raise ValueError("source must be provided for ingest phase result.")
+
+
+def _get_plugin_operation(method_name: str) -> str:
+    """Return the log operation prefix from a plugin method name."""
+    return method_name.split("_", maxsplit=1)[0]
