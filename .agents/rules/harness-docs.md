@@ -8,6 +8,7 @@
 - `.agents/index.md`: 트리거 조건 기반의 작업별 라우터. 라우팅만 담는 한 줄 수 제한 예외.
 - `.agents/rules/`: 오래가는 영구적 제약 조건(Constraints) 보관.
 - `.agents/workflows/`: 순서가 중요한 작업 절차(Process) 보관.
+- `.agents/guides/`: 도메인 고유의 컴포넌트 확장 지침(Guide) 보관.
 - `MEMORY.md`: 현재 포커스, 임시 결정 등 동적 상태(State) 보관.
 - `CONTRIBUTING.md`: 사람과 AI 공통 기여 규칙의 Canonical 원본.
 

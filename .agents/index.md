@@ -22,9 +22,11 @@
 
 - `.agents/workflows/refactor.md`
 
+## Guides
+
 새 뉴스 source 추가이면 다음 파일을 읽습니다.
 
-- `.agents/workflows/add-news-source.md`
+- `.agents/guides/news-source.md`
 
 ## Context
 

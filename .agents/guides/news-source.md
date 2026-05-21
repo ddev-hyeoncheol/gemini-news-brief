@@ -1,6 +1,6 @@
-# Add News Source Workflow
+# News Source Guide
 
-새 RSS 기반 뉴스 source를 `ingest/news` 흐름에 추가할 때 사용합니다.
+새 RSS 기반 뉴스 source를 `ingest/news` 흐름에 추가할 때 참고하는 가이드입니다.
 
 ## Procedure
 
