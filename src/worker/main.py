@@ -1,10 +1,11 @@
 import asyncio
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
-from contextlib import asynccontextmanager
 
 from src.config.config import settings
 from src.core.logger import configure_uvicorn_loggers, get_logger
+from src.core.middleware import trace_context_middleware
 from src.providers.bigquery import BigQueryProvider
 from src.providers.gemini import GeminiProvider
 from src.worker.routers import ingest, refine
@@ -19,19 +20,21 @@ async def lifespan(app: FastAPI):
     This replaces the deprecated @app.on_event decorators.
     """
     configure_uvicorn_loggers()
-    logger.info("Gemini News Brief Worker API Started")
 
     # Initialize shared resources on startup.
     # All semaphores are created here to ensure they are bound to the correct event loop.
     app.state.source_semaphore = asyncio.Semaphore(10)
     app.state.bigquery_provider = BigQueryProvider(semaphore=asyncio.Semaphore(10))
     app.state.gemini_provider = GeminiProvider(semaphore=asyncio.Semaphore(10))
+    logger.info("App startup completed | app: worker")
 
     yield
-    logger.info("Gemini News Brief Worker API Shutdown")
+    logger.info("App shutdown completed | app: worker")
 
 
 app = FastAPI(title="Gemini News Brief Worker API", lifespan=lifespan)
+
+app.middleware("http")(trace_context_middleware)
 
 app.include_router(ingest.router)
 app.include_router(refine.router)

@@ -1,9 +1,9 @@
 import json
 import logging
-
 from datetime import datetime, timezone
 
 from src.config.config import settings
+from src.core.request_context import get_gcp_trace, get_span_id
 
 _IS_GCP = settings.is_gcp
 _LOG_LEVEL = settings.log_level.upper()
@@ -43,12 +43,17 @@ class _GcpJsonFormatter(logging.Formatter):
                 "function": record.funcName,
             },
         }
+        if gcp_trace := get_gcp_trace():
+            payload["logging.googleapis.com/trace"] = gcp_trace
+        if span_id := get_span_id():
+            payload["logging.googleapis.com/spanId"] = span_id
         if record.exc_info:
             payload["exception"] = self.formatException(record.exc_info)
         return json.dumps(payload, ensure_ascii=False)
 
 
 def _configure_root_logger() -> None:
+    """Configure the root logger once for local or GCP logging."""
     root = logging.getLogger()
     if root.handlers:
         return
@@ -90,6 +95,6 @@ def get_logger(name: str) -> logging.Logger:
     Usage:
         from src.core.logger import get_logger
         logger = get_logger(__name__)
-        logger.info("message")
+        logger.info("Plugin extract completed | target: news, count: 1")
     """
     return logging.getLogger(name)
