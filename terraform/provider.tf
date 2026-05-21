@@ -8,6 +8,6 @@ terraform {
 }
 
 provider "google" {
-  project = "gemini-ddev-hyeoncheol-1"
+  project = var.project_id
   region  = "us-west1"
 }
