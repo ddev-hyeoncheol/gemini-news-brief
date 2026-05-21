@@ -2,6 +2,7 @@ import asyncio
 import http
 
 from google import genai
+from google.genai import errors
 from google.genai import types
 from pydantic import TypeAdapter
 from tenacity import retry, retry_if_exception, stop_after_attempt, wait_exponential
@@ -16,16 +17,31 @@ logger = get_logger(__name__)
 _RESULT_ADAPTER = TypeAdapter(list[LLMAnalysisResult])
 
 # Retry on transient server-side errors (503 overload, 429 rate limit).
-# Exponential backoff: 2s → 4s → 8s, up to 3 attempts total.
+# Exponential backoff waits between 5s and 20s, up to 3 attempts total.
 _RETRYABLE_STATUS_CODES = (
     http.HTTPStatus.TOO_MANY_REQUESTS,  # 429
     http.HTTPStatus.SERVICE_UNAVAILABLE,  # 503
 )
 
 
+def _get_error_status_code(exc: BaseException) -> http.HTTPStatus | None:
+    """Return the HTTP status code exposed by a Gemini API exception."""
+    raw_status = getattr(exc, "code", None) or getattr(exc, "status", None)
+    if raw_status is None:
+        return None
+
+    try:
+        return http.HTTPStatus(int(raw_status))
+    except (TypeError, ValueError):
+        return None
+
+
 def _is_retryable(exc: BaseException) -> bool:
     """Return True if the exception represents a transient server-side error worth retrying."""
-    return any(str(status.value) in str(exc) for status in _RETRYABLE_STATUS_CODES)
+    if not isinstance(exc, errors.APIError):
+        return False
+
+    return _get_error_status_code(exc) in _RETRYABLE_STATUS_CODES
 
 
 _retry = retry(
@@ -102,7 +118,7 @@ DEFAULT_GENERATE_CONTENT_CONFIG = types.GenerateContentConfig(
 class GeminiProvider:
     """
     Provider class for interacting with Google Gemini API.
-    Handle model initialization and asynchronous batch content generation.
+    Handles model initialization and asynchronous batch content generation.
     """
 
     def __init__(self, semaphore: asyncio.Semaphore) -> None:
@@ -119,34 +135,43 @@ class GeminiProvider:
         self.client = None
 
         if not self.api_key:
-            logger.error(
-                "Gemini API key is missing | reason: GEMINI_API_KEY_FREE not set"
+            logger.warning(
+                "Provider initialize failed | provider: gemini, reason: GEMINI_API_KEY_FREE not set"
             )
             return
 
         try:
             self.client = genai.Client(api_key=self.api_key)
-            logger.info("GeminiProvider initialized | model: %s", self.model_name)
+            logger.info(
+                "Provider initialize completed | provider: gemini, model: %s",
+                self.model_name,
+            )
         except Exception as e:
-            logger.error("Gemini client initialization failed | error: %s", str(e))
+            logger.warning(
+                "Provider initialize failed | provider: gemini, error: %s",
+                str(e),
+            )
 
     async def generate_content(
         self,
         items: list[SilverNewsModel],
         generate_content_config: types.GenerateContentConfig | None = None,
     ) -> LLMGenerateResult | None:
-        """Generate LLM analysis results for a batch of Silver tier news items.
-        Return an LLMGenerateResult containing parsed results and model metadata.
-        Return None if the client is unavailable or an API error occurs.
+        """
+        Generate structured LLM analysis for a batch of Silver tier news items.
+
+        Return None when the client is unavailable or the request/response cannot be parsed.
         """
         if not self.client:
             logger.warning(
-                "Gemini client not available | reason: initialization failed"
+                "Provider generate skipped | provider: gemini, reason: initialization failed"
             )
             return None
 
         if not items:
-            logger.info("Generate skipped | reason: no items")
+            logger.info(
+                "Provider generate skipped | provider: gemini, reason: no items"
+            )
             return LLMGenerateResult(
                 model_name=self.model_name,
                 model_version=self.model_version,
@@ -168,26 +193,29 @@ class GeminiProvider:
 
         try:
             response = await _call()
-
-            usage = response.usage_metadata
-            logger.info(
-                "Generate completed | prompt_tokens: %s, completion_tokens: %s, total_tokens: %s",
-                usage.prompt_token_count,
-                usage.candidates_token_count,
-                usage.total_token_count,
-            )
-
-            # Explicitly validate response text with Pydantic for type safety and clear error reporting.
-            parsed = _RESULT_ADAPTER.validate_json(response.text)
-
-            return LLMGenerateResult(
-                model_name=self.model_name,
-                model_version=self.model_version,
-                results=parsed,
-            )
         except Exception as e:
-            logger.error("Gemini content generation failed | error: %s", str(e))
+            logger.warning(
+                "Provider generate failed | provider: gemini, reason: request failed, error: %s",
+                str(e),
+            )
             return None
+
+        try:
+            parsed = self._parse_generate_response(response)
+        except Exception as e:
+            logger.warning(
+                "Provider generate failed | provider: gemini, reason: response parse failed, error: %s",
+                str(e),
+            )
+            return None
+
+        self._log_generate_usage(response)
+
+        return LLMGenerateResult(
+            model_name=self.model_name,
+            model_version=self.model_version,
+            results=parsed,
+        )
 
     def _get_news_prompt(self, news: SilverNewsModel) -> str:
         """Return a formatted news prompt string for a single Silver tier news item."""
@@ -198,4 +226,20 @@ class GeminiProvider:
             title=news.title,
             author_raw=news.author_raw or "",
             content_raw=news.content_raw,
+        )
+
+    def _parse_generate_response(
+        self, response: types.GenerateContentResponse
+    ) -> list[LLMAnalysisResult]:
+        """Parse Gemini JSON output into validated analysis results."""
+        return _RESULT_ADAPTER.validate_json(response.text)
+
+    def _log_generate_usage(self, response: types.GenerateContentResponse) -> None:
+        """Log token usage metadata when Gemini includes it in the response."""
+        usage = getattr(response, "usage_metadata", None)
+        logger.info(
+            "Provider generate completed | provider: gemini, prompt_tokens: %s, completion_tokens: %s, total_tokens: %s",
+            getattr(usage, "prompt_token_count", None),
+            getattr(usage, "candidates_token_count", None),
+            getattr(usage, "total_token_count", None),
         )

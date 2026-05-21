@@ -1,11 +1,8 @@
 from typing import ClassVar
 
-from src.core.logger import get_logger
 from src.models.entities.bronze_news import BronzeNewsModel
 from src.models.schemas.ingest import IngestRequest
 from src.worker.plugins.sources.base import SourceBase
-
-logger = get_logger(__name__)
 
 
 class YahooFinanceSource(SourceBase):
@@ -23,19 +20,21 @@ class YahooFinanceSource(SourceBase):
         results: list[BronzeNewsModel] = []
         for entry in feed.entries:
             published_at = self._parse_published_at(entry)
-            if published_at is None:
+            url = entry.get("link")
+
+            if published_at is None or not url:
                 continue
 
             original_source = entry.get("source", {})
             results.append(
                 BronzeNewsModel(
                     executed_at=executed_at,
-                    news_id=self.make_news_id(entry.get("link", "")),
+                    news_id=self.make_news_id(url),
                     category="finance",
                     source=self.source,
                     published_at=published_at,
                     title=entry.get("title", ""),
-                    url=entry.get("link", ""),
+                    url=url,
                     image_url=self._parse_image_url(entry),
                     updated_at=published_at,
                     metadata={

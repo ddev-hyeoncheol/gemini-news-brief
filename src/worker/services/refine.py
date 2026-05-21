@@ -1,17 +1,35 @@
+from collections.abc import Awaitable, Callable
+from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Literal
+from typing import Any, Literal
+
 from fastapi import Depends
 
-from src.core.logger import get_logger
 from src.core.dependencies import get_bigquery_provider, get_gemini_provider
+from src.models.schemas.refine import (
+    RefineExtractResult,
+    RefineLoadResult,
+    RefineRequest,
+    RefineResponse,
+    RefineTarget,
+    RefineTransformResult,
+)
 from src.providers.bigquery import BigQueryProvider
 from src.providers.gemini import GeminiProvider
-from src.models.schemas.refine import RefineRequest, RefineResponse
 from src.worker.plugins.bigquery import RefineDbPlugin
-from src.worker.plugins.transform import TransformPlugin
 from src.worker.plugins.stores.silver import SilverStore
+from src.worker.plugins.transform import TransformPlugin
 
-logger = get_logger(__name__)
+
+@dataclass(frozen=True)
+class RefinePipeline:
+    """Connect target-specific refine phase handlers."""
+
+    extract: Callable[[RefineRequest], Awaitable[RefineExtractResult[Any]]]
+    transform: Callable[
+        [RefineRequest, list[Any]], Awaitable[RefineTransformResult[Any]]
+    ]
+    load: Callable[[RefineRequest, list[Any]], Awaitable[RefineLoadResult[Any]]]
 
 
 class RefineService:
@@ -23,13 +41,26 @@ class RefineService:
         """Initialize the service with required plugins."""
         self.db_plugin = db_plugin
         self.transform_plugin = transform_plugin
+        self.registry: dict[RefineTarget, RefinePipeline] = {
+            RefineTarget.NEWS: RefinePipeline(
+                extract=self.db_plugin.extract_bronze_news,
+                transform=self.transform_plugin.transform_silver_news,
+                load=self.db_plugin.load_silver_news,
+            ),
+            RefineTarget.NEWS_AUGMENTED: RefinePipeline(
+                extract=self.db_plugin.extract_silver_news,
+                transform=self.transform_plugin.transform_silver_news_augmented,
+                load=self.db_plugin.load_silver_news_augmented,
+            ),
+        }
 
-    async def run(self, request: RefineRequest) -> RefineResponse:
+    async def run(self, target: RefineTarget, request: RefineRequest) -> RefineResponse:
         """Run the refinement pipeline sequentially and return the aggregate result."""
         started_at = datetime.now(tz=timezone.utc)
+        pipeline = self.registry[target]
 
         # 1. Extract phase.
-        extract_res = await self.db_plugin.extract(request)
+        extract_res = await pipeline.extract(request)
         if extract_res.status == "failed":
             return self._create_failed_response(
                 request=request,
@@ -39,9 +70,7 @@ class RefineService:
             )
 
         # 2. Transform phase.
-        transform_res = await self.transform_plugin.transform(
-            request, extract_res.items
-        )
+        transform_res = await pipeline.transform(request, extract_res.items)
         if transform_res.status == "failed":
             return self._create_failed_response(
                 request=request,
@@ -52,7 +81,7 @@ class RefineService:
             )
 
         # 3. Load phase.
-        load_res = await self.db_plugin.load(request, transform_res.items)
+        load_res = await pipeline.load(request, transform_res.items)
         if load_res.status == "failed":
             return self._create_failed_response(
                 request=request,
@@ -69,7 +98,6 @@ class RefineService:
 
         return RefineResponse(
             executed_at=request.executed_at,
-            target_table=request.target_table,
             status=status,
             extracted_count=extract_res.item_count,
             transformed_count=transform_res.item_count,
@@ -92,7 +120,6 @@ class RefineService:
         """Construct and return a failed RefineResponse."""
         return RefineResponse(
             executed_at=request.executed_at,
-            target_table=request.target_table,
             status="failed",
             extracted_count=extracted_count,
             transformed_count=transformed_count,

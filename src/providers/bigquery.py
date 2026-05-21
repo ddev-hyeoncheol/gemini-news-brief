@@ -23,25 +23,6 @@ class BigQueryProvider:
         self.semaphore = semaphore
         self.client = self._init_client()
 
-    def _init_client(self) -> bigquery.Client | None:
-        """Initialize and return a BigQuery client, or None if credentials are not found."""
-        is_gcp = settings.is_gcp
-        has_explicit_creds = settings.has_explicit_creds
-
-        if not is_gcp and not has_explicit_creds:
-            logger.info(
-                "BigQuery client not initialized | reason: no GCP credentials found"
-            )
-            return None
-
-        try:
-            client = bigquery.Client()
-            logger.info("BigQuery client initialized | project: %s", client.project)
-            return client
-        except Exception as e:
-            logger.warning("BigQuery client initialization failed | error: %s", str(e))
-            return None
-
     def get_client(self) -> bigquery.Client:
         """Return the BigQuery client, raising RuntimeError if not initialized."""
         if self.client is None:
@@ -49,3 +30,28 @@ class BigQueryProvider:
                 "BigQuery client is not initialized. Check GCP credentials."
             )
         return self.client
+
+    def _init_client(self) -> bigquery.Client | None:
+        """Initialize and return a BigQuery client, or None if credentials are not found."""
+        is_gcp = settings.is_gcp
+        has_explicit_creds = settings.has_explicit_creds
+
+        if not is_gcp and not has_explicit_creds:
+            logger.info(
+                "Provider initialize skipped | provider: bigquery, reason: no GCP credentials found"
+            )
+            return None
+
+        try:
+            client = bigquery.Client(project=settings.gcp_project_id)
+            logger.info(
+                "Provider initialize completed | provider: bigquery, project: %s",
+                client.project,
+            )
+            return client
+        except Exception as e:
+            logger.warning(
+                "Provider initialize failed | provider: bigquery, error: %s",
+                str(e),
+            )
+            return None

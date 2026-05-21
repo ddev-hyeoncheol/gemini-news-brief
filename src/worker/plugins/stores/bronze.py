@@ -1,11 +1,7 @@
-from datetime import timezone
 from google.cloud import bigquery
 
-from src.core.logger import get_logger
 from src.models.entities.bronze_news import BronzeNewsModel
 from src.worker.plugins.stores.base import StoreBase
-
-logger = get_logger(__name__)
 
 
 class BronzeStore(StoreBase):
@@ -15,13 +11,6 @@ class BronzeStore(StoreBase):
     """
 
     _BRONZE_NEWS = "bronze.news"
-
-    _LOOKUP_BRONZE_NEWS_QUERY_TEMPLATE = """
-        SELECT news_id, MAX(updated_at) AS updated_at
-        FROM `{table_id}`
-        WHERE news_id IN UNNEST(@news_ids)
-        GROUP BY news_id
-    """
 
     async def lookup_bronze_news(
         self, items: list[BronzeNewsModel]
@@ -37,32 +26,32 @@ class BronzeStore(StoreBase):
             ]
         )
 
-        query = self._LOOKUP_BRONZE_NEWS_QUERY_TEMPLATE.format(
-            table_id=self._BRONZE_NEWS
-        )
-        # execute_query inherits from StoreBase, applying semaphore automatically.
+        query = f"""
+            SELECT news_id, MAX(updated_at) AS updated_at
+            FROM `{self._BRONZE_NEWS}`
+            WHERE news_id IN UNNEST(@news_ids)
+            GROUP BY news_id
+        """
         results = await self.execute_query(query, job_config)
 
         existing_data = {row.news_id: row.updated_at for row in results}
         target_items = []
-
         for item in items:
-            existing_updated_at = existing_data.get(item.news_id)
-            if existing_updated_at:
-                # Ensure existing_updated_at is timezone-aware (UTC).
-                if existing_updated_at.tzinfo is None:
-                    existing_updated_at = existing_updated_at.replace(
-                        tzinfo=timezone.utc
-                    )
-                # Skip if the existing record in DB is newer or the same as the feed item.
-                item_updated_at = item.updated_at or item.published_at
-                if item_updated_at <= existing_updated_at:
-                    continue
-            target_items.append(item)
+            if item.news_id not in existing_data:
+                target_items.append(item)
+                continue
+
+            existing_updated_at = existing_data[item.news_id]
+            if existing_updated_at is None:
+                if item.updated_at is not None:
+                    target_items.append(item)
+                continue
+
+            if (item.updated_at or item.published_at) > existing_updated_at:
+                target_items.append(item)
 
         return target_items
 
     async def load_bronze_news(self, items: list[BronzeNewsModel]) -> None:
         """Append fully enriched news items into BigQuery using a JSON load job."""
-        json_rows = [item.model_dump(mode="json") for item in items]
-        await self.execute_load_json(json_rows, table_id=self._BRONZE_NEWS)
+        await self.load_models(table_id=self._BRONZE_NEWS, items=items)

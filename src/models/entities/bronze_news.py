@@ -1,5 +1,6 @@
 from typing import Any
-from pydantic import BaseModel, Field, ConfigDict, AwareDatetime
+
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
 
 class BronzeNewsModel(BaseModel):

@@ -1,11 +1,12 @@
 from typing import Literal
-from pydantic import BaseModel, Field, ConfigDict, AwareDatetime
+
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
 
 class SilverNewsAugmentedModel(BaseModel):
     """
     Entity model representing AI-augmented data for Silver tier news.
-    Contains LLM-generated insights, summaries, and processing metrics.
+    Contains LLM-generated insights, summaries, and processing status.
     """
 
     model_config = ConfigDict(

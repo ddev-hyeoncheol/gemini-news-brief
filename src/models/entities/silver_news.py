@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, ConfigDict, AwareDatetime
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
 from src.models.entities.bronze_news import BronzeNewsModel
 
@@ -47,9 +47,9 @@ class SilverNewsModel(BaseModel):
     def from_bronze_news(cls, bronze_news: BronzeNewsModel) -> "SilverNewsModel | None":
         """
         Transform a Bronze tier news item into a Silver tier news item.
-        Return None if the source item failed to fetch content (status_code != 200 or content is None).
+        Return None if the source item failed to fetch non-empty content.
         """
-        if bronze_news.status_code != 200 or bronze_news.content is None:
+        if bronze_news.status_code != 200 or not bronze_news.content:
             return None
 
         return cls(

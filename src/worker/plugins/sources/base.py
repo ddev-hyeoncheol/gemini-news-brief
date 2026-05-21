@@ -1,14 +1,13 @@
 import asyncio
 import hashlib
 import random
+from abc import ABC, abstractmethod
+from datetime import datetime, timezone
+from typing import Any, ClassVar
 
 import feedparser
 import httpx
 import newspaper
-
-from abc import ABC, abstractmethod
-from datetime import datetime, timezone
-from typing import Any, ClassVar
 
 from src.models.entities.bronze_news import BronzeNewsModel
 from src.models.schemas.ingest import IngestRequest
@@ -45,14 +44,9 @@ class SourceBase(ABC):
             if not isinstance(cls.__dict__.get(var), str):
                 raise TypeError(f"{cls.__name__} must define a '{var}' class variable")
 
-    def make_news_id(self, url: str) -> str:
-        """Generate a unique news ID by SHA-256 hashing the source and article URL."""
-        raw_key = f"{self.source}:{url}"
-        return hashlib.sha256(raw_key.encode()).hexdigest()
-
     @abstractmethod
     async def fetch(self, request: IngestRequest) -> list[BronzeNewsModel]:
-        """Fetch raw RSS feed and map to BronzeNewsModel entities WITHOUT enrichment (content is None)."""
+        """Fetch raw RSS feed and map to BronzeNewsModel entities without enriched content."""
         ...
 
     async def enrich(self, url: str) -> dict[str, Any]:
@@ -108,6 +102,11 @@ class SourceBase(ABC):
                 continue
 
             return result
+
+    def make_news_id(self, url: str) -> str:
+        """Generate a unique news ID by SHA-256 hashing the source and article URL."""
+        raw_key = f"{self.source}:{url}"
+        return hashlib.sha256(raw_key.encode()).hexdigest()
 
     async def _fetch_feed(self) -> feedparser.FeedParserDict:
         """Fetch raw RSS feed using feedparser."""

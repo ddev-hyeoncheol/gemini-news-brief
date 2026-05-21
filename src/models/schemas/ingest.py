@@ -1,7 +1,8 @@
 from datetime import datetime, timezone
 from enum import Enum
 from typing import Literal
-from pydantic import BaseModel, Field, AwareDatetime
+
+from pydantic import AwareDatetime, BaseModel, Field
 
 from src.models.entities.bronze_news import BronzeNewsModel
 
@@ -104,7 +105,7 @@ class IngestSourceResult(BaseModel):
     )
     enriched_count: int = Field(
         default=0,
-        description="Number of successfully enriched news items.",
+        description="Number of news items with successfully extracted article content.",
     )
     loaded_count: int = Field(
         default=0,
@@ -147,7 +148,7 @@ class IngestResponse(BaseModel):
     )
     enriched_count: int = Field(
         default=0,
-        description="Total number of successfully enriched news items across all sources.",
+        description="Total number of news items with successfully extracted article content across all sources.",
     )
     loaded_count: int = Field(
         default=0,

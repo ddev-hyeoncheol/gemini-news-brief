@@ -1,7 +1,8 @@
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Literal, Generic, TypeVar
-from pydantic import BaseModel, Field, AwareDatetime
+from typing import Generic, Literal, TypeVar
+
+from pydantic import AwareDatetime, BaseModel, Field
 
 from src.models.entities.bronze_news import BronzeNewsModel
 from src.models.entities.silver_news import SilverNewsModel

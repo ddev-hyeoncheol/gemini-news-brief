@@ -19,6 +19,8 @@ class Settings(BaseSettings):
 
     # GCP Credentials for local development or explicit service account.
     google_application_credentials: str | None = None
+    google_cloud_project: str | None = None
+    gcp_project: str | None = None
 
     # Gemini API Keys (Injected via .env locally, or GCP Secret Manager in Cloud Run)
     gemini_api_key_free: str | None = None
@@ -32,14 +34,17 @@ class Settings(BaseSettings):
     @property
     def has_explicit_creds(self) -> bool:
         """Return True if explicit GCP credentials are configured via environment variable."""
-        return self.google_application_credentials is not None
+        return bool(self.google_application_credentials)
+
+    @property
+    def gcp_project_id(self) -> str | None:
+        """Return the configured GCP project identifier if available."""
+        return self.google_cloud_project or self.gcp_project
 
 
-# 1. Global instance for infrastructure setup (loggers, app startup, lifespan)
 settings = Settings()
 
 
-# 2. Dependency injection for business logic (routers, services)
 def get_settings() -> Settings:
     """Provide the shared Settings instance for FastAPI Dependency Injection."""
     return settings

@@ -1,9 +1,11 @@
 from typing import Any
 
-from src.core.logger import get_logger
 from src.core.decorators import with_ingest_error_handling, with_refine_error_handling
+from src.core.logger import get_logger
 from src.models.entities.bronze_news import BronzeNewsModel
-from src.models.schemas.ingest import IngestLookupResult, IngestLoadResult
+from src.models.entities.silver_news import SilverNewsModel
+from src.models.entities.silver_news_augmented import SilverNewsAugmentedModel
+from src.models.schemas.ingest import IngestLoadResult, IngestLookupResult
 from src.models.schemas.refine import (
     RefineExtractResult,
     RefineLoadResult,
@@ -29,13 +31,16 @@ class IngestDbPlugin:
     async def lookup(self, source: str, items: list[BronzeNewsModel]) -> dict[str, Any]:
         """Filter out existing items using the injected store."""
         if not items:
-            logger.info("[%s] Lookup skipped | reason: no items", source)
+            logger.info(
+                "Plugin lookup skipped | source: %s, reason: no items",
+                source,
+            )
             return {"items": []}
 
-        target_items = await self.store.lookup_bronze_news(items)
+        target_items = await self.store.lookup_bronze_news(items=items)
 
         logger.info(
-            "[%s] Lookup completed | targets: %d, total: %d",
+            "Plugin lookup completed | source: %s, count: %d, total: %d",
             source,
             len(target_items),
             len(items),
@@ -46,12 +51,15 @@ class IngestDbPlugin:
     async def load(self, source: str, items: list[BronzeNewsModel]) -> dict[str, Any]:
         """Append fully enriched items into the database using the injected store."""
         if not items:
-            logger.info("[%s] Load skipped | reason: no items", source)
+            logger.info(
+                "Plugin load skipped | source: %s, reason: no items",
+                source,
+            )
             return {"items": []}
 
-        await self.store.load_bronze_news(items)
+        await self.store.load_bronze_news(items=items)
 
-        logger.info("[%s] Load completed | count: %d", source, len(items))
+        logger.info("Plugin load completed | source: %s, count: %d", source, len(items))
         return {"items": items}
 
 
@@ -66,31 +74,59 @@ class RefineDbPlugin:
         self.store = store
 
     @with_refine_error_handling(RefineExtractResult)
-    async def extract(self, request: RefineRequest) -> dict[str, Any]:
-        """Extract raw items from the source tier based on the target table."""
-        if request.target_table == self.store._SILVER_NEWS:
-            items = await self.store.extract_bronze_news(request.executed_at)
-        elif request.target_table == self.store._SILVER_NEWS_AUGMENTED:
-            items = await self.store.extract_silver_news(request.executed_at)
-        else:
-            items = []
+    async def extract_bronze_news(self, request: RefineRequest) -> dict[str, Any]:
+        """Extract Bronze news items for Silver news refinement."""
+        items = await self.store.extract_bronze_news(executed_at=request.executed_at)
+
+        logger.info("Plugin extract completed | target: news, count: %d", len(items))
+        return {"items": items}
+
+    @with_refine_error_handling(RefineExtractResult)
+    async def extract_silver_news(self, request: RefineRequest) -> dict[str, Any]:
+        """Extract Silver news items for AI augmentation."""
+        items = await self.store.extract_silver_news(executed_at=request.executed_at)
 
         logger.info(
-            "[%s] Extract completed | count: %d", request.target_table, len(items)
+            "Plugin extract completed | target: news-augmented, count: %d",
+            len(items),
         )
         return {"items": items}
 
     @with_refine_error_handling(RefineLoadResult)
-    async def load(self, request: RefineRequest, items: list[Any]) -> dict[str, Any]:
-        """Load transformed items into the corresponding Silver tier table."""
+    async def load_silver_news(
+        self, request: RefineRequest, items: list[SilverNewsModel]
+    ) -> dict[str, Any]:
+        """Load refined news items into the Silver news table."""
         if not items:
-            logger.info("[%s] Load skipped | reason: no items", request.target_table)
-            return {"items": []}
+            logger.info(
+                "Plugin load replacing | target: news, reason: no items"
+            )
 
-        if request.target_table == self.store._SILVER_NEWS:
-            await self.store.load_silver_news(request.executed_at, items)
-        elif request.target_table == self.store._SILVER_NEWS_AUGMENTED:
-            await self.store.load_augmented_news(request.executed_at, items)
+        await self.store.load_silver_news(
+            executed_at=request.executed_at,
+            items=items,
+        )
 
-        logger.info("[%s] Load completed | count: %d", request.target_table, len(items))
+        logger.info("Plugin load completed | target: news, count: %d", len(items))
+        return {"items": items}
+
+    @with_refine_error_handling(RefineLoadResult)
+    async def load_silver_news_augmented(
+        self, request: RefineRequest, items: list[SilverNewsAugmentedModel]
+    ) -> dict[str, Any]:
+        """Load AI-augmented news items into the Silver augmented news table."""
+        if not items:
+            logger.info(
+                "Plugin load replacing | target: news-augmented, reason: no items"
+            )
+
+        await self.store.load_silver_news_augmented(
+            executed_at=request.executed_at,
+            items=items,
+        )
+
+        logger.info(
+            "Plugin load completed | target: news-augmented, count: %d",
+            len(items),
+        )
         return {"items": items}

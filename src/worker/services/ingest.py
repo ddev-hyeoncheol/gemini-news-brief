@@ -1,22 +1,20 @@
 import asyncio
-
 from datetime import datetime, timezone
+
 from fastapi import Depends
 
-from src.core.logger import get_logger
+from src.core.dependencies import get_bigquery_provider, get_source_semaphore
 from src.models.schemas.ingest import (
     IngestRequest,
-    IngestSourceResult,
     IngestResponse,
+    IngestSourceResult,
+    IngestTarget,
 )
-from src.core.dependencies import get_bigquery_provider, get_source_semaphore
 from src.providers.bigquery import BigQueryProvider
-from src.worker.plugins.collect import CollectPlugin
 from src.worker.plugins.bigquery import IngestDbPlugin
-from src.worker.plugins.stores.bronze import BronzeStore
+from src.worker.plugins.collect import CollectPlugin
 from src.worker.plugins.sources.yahoo_finance import YahooFinanceSource
-
-logger = get_logger(__name__)
+from src.worker.plugins.stores.bronze import BronzeStore
 
 
 class IngestService:
@@ -29,7 +27,7 @@ class IngestService:
         self.source_plugins = source_plugins
         self.db_plugin = db_plugin
 
-    async def run(self, request: IngestRequest) -> IngestResponse:
+    async def run(self, target: IngestTarget, request: IngestRequest) -> IngestResponse:
         """Run all plugins in parallel and aggregate results into IngestResponse."""
         source_results: list[IngestSourceResult] = await asyncio.gather(
             *[self._run_pipeline(plugin, request) for plugin in self.source_plugins]
@@ -64,14 +62,14 @@ class IngestService:
         self, plugin: CollectPlugin, request: IngestRequest
     ) -> IngestSourceResult:
         """Process a single source pipeline (fetch -> lookup -> enrich -> load)."""
-        source_name = plugin.source.source
+        source = plugin.source
         started_at = datetime.now(tz=timezone.utc)
 
         # 1. Fetch phase.
         fetch_res = await plugin.fetch(request)
         if fetch_res.status == "failed":
             return IngestSourceResult(
-                source=source_name,
+                source=source,
                 status="failed",
                 started_at=started_at,
                 completed_at=datetime.now(tz=timezone.utc),
@@ -80,10 +78,10 @@ class IngestService:
             )
 
         # 2. Lookup phase.
-        lookup_res = await self.db_plugin.lookup(source_name, fetch_res.items)
+        lookup_res = await self.db_plugin.lookup(source=source, items=fetch_res.items)
         if lookup_res.status == "failed":
             return IngestSourceResult(
-                source=source_name,
+                source=source,
                 status="failed",
                 fetched_count=fetch_res.item_count,
                 started_at=started_at,
@@ -96,7 +94,7 @@ class IngestService:
         enrich_res = await plugin.enrich(lookup_res.items)
         if enrich_res.status == "failed":
             return IngestSourceResult(
-                source=source_name,
+                source=source,
                 status="failed",
                 fetched_count=fetch_res.item_count,
                 lookup_count=lookup_res.item_count,
@@ -107,7 +105,7 @@ class IngestService:
             )
 
         # 4. Load phase.
-        load_res = await self.db_plugin.load(source_name, enrich_res.items)
+        load_res = await self.db_plugin.load(source=source, items=enrich_res.items)
 
         # Bubble up partial success if load succeeded but enrich was partial.
         status = load_res.status
@@ -115,7 +113,7 @@ class IngestService:
             status = "partial"
 
         return IngestSourceResult(
-            source=source_name,
+            source=source,
             status=status,
             fetched_count=fetch_res.item_count,
             lookup_count=lookup_res.item_count,
