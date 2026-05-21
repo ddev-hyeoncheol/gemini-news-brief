@@ -4,62 +4,60 @@
 
 ## Always
 
+항상 다음 파일을 읽습니다.
+
 - `.agents/rules/core.md`
 
 ## Workflows
 
-코드나 문서 변경:
+기능 추가, 버그 수정, 문서 변경처럼 동작이나 산출물이 바뀌는 작업이면 다음 파일을 읽습니다.
 
 - `.agents/workflows/implement.md`
 
-리뷰 요청:
+리뷰 요청이면 다음 파일을 읽습니다.
 
 - `.agents/workflows/review.md`
 
-리팩토링:
+동작 변경 없는 코드 구조 개선이나 청소이면 다음 파일을 읽습니다.
 
 - `.agents/workflows/refactor.md`
 
-새 뉴스 source 추가:
+새 뉴스 source 추가이면 다음 파일을 읽습니다.
 
 - `.agents/workflows/add-news-source.md`
 
 ## Context
 
-현재 리팩토링 방향, 임시 결정, 진행 중인 맥락이 작업 결과에 영향을 주는 경우:
+현재 포커스, 임시 결정 등 동적 상태가 작업 결과에 직접 영향을 주는 경우 다음 파일을 읽습니다.
 
 - `MEMORY.md`
 
 ## Domain Rules
 
-아키텍처, 레이어 책임, target, Provider 변경:
+아키텍처, 레이어 책임, target, Provider 변경이면 다음 파일을 읽습니다.
 
 - `.agents/rules/architecture.md`
 
-Ingest, Refine, count, 실패 전파 변경:
+Ingest, Refine, count, 실패 전파 변경이면 다음 파일을 읽습니다.
 
 - `.agents/rules/pipeline.md`
 
-Entity, Schema, BigQuery, Terraform, field description 변경:
+Entity, Schema, BigQuery, Terraform, field description 변경이면 다음 파일을 읽습니다.
 
 - `.agents/rules/data-contracts.md`
 
 ## Cross-Cutting Rules
 
-import, method order, docstring, comment, logging 변경:
+import, method order, docstring, comment, logging 변경이면 다음 파일을 읽습니다.
 
 - `.agents/rules/style.md`
 
 ## Special Rules
 
-하네스 문서 추가/수정:
+하네스 문서 추가/수정이면 다음 파일을 읽습니다.
 
 - `.agents/rules/harness-docs.md`
 
-commit 요청:
+commit 요청이면 다음 파일을 읽습니다.
 
 - `.agents/rules/commit.md`
-
-## Guardrail
-
-`.agents/` 아래 모든 파일을 기본으로 한 번에 읽지 않습니다. 작업 범위가 여러 영역에 걸치면 해당 파일만 조합해서 읽습니다.

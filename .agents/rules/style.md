@@ -1,22 +1,25 @@
 # Style Rules
 
-import, method order, docstring, comment, logging을 수정할 때 읽습니다.
+import, method order, docstring, comment, logging 스타일 계약을 정의합니다.
 
 ## Imports
 
-- import 그룹은 Python 표준 라이브러리, third-party package, first-party `src.*` 순서로 작성합니다.
-- 각 그룹 사이에는 빈 줄 하나를 두고, 그룹 내부는 가능한 한 알파벳순으로 정렬합니다.
-- 같은 패키지 import는 가능한 한 한 그룹으로 묶습니다.
+- import는 Python standard library, third-party package, first-party `src.*` 순서로 둡니다.
+- 각 그룹 사이에는 빈 줄 하나만 둡니다.
+- 그룹 내부는 알파벳순으로 정렬하고 같은 패키지 import는 가능한 한 묶습니다.
 - `TYPE_CHECKING`은 순환 import를 피해야 할 때만 사용합니다.
+- 수정하는 파일의 import는 새 규칙에 맞추고, 관련 없는 파일의 import churn은 만들지 않습니다.
 
-## Methods
+## Naming And Order
 
-- 공개 파이프라인 메서드는 가능하면 `ETL단계_레이어_테이블명` 형태로 작성합니다.
-- helper 이름은 반환값이나 처리 대상을 드러냅니다.
-- Pydantic Entity 생성 helper는 반환 모델명을 포함합니다.
-- 메서드는 public phase, orchestration helper, 호출 순서의 private helper, model creation helper 순서로 배치합니다.
-- 레이어별 순서는 Provider, Store, Plugin, Service의 기존 패턴을 따릅니다.
-- 같은 개념의 메서드는 같은 동사와 명사 구조를 유지합니다. 예: `transform_*`, `load_*`, `_create_*_model`.
+- 공개 phase 메서드는 `fetch`, `lookup`, `enrich`, `extract_*`, `transform_*`, `load_*`처럼 단계와 대상을 드러냅니다.
+- helper 이름은 반환값, 처리 대상, 외부 호출 목적을 드러냅니다.
+- Pydantic Entity 생성 helper는 `_create_<model>_model`처럼 반환 모델명을 포함합니다.
+- Provider는 `__init__`, public external-call method, private request/parse/log helper 순서로 둡니다.
+- Store는 public table method, shared CRUD helper, execution method, SQL/filter helper, sync client method 순서로 둡니다.
+- Plugin은 public phase method, private orchestration helper, mapping helper, model creation helper 순서로 둡니다.
+- Service는 public `run()`, private pipeline step, response helper, module-level dependency factory 순서로 둡니다.
+- 같은 개념의 메서드는 같은 동사와 명사 구조를 유지합니다.
 - 함수 인자는 가능한 한 구체적인 Entity 또는 Schema 타입으로 명시합니다.
 
 ## Documentation And Comments
@@ -25,22 +28,24 @@ import, method order, docstring, comment, logging을 수정할 때 읽습니다.
 - 설명은 짧고 구체적으로 쓰고, 코드가 보장하지 않는 동작을 설명하지 않습니다.
 - 함수와 메서드 docstring은 `Return ...`, `Fetch ...`, `Transform ...`처럼 imperative mood를 사용합니다.
 - 클래스 docstring은 객체의 책임을 설명합니다.
-- inline comment는 필요한 이유, 외부 제약, 예외 방지 목적을 설명할 때만 사용합니다.
+- inline comment는 `loaded_at` 주입, event loop semaphore, retry, partial load처럼 필요한 이유나 외부 제약을 설명할 때만 둡니다.
 - TODO comment는 이유와 방향을 함께 포함합니다.
 
 ## Logging
 
 - 애플리케이션 로그 메시지는 영어로 작성합니다.
-- 기본 형식은 `<Layer> <operation> [scope] <outcome> | key: value`입니다.
-- source나 target을 `[]` prefix로 표현하지 말고 key-value 필드를 사용합니다.
+- 런타임 코드는 `logger`를 사용하고 `print()`를 사용하지 않습니다.
+- 기본 형식은 `<Layer> <operation> [scope] <outcome> | key: value, key: value`입니다.
+- source, target, table은 `[]` prefix가 아니라 key-value 필드로 기록합니다.
 - 레이어 이름은 `App`, `Router`, `Plugin`, `Store`, `Provider`처럼 책임 단위를 드러냅니다.
-- item/chunk 단위 실패에는 scope를 사용하고, method 전체 실패에는 scope를 쓰지 않습니다.
-- 자주 쓰는 필드는 `target`, `source`, `table`, `provider`, `method`, `news_id`, `batch_id`, `count`, `total`, `reason`, `error`, `status`, `status_code`입니다.
+- item/chunk 단위 실패에는 scope를 쓰고, method 전체 실패에는 scope를 쓰지 않습니다.
+- `logger.exception`은 stack trace가 필요한 phase/method 실패에만 사용합니다.
+- 자주 쓰는 필드는 `target`, `source`, `table`, `provider`, `method`, `news_id`, `news_ids`, `batch_id`, `count`, `total`, `reason`, `error`, `status`, `status_code`입니다.
 
-예시:
+예시는 다음 로그 형식을 따릅니다.
 
 ```text
-Router request received | endpoint: refine, target: news
+Router request received | endpoint: refine, target: news, executed_at: 2026-05-20T00:00:00+00:00
 Plugin transform item failed | target: news-augmented, news_id: ..., batch_id: ..., reason: llm result missing
-Store load skipped | table: bronze.news, reason: no items
+Store load skipped | table: silver.news, reason: no items
 ```
