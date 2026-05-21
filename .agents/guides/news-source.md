@@ -4,7 +4,7 @@
 
 ## Procedure
 
-1. `.agents/rules/architecture.md`, `.agents/rules/pipeline.md`, `.agents/rules/data-contracts.md`를 함께 적용합니다.
+1. `.agents/rules/architecture.md`, `.agents/rules/pipeline.md`, `.agents/rules/data-contract.md`를 함께 적용합니다.
 2. `src/worker/plugins/sources/` 아래에 `SourceBase` 구현체를 추가합니다.
 3. `source`는 DB와 응답에 남는 안정적인 lower_snake_case 식별자로 정의합니다.
 4. `RSS_URL`과 `fetch(request: IngestRequest)`를 정의합니다.

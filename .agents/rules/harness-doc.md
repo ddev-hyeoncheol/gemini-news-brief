@@ -1,4 +1,4 @@
-# Harness Documentation Rules
+# Harness Documentation Rule
 
 하네스 문서를 추가하거나 수정할 때만 이 규칙을 적용합니다.
 

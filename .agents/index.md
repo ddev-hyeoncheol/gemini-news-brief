@@ -50,7 +50,7 @@ Ingest, Refine, count, 실패 전파 변경이면 다음 파일을 읽습니다.
 
 Entity, Schema, BigQuery, Terraform, field description 변경이면 다음 파일을 읽습니다.
 
-- `.agents/rules/data-contracts.md`
+- `.agents/rules/data-contract.md`
 
 ## Cross-Cutting Rules
 
@@ -62,7 +62,7 @@ import, method order, docstring, comment, logging 변경이면 다음 파일을 
 
 하네스 문서 추가/수정이면 다음 파일을 읽습니다.
 
-- `.agents/rules/harness-docs.md`
+- `.agents/rules/harness-doc.md`
 
 commit 요청이면 다음 파일을 읽습니다.
 
