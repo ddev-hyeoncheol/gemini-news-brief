@@ -17,7 +17,7 @@ steps:
 
   # 4. Apply Changes: Execute the saved 'tfplan' and update real infrastructure
   - name: "hashicorp/terraform:${_TF_VERSION}"
-    args: ["apply", "-auto-approve", "tfplan"]
+    args: ["apply", "tfplan"]
     dir: "terraform"
 
 substitutions:
