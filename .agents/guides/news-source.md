@@ -24,3 +24,12 @@
 - Enrich 실패 record 보존과 `count` 의미는 pipeline 규칙을 따릅니다.
 - 기존 source의 `source` 식별자는 DB와 응답 계약에 남으므로 rename하지 않습니다.
 - 검증은 새 source 파일과 `src/worker/services/batch.py`를 중심으로 compile 또는 import 검증을 실행합니다.
+
+## Candidate RSS Feed URLs
+
+다음은 프로젝트에서 검토했거나 제공 중인 RSS 피드 소스 URL 정보입니다.
+
+- **Yahoo Finance**: `https://finance.yahoo.com/news/rssindex` (또는 `https://finance.yahoo.com/rss/`)
+- **CNBC**: `https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=15839069`
+- **BBC Business**: `https://feeds.bbci.co.uk/news/business/rss.xml`
+- **The Guardian**: `https://www.theguardian.com/business/economics/rss`
