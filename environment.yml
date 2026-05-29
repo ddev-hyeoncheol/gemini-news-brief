@@ -2,97 +2,80 @@ name: gemini-news-brief
 channels:
   - conda-forge
 dependencies:
-  - bzip2=1.0.8=hd037594_9
-  - ca-certificates=2026.2.25=hbd8a1cb_0
-  - libexpat=2.7.5=hf6b4638_0
-  - libffi=3.5.2=hcf2aa1b_0
-  - liblzma=5.8.3=h8088a28_0
-  - libsqlite=3.53.0=h1b79a29_0
-  - libzlib=1.3.2=h8088a28_2
-  - ncurses=6.5=h5e97a16_3
-  - openssl=3.6.2=hd24854e_0
-  - packaging=26.0=pyhcf101f3_0
-  - pip=26.0.1=pyh8b19718_0
-  - python=3.12.13=h8561d8f_0_cpython
-  - readline=8.3=h46df422_0
-  - setuptools=82.0.1=pyh332efcf_0
-  - tk=8.6.13=h010d191_3
-  - tzdata=2025c=hc9c84f9_1
-  - wheel=0.46.3=pyhd8ed1ab_0
+  - bzip2=1.0.8
+  - ca-certificates=2026.5.20
+  - libexpat=2.8.1
+  - libffi=3.5.2
+  - liblzma=5.8.3
+  - libsqlite=3.53.1
+  - libzlib=1.3.2
+  - ncurses=6.6
+  - openssl=3.6.2
+  - packaging=26.2
+  - pip=26.1.1
+  - python=3.12.13
+  - readline=8.3
+  - setuptools=82.0.1
+  - tk=8.6.13
+  - tzdata=2025c
+  - wheel=0.47.0
   - pip:
       - annotated-doc==0.0.4
       - annotated-types==0.7.0
       - anyio==4.13.0
       - beautifulsoup4==4.14.3
-      - blinker==1.9.0
-      - certifi==2026.2.25
+      - brotli==1.2.0
+      - certifi==2026.5.20
       - cffi==2.0.0
       - charset-normalizer==3.4.7
-      - click==8.3.2
-      - cloudevents==1.12.0
-      - cryptography==46.0.7
-      - cssselect==1.4.0
-      - deprecation==2.1.0
-      - fastapi==0.135.3
-      - feedfinder2==0.0.4
+      - click==8.4.1
+      - cryptography==48.0.0
+      - distro==1.9.0
+      - fastapi==0.136.3
       - feedparser==6.0.12
-      - filelock==3.25.2
-      - flask==3.1.3
-      - functions-framework==3.10.1
-      - google-ai-generativelanguage==0.6.15
+      - filelock==3.29.0
       - google-api-core==2.30.3
-      - google-api-python-client==2.194.0
-      - google-auth==2.49.2
-      - google-auth-httplib2==0.3.1
+      - google-auth==2.53.0
       - google-cloud-bigquery==3.41.0
-      - google-cloud-core==2.5.1
-      - google-cloud-storage==3.10.1
+      - google-cloud-core==2.6.0
       - google-crc32c==1.8.0
-      - google-generativeai==0.8.6
-      - google-resumable-media==2.8.2
-      - googleapis-common-protos==1.74.0
+      - google-genai==2.7.0
+      - google-resumable-media==2.9.0
+      - googleapis-common-protos==1.75.0
       - grpcio==1.80.0
-      - grpcio-status==1.71.2
-      - gunicorn==25.3.0
+      - grpcio-status==1.80.0
       - h11==0.16.0
-      - httplib2==0.31.2
-      - idna==3.11
-      - itsdangerous==2.2.0
-      - jieba3k==0.35.1
-      - jinja2==3.1.6
-      - joblib==1.5.3
-      - lxml==6.0.4
+      - httpcore==1.0.9
+      - httpx==0.28.1
+      - idna==3.17
+      - lxml==5.4.0
       - lxml-html-clean==0.4.4
-      - markupsafe==3.0.3
-      - newspaper3k==0.2.8
-      - nltk==3.9.4
+      - newspaper4k==0.9.5
       - pillow==12.2.0
-      - proto-plus==1.27.2
-      - protobuf==5.29.6
+      - proto-plus==1.28.0
+      - protobuf==6.33.6
       - pyasn1==0.6.3
       - pyasn1-modules==0.4.2
       - pycparser==3.0
-      - pydantic==2.13.0
-      - pydantic-core==2.46.0
-      - pyparsing==3.3.2
+      - pydantic==2.13.4
+      - pydantic-core==2.46.4
+      - pydantic-settings==2.14.1
       - python-dateutil==2.9.0.post0
+      - python-dotenv==1.2.2
       - pyyaml==6.0.3
-      - regex==2026.4.4
-      - requests==2.33.1
+      - requests==2.34.2
       - requests-file==3.0.1
       - sgmllib3k==1.0.0
       - six==1.17.0
-      - soupsieve==2.8.3
-      - starlette==0.52.1
-      - tinysegmenter==0.3
+      - sniffio==1.3.1
+      - soupsieve==2.8.4
+      - starlette==1.2.0
+      - tenacity==9.1.4
       - tldextract==5.3.1
-      - tqdm==4.67.3
       - typing-extensions==4.15.0
       - typing-inspection==0.4.2
-      - uritemplate==4.2.0
-      - urllib3==2.6.3
-      - uvicorn==0.44.0
-      - uvicorn-worker==0.4.0
-      - watchdog==6.0.0
-      - werkzeug==3.1.8
+      - urllib3==2.7.0
+      - uvicorn==0.48.0
+      - w3lib==2.4.1
+      - websockets==16.0
 prefix: /Users/supergrammer/miniforge3/envs/gemini-news-brief
