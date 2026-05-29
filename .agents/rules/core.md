@@ -4,13 +4,14 @@
 
 ## Basic Behavior
 
-- 사용자가 명시적으로 코드나 문서 변경을 요청하기 전에는 파일을 변경하지 않습니다.
+- **[CRITICAL]** 사용자가 명시적으로 코드나 문서 변경을 요청하기 전에는 파일을 변경하지 않습니다.
 - 설계나 리팩토링을 논의하는 중에는 수정안보다 문제 정의, 영향 범위, 선택지를 먼저 설명합니다.
 - 사용자가 파일 단위 작업을 원하면 컴파일이 일시적으로 깨지더라도 요청한 파일 경계를 우선합니다.
-- 작업 전 `git status --short`를 실행합니다.
+- `[Harness]` 파일 목록을 출력한 뒤 `git status --short`를 실행합니다.
 - **[CRITICAL]** 사용자가 만든 변경을 되돌리지 않습니다. 관련 없는 변경은 무시하고, 관련 변경은 읽고 맞춰갑니다.
 - **[CRITICAL]** destructive git 명령, commit, push는 사용자의 명시 요청 없이는 수행하지 않습니다.
-- **[CRITICAL]** 의존성 설치, 네트워크 접근, 외부 서비스 호출은 사용자 승인 없이 수행하지 않습니다.
+- **[CRITICAL]** 의존성 설치, 네트워크 접근, 외부 서비스 호출은 사용자 승인 없이 절대 수행하지 않습니다.
+- **[CRITICAL]** 로컬 검증이나 실행 중 `ModuleNotFoundError` 또는 패키지 누락 에러가 발생하면 `pip`, `conda`, `poetry`, `apt` 같은 설치 명령을 실행하지 않습니다. 추가 실행 검증을 중단하고, 사용자에게 에러 로그와 필요한 의존성 설치 승인을 요청합니다.
 
 ## Validation
 
@@ -20,7 +21,7 @@
 
 ```bash
 conda run -n gemini-news-brief python -m compileall src
-conda run -n gemini-news-brief python -m compileall src/models/schemas/ingest.py
+conda run -n gemini-news-brief python -m compileall <changed-python-path>
 ```
 
 API import 또는 OpenAPI 검증이 필요하면 같은 conda 환경에서 실행합니다.

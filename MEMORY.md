@@ -4,9 +4,7 @@
 
 ## Current Focus
 
-- 현재 리팩토링 초점은 `target_table` 제거, path target 검증, `TransformPlugin`/Store 책임 분리, Entity/Terraform description 동기화입니다.
+- Batch path target 검증의 잔여 영향을 확인합니다.
+- `AiPlugin`/Store 책임 경계와 Entity/Terraform description 동기화 상태를 이어서 확인합니다.
 
 ## Temporary Notes
-
-- `BronzeStore._BRONZE_NEWS`는 아직 `"bronze.news"`로 하드코딩되어 있습니다.
-- 멀티 프로젝트 테이블 ID 설정은 향후 리팩토링 대상이며, 모든 변경의 선행 조건은 아닙니다.

@@ -10,10 +10,6 @@
 
 ## Workflows
 
-기능 추가, 버그 수정, 문서 변경처럼 동작이나 산출물이 바뀌는 작업이면 다음 파일을 읽습니다.
-
-- `.agents/workflows/implement.md`
-
 리뷰 요청이면 다음 파일을 읽습니다.
 
 - `.agents/workflows/review.md`
@@ -21,6 +17,14 @@
 동작 변경 없는 코드 구조 개선이나 청소이면 다음 파일을 읽습니다.
 
 - `.agents/workflows/refactor.md`
+
+리팩토링이 파일 수정을 포함하면 다음 파일도 함께 읽습니다.
+
+- `.agents/workflows/implement.md`
+
+기능 추가, 버그 수정, 문서 변경처럼 동작이나 산출물이 바뀌는 작업이면 다음 파일을 읽습니다.
+
+- `.agents/workflows/implement.md`
 
 ## Guides
 
@@ -44,7 +48,7 @@
 
 - `.agents/rules/architecture.md`
 
-Ingest, Refine, count, 실패 전파 변경이면 다음 파일을 읽습니다.
+Batch pipeline, bronze/silver, count, 실패 전파 변경이면 다음 파일을 읽습니다.
 
 - `.agents/rules/pipeline.md`
 
@@ -60,7 +64,7 @@ import, method order, docstring, comment, logging 변경이면 다음 파일을 
 
 ## Special Rules
 
-하네스 문서 추가/수정이면 다음 파일을 읽습니다.
+하네스 문서 추가/수정/리뷰/검토이면 다음 파일을 읽습니다.
 
 - `.agents/rules/harness-doc.md`
 
