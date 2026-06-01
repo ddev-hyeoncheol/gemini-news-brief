@@ -65,9 +65,10 @@ Header만으로 충분한 작은 변경은 한 줄 commit도 허용합니다.
 ## Examples
 
 ```text
-[Feat] Gemini 뉴스 증강 target 추가
+[Feat] Silver 뉴스 증강 batch 추가
 
-- `refine/news-augmented` target 추가
+- `silver/news-augmented` batch target 추가
+- `POST /batch/{layer}/{target}` 경로에서 Silver 증강 실행 지원
 - `silver.news`를 Gemini로 분석해 `silver.news_augmented`에 적재
 - AI chunk 실패 시 실패 record 유지
 
@@ -86,14 +87,14 @@ Closes #123
 ```
 
 ```text
-[Refactor] refine 요청 target 경로 변경
+[Refactor] batch 실행 target 경로 정리
 
 - 요청 body에서 `target_table` 제거
-- path target으로 refine 실행 대상 전달
+- `POST /batch/{layer}/{target}` path target으로 실행 대상 전달
 
-BREAKING CHANGE: refine 요청은 더 이상 `target_table`을 받지 않습니다.
+BREAKING CHANGE: batch 실행 요청은 더 이상 `target_table`을 받지 않습니다.
 
-기존 클라이언트는 `POST /refine` 대신 `POST /refine/{target}`을 호출해야 합니다.
+기존 클라이언트는 실행 대상을 `POST /batch/{layer}/{target}` path로 전달해야 합니다.
 ```
 
 ## Branches And Pull Requests

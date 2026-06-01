@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.debugpy",
+    "ms-python.black-formatter",
+    "ms-pyright.pyright",
+    "editorconfig.editorconfig",
+    "eamodio.gitlens",
+    "4ops.terraform"
+  ]
+}
