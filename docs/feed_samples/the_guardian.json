@@ -1,0 +1,871 @@
+[
+  {
+    "feedparser_entry": {
+      "title": "Disaster of Brexit is a warning against simple solutions to hard problems | Richard Partington",
+      "title_detail": {
+        "type": "text/plain",
+        "language": null,
+        "base": "https://www.theguardian.com/business/economics/rss",
+        "value": "Disaster of Brexit is a warning against simple solutions to hard problems | Richard Partington"
+      },
+      "links": [
+        {
+          "rel": "alternate",
+          "type": "text/html",
+          "href": "https://www.theguardian.com/politics/2026/may/31/disaster-brexit-warning-simple-solutions-hard-problems"
+        }
+      ],
+      "link": "https://www.theguardian.com/politics/2026/may/31/disaster-brexit-warning-simple-solutions-hard-problems",
+      "summary": "<p>Alan Milburn says youth unemployment has no quick fixes – an idea with an important lesson for those thinking about how to rejoin the EU</p><p>Mainstream politicians are rarely direct. It is part of the reason why their populist counterparts thrive: they say it like it is. No nonsense. Let’s get things done. But last week Alan Milburn had a frank rebuttal: “Everybody goes for the bloody easy solution, don’t they? You can’t just go for the easy solution, OK? There are no easy solutions, guys. None. They’re all hard.”</p><p>Speaking at the launch of his review into <a href=\"https://www.theguardian.com/business/2026/may/28/uk-risks-125bn-hit-youth-unemployment-landmark-report-alan-milburn-neets\">Britain’s youth worklessness crisis</a>, the former Labour cabinet minister was arguing that one tax U-turn could not fix a problem decades in the making.</p> <a href=\"https://www.theguardian.com/politics/2026/may/31/disaster-brexit-warning-simple-solutions-hard-problems\">Continue reading...</a>",
+      "summary_detail": {
+        "type": "text/html",
+        "language": null,
+        "base": "https://www.theguardian.com/business/economics/rss",
+        "value": "<p>Alan Milburn says youth unemployment has no quick fixes – an idea with an important lesson for those thinking about how to rejoin the EU</p><p>Mainstream politicians are rarely direct. It is part of the reason why their populist counterparts thrive: they say it like it is. No nonsense. Let’s get things done. But last week Alan Milburn had a frank rebuttal: “Everybody goes for the bloody easy solution, don’t they? You can’t just go for the easy solution, OK? There are no easy solutions, guys. None. They’re all hard.”</p><p>Speaking at the launch of his review into <a href=\"https://www.theguardian.com/business/2026/may/28/uk-risks-125bn-hit-youth-unemployment-landmark-report-alan-milburn-neets\">Britain’s youth worklessness crisis</a>, the former Labour cabinet minister was arguing that one tax U-turn could not fix a problem decades in the making.</p> <a href=\"https://www.theguardian.com/politics/2026/may/31/disaster-brexit-warning-simple-solutions-hard-problems\">Continue reading...</a>"
+      },
+      "tags": [
+        {
+          "term": "Economic policy",
+          "scheme": "https://www.theguardian.com/politics/economy",
+          "label": null
+        },
+        {
+          "term": "Brexit",
+          "scheme": "https://www.theguardian.com/politics/eu-referendum",
+          "label": null
+        },
+        {
+          "term": "Youth unemployment",
+          "scheme": "https://www.theguardian.com/society/youth-unemployment",
+          "label": null
+        },
+        {
+          "term": "Economics",
+          "scheme": "https://www.theguardian.com/business/economics",
+          "label": null
+        },
+        {
+          "term": "Business",
+          "scheme": "https://www.theguardian.com/business/business",
+          "label": null
+        },
+        {
+          "term": "UK news",
+          "scheme": "https://www.theguardian.com/uk/uk",
+          "label": null
+        },
+        {
+          "term": "Politics",
+          "scheme": "https://www.theguardian.com/politics/politics",
+          "label": null
+        },
+        {
+          "term": "Unemployment",
+          "scheme": "https://www.theguardian.com/society/unemployment",
+          "label": null
+        },
+        {
+          "term": "Young people",
+          "scheme": "https://www.theguardian.com/society/youngpeople",
+          "label": null
+        }
+      ],
+      "published": "Sun, 31 May 2026 10:41:34 GMT",
+      "published_parsed": [
+        2026,
+        5,
+        31,
+        10,
+        41,
+        34,
+        6,
+        151,
+        0
+      ],
+      "id": "https://www.theguardian.com/politics/2026/may/31/disaster-brexit-warning-simple-solutions-hard-problems",
+      "guidislink": false,
+      "media_content": [
+        {
+          "width": "140",
+          "url": "https://i.guim.co.uk/img/media/1517774b027b2c8d2a80d2f7608ba876449a3eb3/201_0_4560_3648/master/4560.jpg?width=140&quality=85&auto=format&fit=max&s=66a247746c34042fa869063cfbff5cdb"
+        },
+        {
+          "width": "460",
+          "url": "https://i.guim.co.uk/img/media/1517774b027b2c8d2a80d2f7608ba876449a3eb3/201_0_4560_3648/master/4560.jpg?width=460&quality=85&auto=format&fit=max&s=f551855be29bb18ff85d366665c88f47"
+        },
+        {
+          "width": "700",
+          "url": "https://i.guim.co.uk/img/media/1517774b027b2c8d2a80d2f7608ba876449a3eb3/201_0_4560_3648/master/4560.jpg?width=700&quality=85&auto=format&fit=max&s=10e3c4f14a2d791479b85028cb04005f"
+        }
+      ],
+      "media_credit": [
+        {
+          "scheme": "urn:ebu",
+          "content": "Photograph: WPA/Getty Images"
+        },
+        {
+          "scheme": "urn:ebu",
+          "content": "Photograph: WPA/Getty Images"
+        },
+        {
+          "scheme": "urn:ebu",
+          "content": "Photograph: WPA/Getty Images"
+        }
+      ],
+      "credit": "Photograph: WPA/Getty Images",
+      "authors": [
+        {
+          "name": "Richard Partington"
+        }
+      ],
+      "author": "Richard Partington",
+      "author_detail": {
+        "name": "Richard Partington"
+      },
+      "updated": "2026-05-31T10:41:34Z",
+      "updated_parsed": [
+        2026,
+        5,
+        31,
+        10,
+        41,
+        34,
+        6,
+        151,
+        0
+      ]
+    },
+    "newspaper_article": {
+      "url": "https://www.theguardian.com/politics/2026/may/31/disaster-brexit-warning-simple-solutions-hard-problems",
+      "title": "The disaster of Brexit is a warning against simple solutions to hard problems",
+      "text": "Mainstream politicians are rarely direct. It is part of the reason why their populist counterparts thrive: they say it like it is. No nonsense. Let’s get things done. But last week Alan Milburn had a frank rebuttal: “Everybody goes for the bloody easy solution, don’t they? You can’t just go for the easy solution, OK? There are no easy solutions, guys. None. They’re all hard.”\n\nSpeaking at the launch of his review into Britain’s youth worklessness crisis, the former Labour cabinet minister was arguing that one tax U-turn could not fix a problem decades in the making.\n\nBut his comment could easily have applied elsewhere across the political landscape. It also comes with impeccable timing, just before the 10th anniversary of the ultimate populist silver-bullet solution: Brexit.\n\nTen years ago, Britain faced a binary question obscuring a deeply complicated issue. Far from being the easy solution to the country’s ills the leave campaign promised, Brexit opened a Pandora’s box and imposed permanent negative costs on the economy.\n\nAccording to the Stanford economist Nick Bloom and others in a paper for the US National Bureau of Economic Research, UK GDP per head is as much as 8% lower than it would have been under a remain scenario.\n\nThe reasons Brexit has been such a disaster speak to Milburn’s argument: there are no easy solutions. Leaving the EU was no panacea. It was complicated and messy, and involved years of hard work resulting in an outcome with which no one is happy.\n\nBloom’s analysis highlights the damage from the years of political uncertainty unleashed by the vote. Without a clear plan for what Brexit – never properly defined, and often subjective – should be in practice, business investment froze, trade faltered and the economy stalled.\n\nAs a consequence, investment is close to 18% lower than it would have been under remain, employment as much as 4% lower, and productivity up to 4% lower.\n\nThe leavers who say Brexit was botched may have a point. But their arguments are also redolent of the “real communism has never been tried” response to the dystopia of Soviet Russia.\n\nTo achieve the benefits forecast by leave-supporting economists, Britain would have needed to build a Singapore-on-Thames economic model, for which there was no public majority support.\n\nBrexit’s true believers tend to be libertarian Atlanticists. Inspired by a low-tax, small-state US model, they wanted closer transatlantic ties and to trade with the fast-growing Asian economies. Unshackled from the rotting corpse of the EU, the message was that Global Britain would prosper.\n\nTo get Brexit done, however, this group courted a much larger slice of the British electorate who wanted to give the Westminster establishment and the pen-pushers in Brussels a kicking, were fed-up of austerity, and were worried about immigration.\n\nThis coalition was never stable. Unlike the libertarians, most Brexit voters were anti-globalists who, when push came to shove, were more comfortable with big government than first meets the eye.\n\nBuilding Singapore-on-Thames would have entailed tax cuts incompatible with Britain’s already cash-starved public services. Most Brexit voters wanted £350m extra a week for the NHS, not a further denuded state.\n\nA bonfire of red tape was also a non-starter: ditching inherited EU health rules to allow for hormone-treated beef and chlorinated chicken imports from the US, at the expense of British farmers, revolted most voters.\n\nFor manufacturers, duplicating production lines to follow separate rules to sell to 70 million Britons, versus 450 million EU inhabitants, is a nightmare.\n\nGeopolitics has also changed. The idea of closer relations with the US is now anathema under Donald Trump, and tensions with China and war in the Middle East have exposed severe weaknesses in global trade.\n\nIn this world, forging closer economic ties with near and politically aligned neighbours makes increasing sense. That has spurred supporters of the campaign for Britain to rejoin the EU.\n\nHowever, this idea is more complicated than it sounds. As Danny Blanchflower, a former Bank of England policymaker – who is no ally of Brexit – told me: “People can’t say: ‘I want to rejoin.’ On what terms? It’s far too simplistic.\n\n“Presumably you would have to have thousands of negotiators talking to all the people in the EU, on regulation about widgets, fish, qualifications and other things. You’d have to do all that. It’d be a major thing.”\n\nBlanchflower says closer ties with the EU would be “a bloody good start” to fixing the economy. But there are no quick fixes.\n\nPart of the problem is the spectre of Nigel Farage. Already, under Labour’s UK-EU reset, the prospect of a Reform UK government could undermine the benefits. Without certainty over the durability of any deal, business investment is likely to be withheld – stifling the benefits.\n\nIn addition to its EU relations, Britain has other major economic problems to overcome, challenges that some economists worry politicians will struggle to tackle head-on because of short-term political priorities.\n\nMilburn’s report highlights one of the most serious: the rise in youth unemployment and inactivity to more than 1 million. Fixing this will require a whole “system reset”, he says, involving hard policy changes covering schools, health, welfare and the jobs market.\n\nPoliticians should follow the Milburn mantra and be straight with voters. Change is hard. As Blanchflower told me: “The moral of the tale on Brexit is simplicity, and a lack of experts, gets us into a big mess. And that is where we are.”",
+      "authors": [
+        "Richard Partington",
+        "www.theguardian.com",
+        "richard-partington"
+      ],
+      "top_image": "https://i.guim.co.uk/img/media/1517774b027b2c8d2a80d2f7608ba876449a3eb3/201_0_4560_3648/master/4560.jpg?width=1200&height=630&quality=85&auto=format&fit=crop&precrop=40:21,offset-x50,offset-y0&overlay-align=bottom%2Cleft&overlay-width=100p&overlay-base64=L2ltZy9zdGF0aWMvb3ZlcmxheXMvdGctb3BpbmlvbnMucG5n&enable=upscale&s=c771abf7d782c18b23b1ffb104b22622",
+      "images": [
+        "https://sb.scorecardresearch.com/p?c1=2&c2=6035250&cv=2.0&cj=1&cs_ucfr=0&comscorekw=politics",
+        "https://i.guim.co.uk/img/media/1517774b027b2c8d2a80d2f7608ba876449a3eb3/201_0_4560_3648/master/4560.jpg?width=465&dpr=1&s=none&crop=none",
+        "https://i.guim.co.uk/img/uploads/2017/12/27/Richard_Partington,_R.png?width=180&dpr=1&s=none&crop=none"
+      ],
+      "movies": [],
+      "publish_date": "2026-05-31 00:00:00",
+      "meta_description": "Alan Milburn says youth unemployment has no quick fixes – an idea with an important lesson for those thinking about how to rejoin the EU",
+      "meta_keywords": [
+        ""
+      ],
+      "meta_lang": "en",
+      "meta_data": {
+        "description": "Alan Milburn says youth unemployment has no quick fixes – an idea with an important lesson for those thinking about how to rejoin the EU",
+        "viewport": "width=device-width,minimum-scale=1,initial-scale=1",
+        "theme-color": "#052962",
+        "robots": "max-image-preview:large"
+      },
+      "canonical_link": "https://www.theguardian.com/politics/2026/may/31/disaster-brexit-warning-simple-solutions-hard-problems",
+      "keywords": [],
+      "summary": ""
+    }
+  },
+  {
+    "feedparser_entry": {
+      "title": "‘I want my life back’: drugs shortages lay bare economic impact of diamond crash in Botswana",
+      "title_detail": {
+        "type": "text/plain",
+        "language": null,
+        "base": "https://www.theguardian.com/business/economics/rss",
+        "value": "‘I want my life back’: drugs shortages lay bare economic impact of diamond crash in Botswana"
+      },
+      "links": [
+        {
+          "rel": "alternate",
+          "type": "text/html",
+          "href": "https://www.theguardian.com/world/2026/may/30/drugs-shortages-economic-impact-diamond-crash-botswana"
+        }
+      ],
+      "link": "https://www.theguardian.com/world/2026/may/30/drugs-shortages-economic-impact-diamond-crash-botswana",
+      "summary": "<p>Healthcare should be free but lack of essential supplies has led to patients being told to buy their own medicines</p><p>In late 2023, Boitumelo Mosege fell sick. Her neck swelled up, her whole body itched and she fainted frequently. She was diagnosed with hyperthyroidism and had to give up her work as a farmer on the outskirts of Molepolole, a town about 30 miles north-west of Botswana’s capital, Gaborone.</p><p>In Botswana, public healthcare is supposed to be universal and free. However, Mosege said she had only sporadically received medication since becoming ill. The 53-year-old relies on her four children’s occasional piecework (where a worker is paid a fixed rate per task or unit produced), and her mother’s 1,400 pula (£77) monthly pension, to afford 2,000 pula-worth of medication every month. In early May, she said it was three months since she had last bought medicine.</p> <a href=\"https://www.theguardian.com/world/2026/may/30/drugs-shortages-economic-impact-diamond-crash-botswana\">Continue reading...</a>",
+      "summary_detail": {
+        "type": "text/html",
+        "language": null,
+        "base": "https://www.theguardian.com/business/economics/rss",
+        "value": "<p>Healthcare should be free but lack of essential supplies has led to patients being told to buy their own medicines</p><p>In late 2023, Boitumelo Mosege fell sick. Her neck swelled up, her whole body itched and she fainted frequently. She was diagnosed with hyperthyroidism and had to give up her work as a farmer on the outskirts of Molepolole, a town about 30 miles north-west of Botswana’s capital, Gaborone.</p><p>In Botswana, public healthcare is supposed to be universal and free. However, Mosege said she had only sporadically received medication since becoming ill. The 53-year-old relies on her four children’s occasional piecework (where a worker is paid a fixed rate per task or unit produced), and her mother’s 1,400 pula (£77) monthly pension, to afford 2,000 pula-worth of medication every month. In early May, she said it was three months since she had last bought medicine.</p> <a href=\"https://www.theguardian.com/world/2026/may/30/drugs-shortages-economic-impact-diamond-crash-botswana\">Continue reading...</a>"
+      },
+      "tags": [
+        {
+          "term": "Botswana",
+          "scheme": "https://www.theguardian.com/world/botswana",
+          "label": null
+        },
+        {
+          "term": "Africa",
+          "scheme": "https://www.theguardian.com/world/africa",
+          "label": null
+        },
+        {
+          "term": "Business",
+          "scheme": "https://www.theguardian.com/business/business",
+          "label": null
+        },
+        {
+          "term": "Economics",
+          "scheme": "https://www.theguardian.com/business/economics",
+          "label": null
+        },
+        {
+          "term": "World news",
+          "scheme": "https://www.theguardian.com/world/world",
+          "label": null
+        }
+      ],
+      "published": "Sat, 30 May 2026 13:00:20 GMT",
+      "published_parsed": [
+        2026,
+        5,
+        30,
+        13,
+        0,
+        20,
+        5,
+        150,
+        0
+      ],
+      "id": "https://www.theguardian.com/world/2026/may/30/drugs-shortages-economic-impact-diamond-crash-botswana",
+      "guidislink": false,
+      "media_content": [
+        {
+          "width": "140",
+          "url": "https://i.guim.co.uk/img/media/e2ceb570408a7449f1b04db8c6918c8c8c6a3dde/520_0_5200_4160/master/5200.jpg?width=140&quality=85&auto=format&fit=max&s=677f5d9b116fc660ce57181c166c0904"
+        },
+        {
+          "width": "460",
+          "url": "https://i.guim.co.uk/img/media/e2ceb570408a7449f1b04db8c6918c8c8c6a3dde/520_0_5200_4160/master/5200.jpg?width=460&quality=85&auto=format&fit=max&s=a1ac7b0144bd2cba7c01fc548af422d0"
+        },
+        {
+          "width": "700",
+          "url": "https://i.guim.co.uk/img/media/e2ceb570408a7449f1b04db8c6918c8c8c6a3dde/520_0_5200_4160/master/5200.jpg?width=700&quality=85&auto=format&fit=max&s=20f1ffe60380ba0c0be23b6c337998e6"
+        }
+      ],
+      "media_credit": [
+        {
+          "scheme": "urn:ebu",
+          "content": "Photograph: Kefilwe Monosi/The Guardian"
+        },
+        {
+          "scheme": "urn:ebu",
+          "content": "Photograph: Kefilwe Monosi/The Guardian"
+        },
+        {
+          "scheme": "urn:ebu",
+          "content": "Photograph: Kefilwe Monosi/The Guardian"
+        }
+      ],
+      "credit": "Photograph: Kefilwe Monosi/The Guardian",
+      "authors": [
+        {
+          "name": "Rachel Savage and Yvonne Mooka in Molepolole"
+        }
+      ],
+      "author": "Rachel Savage and Yvonne Mooka in Molepolole",
+      "author_detail": {
+        "name": "Rachel Savage and Yvonne Mooka in Molepolole"
+      },
+      "updated": "2026-05-30T13:00:20Z",
+      "updated_parsed": [
+        2026,
+        5,
+        30,
+        13,
+        0,
+        20,
+        5,
+        150,
+        0
+      ]
+    },
+    "newspaper_article": {
+      "url": "https://www.theguardian.com/world/2026/may/30/drugs-shortages-economic-impact-diamond-crash-botswana",
+      "title": "‘I want my life back’: drugs shortages lay bare economic impact of diamond crash in Botswana",
+      "text": "In late 2023, Boitumelo Mosege fell sick. Her neck swelled up, her whole body itched and she fainted frequently. She was diagnosed with hyperthyroidism and had to give up her work as a farmer on the outskirts of Molepolole, a town about 30 miles north-west of Botswana’s capital, Gaborone.\n\nIn Botswana, public healthcare is supposed to be universal and free. However, Mosege said she had only sporadically received medication since becoming ill. The 53-year-old relies on her four children’s occasional piecework (where a worker is paid a fixed rate per task or unit produced), and her mother’s 1,400 pula (£77) monthly pension, to afford 2,000 pula-worth of medication every month. In early May, she said it was three months since she had last bought medicine.\n\n“I felt like I had lost my life right there,” Mosege said, recounting when she was told she had to buy her medication herself. “I felt suicidal.”\n\nNearby, Kelly Jansen cares full time for her 83-year-old father, Gerhardus Jansen, who uses a wheelchair. They spend a third of his pension on medication and supplies including a blood pressure monitor and compression stockings.\n\nJansen, 39, is searching for someone to donate an electric wheelchair, which would give her more freedom. “I want my life back,” she said.\n\nLast year, shortages of essential medicines and medical supplies led the president, Duma Boko, to declare a public health emergency, 10 months after he defeated the party that had ruled Botswana since independence from Britain in 1966.\n\nHealth procurement had long been dysfunctional. But a multi-year economic downturn caused by a collapse in demand for diamonds, which are 80% of Botswana’s exports, tipped it over the edge, Boko wrote in an opinion piece for the Guardian in February. Meanwhile, the economic malaise has pushed up unemployment in what has long been one of the most stable and wealthiest countries in Africa.\n\nBoko blamed the Central Medical Stores (CMS), the state health procurement agency, for raising drug prices. Thabo Lucas Seleke, a University of Botswana health policy lecturer, said the agency’s problems had been known since at least 2010, when a government report said it needed wide-scale reforms.\n\n“It is a breeding ground for corruption,” Seleke said. “It has not improved, it is getting worse.”\n\nBotswana’s health ministry did not provide a comment, after a spokesperson requested written questions.\n\nAt independence, Botswana was one of the world’s poorest countries. The fortunes of the landlocked, semi-arid state were transformed a year later, when De Beers geologists found diamonds. For the next few decades, it was one of the world’s fastest-growing economies.\n\nThis wealth enabled Botswana to provide free primary and secondary education and become a world leader in tackling HIV/Aids. Its 2024 GDP per capita of $7,695 (£5,697) was the fourth highest in Africa, according to the World Bank.\n\nHowever, other healthcare outcomes haven’t kept pace with economic growth. Maternal deaths are higher than in similarly wealthy countries, according to the World Health Organization.\n\nMeanwhile, the crash in natural diamond prices – which have fallen 60% in four years and show no signs of recovery as consumers buy cheaper lab-grown stones – have dented Botswana’s relative prosperity. The IMF estimated that Botswana’s economy shrank 3% in 2024 and 1% last year.\n\nThe rise in fuel prices caused by the US war with Iran will hit Botswana hard, as it is an oil importer, said Marisa Lourenço, an independent political risk consultant. “It doesn’t have much other buffer,” she said. “If we look at how much the economy contracted during Covid, it never really recovered from that.”\n\nUnemployment rose to 21% among its population of 2.5 million in the year to 31 March 2025, according to the most recent official data. Almost 29% of 15- to 35-year-olds were jobless.\n\nOratile Olorato Kgatle’s eyes lit up as she spoke about wanting to work in public relations. But the 26-year-old, who lives with her aunt, has not had a single job interview in 18 months of applying.\n\n“I could feel that light just dimming with each day, until January when I went to [a psychiatric hospital] to seek help,” said Kgatle, who is limited to office work by Erb’s palsy, a condition that affects her strength and mobility.\n\nBotswana’s ailing economy has also affected middle-class families. Phenyo Tanka said her family stopped eating out and fired their domestic worker, after her husband was made redundant from his job as a mining engineer in December.\n\nTanka, a 39-year-old mother of four, is also an example of Botswana’s failure to diversify its economy away from diamonds. She graduated with a degree in agriculture in 2011, but has never been able to find a job.\n\nTanka hasn’t given up, though. She now sells homemade cakes and wants to set up a toilet paper factory. “I have two girls and I want them to know that they can also be independent, as ladies,” she said.",
+      "authors": [
+        "Rachel Savage",
+        "www.theguardian.com",
+        "rachel-savage"
+      ],
+      "top_image": "https://i.guim.co.uk/img/media/e2ceb570408a7449f1b04db8c6918c8c8c6a3dde/520_0_5200_4160/master/5200.jpg?width=1200&height=630&quality=85&auto=format&fit=crop&precrop=40:21,offset-x50,offset-y0&overlay-align=bottom%2Cleft&overlay-width=100p&overlay-base64=L2ltZy9zdGF0aWMvb3ZlcmxheXMvdGctZGVmYXVsdC5wbmc&enable=upscale&s=172920a18a76c01089879aa4b3d75c9c",
+      "images": [
+        "https://sb.scorecardresearch.com/p?c1=2&c2=6035250&cv=2.0&cj=1&cs_ucfr=0&comscorekw=world",
+        "https://i.guim.co.uk/img/media/e2ceb570408a7449f1b04db8c6918c8c8c6a3dde/0_0_6240_4160/master/6240.jpg?width=465&dpr=1&s=none&crop=none",
+        "https://i.guim.co.uk/img/media/e44b3ec757b7ba6392e6d35e84e086913a8c7eae/0_0_6240_4160/master/6240.jpg?width=445&dpr=1&s=none&crop=none",
+        "https://i.guim.co.uk/img/media/92e84d5d299b9360e86322719d6b0528c84ead4e/0_113_2295_1377/master/2295.jpg?width=445&dpr=1&s=none&crop=none",
+        "https://i.guim.co.uk/img/media/9106e9b19526626da3043b326064b81f36d91aa4/0_259_4876_3901/master/4876.jpg?width=445&dpr=1&s=none&crop=none",
+        "https://i.guim.co.uk/img/media/55f19d8760c951ad894f9889d20eef659cd6b1da/0_0_6240_4160/master/6240.jpg?width=445&dpr=1&s=none&crop=none"
+      ],
+      "movies": [],
+      "publish_date": "2026-05-30 00:00:00",
+      "meta_description": "Healthcare should be free but lack of essential supplies has led to patients being told to buy their own medicines",
+      "meta_keywords": [
+        ""
+      ],
+      "meta_lang": "en",
+      "meta_data": {
+        "description": "Healthcare should be free but lack of essential supplies has led to patients being told to buy their own medicines",
+        "viewport": "width=device-width,minimum-scale=1,initial-scale=1",
+        "theme-color": "#052962",
+        "robots": "max-image-preview:large"
+      },
+      "canonical_link": "https://www.theguardian.com/world/2026/may/30/drugs-shortages-economic-impact-diamond-crash-botswana",
+      "keywords": [],
+      "summary": ""
+    }
+  },
+  {
+    "feedparser_entry": {
+      "title": "Inflation won Trump the presidency, but could cost him the midterms",
+      "title_detail": {
+        "type": "text/plain",
+        "language": null,
+        "base": "https://www.theguardian.com/business/economics/rss",
+        "value": "Inflation won Trump the presidency, but could cost him the midterms"
+      },
+      "links": [
+        {
+          "rel": "alternate",
+          "type": "text/html",
+          "href": "https://www.theguardian.com/business/2026/may/30/inflation-trump-presidency-midterm-election"
+        }
+      ],
+      "link": "https://www.theguardian.com/business/2026/may/30/inflation-trump-presidency-midterm-election",
+      "summary": "<p>Trump’s pursuit of policies that drive up prices, including tariffs and war, might be punished in November’s elections</p><p>For such an uncannily successful politician, <a href=\"https://www.theguardian.com/us-news/donaldtrump\">Donald Trump</a> exhibits a perplexing political myopia. His most recent own-goal was endorsing Ken Paxton, a state attorney general, against four-term senator John Cornyn in the Republican primary for Senate in Texas. Trump’s endorsement helped push the <a href=\"https://www.nytimes.com/2026/05/18/us/politics/ken-paxton-texas-senate-race.html\">ethically compromised Maga firebrand</a> over the top, to run against popular Democrat James Talarico in November, complicating the Republicans’ chances to keep the seat.</p><p>But what truly screams “I want us to lose the midterms” is what Trump is doing about inflation, which is becoming his most vulnerable issue. According to a <a href=\"https://www.nytimes.com/interactive/2026/05/21/polls/times-siena-national-poll-toplines.html\">New York Times/Siena poll</a> of registered voters earlier in May, Trump’s approval on handling the cost of living is underwater by 42 percentage points, poorer than his rating on handling the economy (minus 31 points) and the unpopular war in Iran (minus 34 points).</p> <a href=\"https://www.theguardian.com/business/2026/may/30/inflation-trump-presidency-midterm-election\">Continue reading...</a>",
+      "summary_detail": {
+        "type": "text/html",
+        "language": null,
+        "base": "https://www.theguardian.com/business/economics/rss",
+        "value": "<p>Trump’s pursuit of policies that drive up prices, including tariffs and war, might be punished in November’s elections</p><p>For such an uncannily successful politician, <a href=\"https://www.theguardian.com/us-news/donaldtrump\">Donald Trump</a> exhibits a perplexing political myopia. His most recent own-goal was endorsing Ken Paxton, a state attorney general, against four-term senator John Cornyn in the Republican primary for Senate in Texas. Trump’s endorsement helped push the <a href=\"https://www.nytimes.com/2026/05/18/us/politics/ken-paxton-texas-senate-race.html\">ethically compromised Maga firebrand</a> over the top, to run against popular Democrat James Talarico in November, complicating the Republicans’ chances to keep the seat.</p><p>But what truly screams “I want us to lose the midterms” is what Trump is doing about inflation, which is becoming his most vulnerable issue. According to a <a href=\"https://www.nytimes.com/interactive/2026/05/21/polls/times-siena-national-poll-toplines.html\">New York Times/Siena poll</a> of registered voters earlier in May, Trump’s approval on handling the cost of living is underwater by 42 percentage points, poorer than his rating on handling the economy (minus 31 points) and the unpopular war in Iran (minus 34 points).</p> <a href=\"https://www.theguardian.com/business/2026/may/30/inflation-trump-presidency-midterm-election\">Continue reading...</a>"
+      },
+      "tags": [
+        {
+          "term": "Inflation",
+          "scheme": "https://www.theguardian.com/business/inflation",
+          "label": null
+        },
+        {
+          "term": "Business",
+          "scheme": "https://www.theguardian.com/business/business",
+          "label": null
+        },
+        {
+          "term": "Economics",
+          "scheme": "https://www.theguardian.com/business/economics",
+          "label": null
+        },
+        {
+          "term": "US economy",
+          "scheme": "https://www.theguardian.com/business/useconomy",
+          "label": null
+        },
+        {
+          "term": "Donald Trump",
+          "scheme": "https://www.theguardian.com/us-news/donaldtrump",
+          "label": null
+        },
+        {
+          "term": "Trump tariffs",
+          "scheme": "https://www.theguardian.com/us-news/trump-tariffs",
+          "label": null
+        },
+        {
+          "term": "Trump administration",
+          "scheme": "https://www.theguardian.com/us-news/trump-administration",
+          "label": null
+        },
+        {
+          "term": "Tariffs",
+          "scheme": "https://www.theguardian.com/business/tariffs",
+          "label": null
+        },
+        {
+          "term": "US news",
+          "scheme": "https://www.theguardian.com/us-news/us-news",
+          "label": null
+        },
+        {
+          "term": "US politics",
+          "scheme": "https://www.theguardian.com/us-news/us-politics",
+          "label": null
+        },
+        {
+          "term": "US midterm elections 2026",
+          "scheme": "https://www.theguardian.com/us-news/us-midterm-elections-2026",
+          "label": null
+        }
+      ],
+      "published": "Sat, 30 May 2026 11:00:18 GMT",
+      "published_parsed": [
+        2026,
+        5,
+        30,
+        11,
+        0,
+        18,
+        5,
+        150,
+        0
+      ],
+      "id": "https://www.theguardian.com/business/2026/may/30/inflation-trump-presidency-midterm-election",
+      "guidislink": false,
+      "media_content": [
+        {
+          "width": "140",
+          "url": "https://i.guim.co.uk/img/media/e4ed4433a5457bdb77ed2fa5e0002f58d91dc5db/0_0_3000_2400/master/3000.jpg?width=140&quality=85&auto=format&fit=max&s=96bf35ba58e1526c61db67003882f772"
+        },
+        {
+          "width": "460",
+          "url": "https://i.guim.co.uk/img/media/e4ed4433a5457bdb77ed2fa5e0002f58d91dc5db/0_0_3000_2400/master/3000.jpg?width=460&quality=85&auto=format&fit=max&s=8323092e32ea4735dcf79bcfa6043b4b"
+        },
+        {
+          "width": "700",
+          "url": "https://i.guim.co.uk/img/media/e4ed4433a5457bdb77ed2fa5e0002f58d91dc5db/0_0_3000_2400/master/3000.jpg?width=700&quality=85&auto=format&fit=max&s=34751233ffa47107584def12ed73bffd"
+        }
+      ],
+      "media_credit": [
+        {
+          "scheme": "urn:ebu",
+          "content": "Composite: The Guardian/Getty Images"
+        },
+        {
+          "scheme": "urn:ebu",
+          "content": "Composite: The Guardian/Getty Images"
+        },
+        {
+          "scheme": "urn:ebu",
+          "content": "Composite: The Guardian/Getty Images"
+        }
+      ],
+      "credit": "Composite: The Guardian/Getty Images",
+      "authors": [
+        {
+          "name": "Eduardo Porter"
+        }
+      ],
+      "author": "Eduardo Porter",
+      "author_detail": {
+        "name": "Eduardo Porter"
+      },
+      "updated": "2026-05-30T11:00:18Z",
+      "updated_parsed": [
+        2026,
+        5,
+        30,
+        11,
+        0,
+        18,
+        5,
+        150,
+        0
+      ]
+    },
+    "newspaper_article": {
+      "url": "https://www.theguardian.com/business/2026/may/30/inflation-trump-presidency-midterm-election",
+      "title": "Inflation won Trump the presidency, but could cost him the midterms",
+      "text": "For such an uncannily successful politician, Donald Trump exhibits a perplexing political myopia. His most recent own-goal was endorsing Ken Paxton, a state attorney general, against four-term senator John Cornyn in the Republican primary for Senate in Texas. Trump’s endorsement helped push the ethically compromised Maga firebrand over the top, to run against popular Democrat James Talarico in November, complicating the Republicans’ chances to keep the seat.\n\nBut what truly screams “I want us to lose the midterms” is what Trump is doing about inflation, which is becoming his most vulnerable issue. According to a New York Times/Siena poll of registered voters earlier in May, Trump’s approval on handling the cost of living is underwater by 42 percentage points, poorer than his rating on handling the economy (minus 31 points) and the unpopular war in Iran (minus 34 points).\n\nIt’s not unusual that one of his most effective weapons in defeating Kamala Harris in 2024 has been turned against him now that he is running things. What’s truly astonishing is how Trump seems willing to build a track record of inflationary policymaking. He seems to have decided that whatever fork appears in his path, he must take the one that leads to higher prices.\n\nThe list of inflationary gambits probably starts with the round of “reciprocal” tariffs Trump unleashed in April of last year, which he tweaked, rejiggered, raised, cut and dropped after the supreme court told him to. A report by the Yale Budget Lab concluded that tariffs boosted the price of durable goods by up to 3.8% in the 13 months to January of 2026.\n\nTrump got lucky. Importers stocked up on imports in late 2024 and early 2025, in anticipation of his tariffs. Even when the tariffs hit, they absorbed the higher costs via compressed margins. Moreover, the fast-rising prices of goods were masked by falling inflation in services, which were not hit by the levies.\n\nHe has also been lucky, so far, with his mass deportation campaign, which has not yet done much to reduce employment in immigrant-heavy industries such as food processing, construction, childcare and health services. As deportations continue, a more limited supply of workers is expected to push up wages and feed into higher prices.\n\nAnd that’s where the luck ends. Notable was his decision last year to end the enhanced subsidies for health insurance under the Affordable Care Act. Insurance premiums have jumped 58% on average, according to the Kaiser Family Foundation. Deductibles increased 37%, on average, to a record $3,706. Altogether, KFF estimated, up to 6 million Americans could drop their insurance this year.\n\nEnergy is his main sore spot. His zero-regulation, pedal-to-the-metal approach to artificial intelligence may not be the main driver of the massive investment in power-hogging AI datacenters, which is raising the price of electricity. But, adding in his efforts to cancel wind power projects, it’s clear he is not helping consumers with rising electricity bills. Despite his claims to be fighting for cheaper electricity, household energy prices in April were 6.4% more expensive than a year earlier.\n\nThen there’s that war Trump decided to wage against Iran, which, predictably, led Tehran to strangle the strait of Hormuz and sharply curtail the global supply of oil and gas. The nationwide average price of regular gasoline is hovering around $4.50 a gallon, about $1.30 higher than a year ago. That has driven a surge in consumer prices, which increased 3.8% in the year to April, their highest annual rate in two years.\n\nThe effect of the war is unlikely to end soon. An analysis by economists at the Dallas Fed estimated that the rise in oil prices due to the war could add anything between 0.2 and 1.8 percentage points to annual inflation by the end of the year, depending on how quickly the strait reopens, whether it stays open and uncertainty over its future status.\n\nPeople’s attitudes about inflation are difficult to parse. They think less about the alphabet of indices policymakers focus on, such as CPI and PCE, and more about how much the price of eggs and gas have risen since they last remembered. They hate inflation even if wages keep up with prices, as they have, on average, since Trump came into office, viewing the wage gain as a just reward and inflation as an unfair burden, even if both were driven by the same macroeconomic forces.\n\nIn the eyes of many Americans, dealing with inflation means not slowing the rate but forcing prices to fall, a predilection that Trump paid lip service to in the presidential election, even though bringing about lower prices across the board would almost certainly require a deep recession.\n\nWhatever their biases, they seem eager to punish incumbents for rising prices. One study based on polling just before the 2022 midterms found that people who felt the burden of inflation personally and observed it in their local community were less likely to vote for the Democrats than those who did not. (Those who blamed it on government spending tilted particularly heavily toward Republicans.)\n\nInflation was lower than it is today on election day in 2024. Still, researchers found that merely asking people to think about inflation caused support for the Biden-Harris administration and the Democratic party to fall. A third study based on actual votes cast found that Trump’s vote share in 2024 improved more relative to 2020 in counties where inflation was higher.\n\nThis may not be statistically robust, but since George HW Bush lost to Bill Clinton in 1992, there has been only one presidential election in a year with inflation as high as it is today. The incumbent, George W Bush, saw his Republican party lose to Barack Obama.\n\nOne might have thought Trump understands this stuff, given his successful deployment of inflation as a political cudgel not two years ago. But who knows? He has been hammering at the Fed not because he wants it to bring inflation under control, but because he wants it to lower interest rates. At this stage, that would be dramatically bad for inflation. Maybe he wants to lose?\n\nThis article was amended on 30 May 2026 to clarify that George W Bush did not personally lose to Barack Obama, as an earlier version suggested. He had completed a maximum two terms by the referenced election in 2008, when Obama beat the Republican candidate, John McCain.",
+      "authors": [
+        "Eduardo Porter",
+        "www.theguardian.com",
+        "eduardo-porter"
+      ],
+      "top_image": "https://i.guim.co.uk/img/media/e4ed4433a5457bdb77ed2fa5e0002f58d91dc5db/0_0_3000_2400/master/3000.jpg?width=1200&height=630&quality=85&auto=format&fit=crop&precrop=40:21,offset-x50,offset-y0&overlay-align=bottom%2Cleft&overlay-width=100p&overlay-base64=L2ltZy9zdGF0aWMvb3ZlcmxheXMvdGctZGVmYXVsdC5wbmc&enable=upscale&s=71da49ad34546f17e09576f0c8b30339",
+      "images": [
+        "https://sb.scorecardresearch.com/p?c1=2&c2=6035250&cv=2.0&cj=1&cs_ucfr=0&comscorekw=business",
+        "https://i.guim.co.uk/img/media/e4ed4433a5457bdb77ed2fa5e0002f58d91dc5db/0_0_3000_2400/master/3000.jpg?width=465&dpr=1&s=none&crop=none"
+      ],
+      "movies": [],
+      "publish_date": "2026-05-30 00:00:00",
+      "meta_description": "Trump’s pursuit of policies that drive up prices, including tariffs and war, might be punished in November’s elections",
+      "meta_keywords": [
+        ""
+      ],
+      "meta_lang": "en",
+      "meta_data": {
+        "description": "Trump’s pursuit of policies that drive up prices, including tariffs and war, might be punished in November’s elections",
+        "viewport": "width=device-width,minimum-scale=1,initial-scale=1",
+        "theme-color": "#052962",
+        "robots": "max-image-preview:large"
+      },
+      "canonical_link": "https://www.theguardian.com/business/2026/may/30/inflation-trump-presidency-midterm-election",
+      "keywords": [],
+      "summary": ""
+    }
+  },
+  {
+    "feedparser_entry": {
+      "title": "Bank of England’s Bailey says no rush to raise interest rates amid Iran war uncertainty",
+      "title_detail": {
+        "type": "text/plain",
+        "language": null,
+        "base": "https://www.theguardian.com/business/economics/rss",
+        "value": "Bank of England’s Bailey says no rush to raise interest rates amid Iran war uncertainty"
+      },
+      "links": [
+        {
+          "rel": "alternate",
+          "type": "text/html",
+          "href": "https://www.theguardian.com/business/2026/may/29/bank-of-england-bailey-says-no-rush-to-raise-interest-rates-amid-iran-war-uncertainty"
+        }
+      ],
+      "link": "https://www.theguardian.com/business/2026/may/29/bank-of-england-bailey-says-no-rush-to-raise-interest-rates-amid-iran-war-uncertainty",
+      "summary": "<p>Inflation can be tolerated above 2% target for now ‘given context of softness in real economy’, governor says</p><p>The Bank of England is in no rush to raise interest rates while the outcome of the Iran war remains uncertain and the UK’s growth rate stays weak, its governor, Andrew Bailey, has said.</p><p>In a signal that borrowing costs will remain at 3.75% at least during the summer, Bailey said it was tolerable for inflation to stay above the Bank’s 2% target during the current crisis. However, that would change if a more permanent increase in prices began to take effect, he said.</p> <a href=\"https://www.theguardian.com/business/2026/may/29/bank-of-england-bailey-says-no-rush-to-raise-interest-rates-amid-iran-war-uncertainty\">Continue reading...</a>",
+      "summary_detail": {
+        "type": "text/html",
+        "language": null,
+        "base": "https://www.theguardian.com/business/economics/rss",
+        "value": "<p>Inflation can be tolerated above 2% target for now ‘given context of softness in real economy’, governor says</p><p>The Bank of England is in no rush to raise interest rates while the outcome of the Iran war remains uncertain and the UK’s growth rate stays weak, its governor, Andrew Bailey, has said.</p><p>In a signal that borrowing costs will remain at 3.75% at least during the summer, Bailey said it was tolerable for inflation to stay above the Bank’s 2% target during the current crisis. However, that would change if a more permanent increase in prices began to take effect, he said.</p> <a href=\"https://www.theguardian.com/business/2026/may/29/bank-of-england-bailey-says-no-rush-to-raise-interest-rates-amid-iran-war-uncertainty\">Continue reading...</a>"
+      },
+      "tags": [
+        {
+          "term": "Bank of England",
+          "scheme": "https://www.theguardian.com/business/bankofenglandgovernor",
+          "label": null
+        },
+        {
+          "term": "Interest rates",
+          "scheme": "https://www.theguardian.com/business/interest-rates",
+          "label": null
+        },
+        {
+          "term": "Inflation",
+          "scheme": "https://www.theguardian.com/business/inflation",
+          "label": null
+        },
+        {
+          "term": "Andrew Bailey",
+          "scheme": "https://www.theguardian.com/business/andrew-bailey",
+          "label": null
+        },
+        {
+          "term": "Business",
+          "scheme": "https://www.theguardian.com/business/business",
+          "label": null
+        },
+        {
+          "term": "Economics",
+          "scheme": "https://www.theguardian.com/business/economics",
+          "label": null
+        },
+        {
+          "term": "Economic growth (GDP)",
+          "scheme": "https://www.theguardian.com/business/economicgrowth",
+          "label": null
+        },
+        {
+          "term": "US-Israel war on Iran",
+          "scheme": "https://www.theguardian.com/world/us-israel-war-on-iran",
+          "label": null
+        },
+        {
+          "term": "UK news",
+          "scheme": "https://www.theguardian.com/uk/uk",
+          "label": null
+        }
+      ],
+      "published": "Fri, 29 May 2026 14:25:57 GMT",
+      "published_parsed": [
+        2026,
+        5,
+        29,
+        14,
+        25,
+        57,
+        4,
+        149,
+        0
+      ],
+      "id": "https://www.theguardian.com/business/2026/may/29/bank-of-england-bailey-says-no-rush-to-raise-interest-rates-amid-iran-war-uncertainty",
+      "guidislink": false,
+      "media_content": [
+        {
+          "width": "140",
+          "url": "https://i.guim.co.uk/img/media/7a1dfe3bd2b11ea100a7b549e771c83023789b5e/522_221_4677_3744/master/4677.jpg?width=140&quality=85&auto=format&fit=max&s=14dda87f65e670a5377aadaea30db906"
+        },
+        {
+          "width": "460",
+          "url": "https://i.guim.co.uk/img/media/7a1dfe3bd2b11ea100a7b549e771c83023789b5e/522_221_4677_3744/master/4677.jpg?width=460&quality=85&auto=format&fit=max&s=abcee4fa52e47ec62cb084596e33f51e"
+        },
+        {
+          "width": "700",
+          "url": "https://i.guim.co.uk/img/media/7a1dfe3bd2b11ea100a7b549e771c83023789b5e/522_221_4677_3744/master/4677.jpg?width=700&quality=85&auto=format&fit=max&s=1de1b90839cd5f5c556873e3e43cfabe"
+        }
+      ],
+      "media_credit": [
+        {
+          "scheme": "urn:ebu",
+          "content": "Photograph: Amer Ghazzal/Shutterstock"
+        },
+        {
+          "scheme": "urn:ebu",
+          "content": "Photograph: Amer Ghazzal/Shutterstock"
+        },
+        {
+          "scheme": "urn:ebu",
+          "content": "Photograph: Amer Ghazzal/Shutterstock"
+        }
+      ],
+      "credit": "Photograph: Amer Ghazzal/Shutterstock",
+      "authors": [
+        {
+          "name": "Phillip Inman"
+        }
+      ],
+      "author": "Phillip Inman",
+      "author_detail": {
+        "name": "Phillip Inman"
+      },
+      "updated": "2026-05-29T14:25:57Z",
+      "updated_parsed": [
+        2026,
+        5,
+        29,
+        14,
+        25,
+        57,
+        4,
+        149,
+        0
+      ]
+    },
+    "newspaper_article": {
+      "url": "https://www.theguardian.com/business/2026/may/29/bank-of-england-bailey-says-no-rush-to-raise-interest-rates-amid-iran-war-uncertainty",
+      "title": "Bank of England’s Bailey says no rush to raise interest rates amid Iran war uncertainty",
+      "text": "The Bank of England is in no rush to raise interest rates while the outcome of the Iran war remains uncertain and the UK’s growth rate stays weak, its governor, Andrew Bailey, has said.\n\nIn a signal that borrowing costs will remain at 3.75% at least during the summer, Bailey said it was tolerable for inflation to stay above the Bank’s 2% target during the current crisis. However, that would change if a more permanent increase in prices began to take effect, he said.\n\n“Given the context of softness in the real economy and uncertainty around the scale and duration of the shock, tolerating temporarily above-target inflation to provide some support for the real economy is an appropriate way to approach the trade-off [between inflation and activity],” Bailey said.\n\n“But that tolerance would weaken if signs of second-round effects begin to emerge.”\n\nAt the start of the year, financial markets had expected the Bank to cut interest rates twice this year to 3.25%. Since the Iran war began, the situation has reversed, and now a rise of 0.25 percentage points to 4% before December is forecast.\n\nSpeaking at a conference in Reykjavik organised by Iceland’s central bank, the governor said the economic situation had deteriorated since the start of the bombing of Iran by the US and Israel.\n\n“We have to monitor the situation in the Middle East and how it affects the UK economy and inflation very closely and adjust policy as required,” Bailey said.\n\nCentral banks across the world have struggled to cope with the shock increases in energy costs sparked by the Iran war.\n\nThe Federal Reserve, under pressure from the US president, Donald Trump, was expected to reduce interest rates this year but is now forecast to hold them steady after the new Fed chair, Kevin Warsh, took the helm on 22 May.\n\nPolicymakers at the European Central Bank have signalled a likely rate rise in June after it cut rates by more than the Bank of England before the Middle East conflict.\n\nBailey said one reason the Bank was prepared to wait was that borrowing costs had risen for homeowners and businesses without the central bank needing to adjust interest rates.\n\nHe said mortgage costs had increased since hostilities broke out as lenders reversed their expectations of rate cuts, dampening the housing market.\n\nMortgage lending is influenced by financial hedging instruments known as interest rate swaps. Swap rates have risen over the last month, reflecting predictions that future interest rate movements will be upwards.\n\nHedge funds and other financial institutions that lend money to businesses had also increased borrowing rates, he said.\n\n“We have, in effect, tightened policy in my view. I was quite clear that I thought we probably would cut rates once or twice this year. That’s off the table,” he said.\n\n“So we’ve had about a 1 percentage point increase in the cost of new five-year fixed-rate mortgages. And that is obviously a tightening of financial conditions.”\n\nHe added: “Also, we have had a response by the UK bond market.” Many hedge funds, which are large buyers of bonds, had overestimated the likely downward path of interest rates, according to Bailey, meaning that the turnaround in their stance was exaggerated. “So you had a big reversal of positioning,” he said.\n\nRising bond rates have also increased the cost of financing the government’s £3tn debt load, although Bailey said that in recent weeks this trend had eased. He said there was a hangover from the inflation increase in 2022 after the Russian invasion of Ukraine, which sent inflation soaring into double figures.\n\nHowever, he said the central bank was now better prepared to assess the likely impact of rising energy costs on the economy and inflation, after adopting scenario planning.\n\nThe Bank now highlights the wide range of factors that could turn a temporary increase in inflation into something more permanent. So it was unlikely to allow a repeat of the previous inflation increase without taking swift action, Bailey said.",
+      "authors": [
+        "Phillip Inman",
+        "www.theguardian.com"
+      ],
+      "top_image": "https://i.guim.co.uk/img/media/7a1dfe3bd2b11ea100a7b549e771c83023789b5e/522_221_4677_3744/master/4677.jpg?width=1200&height=630&quality=85&auto=format&fit=crop&precrop=40:21,offset-x50,offset-y0&overlay-align=bottom%2Cleft&overlay-width=100p&overlay-base64=L2ltZy9zdGF0aWMvb3ZlcmxheXMvdGctZGVmYXVsdC5wbmc&enable=upscale&s=384b0f8eb5c496ff74bf69f16ea96c47",
+      "images": [
+        "https://sb.scorecardresearch.com/p?c1=2&c2=6035250&cv=2.0&cj=1&cs_ucfr=0&comscorekw=business",
+        "https://i.guim.co.uk/img/media/7a1dfe3bd2b11ea100a7b549e771c83023789b5e/522_221_4677_3744/master/4677.jpg?width=465&dpr=1&s=none&crop=none",
+        "https://i.guim.co.uk/img/media/07cfd79868d07ad2ee7d018042be6e0d629ebd54/593_54_4470_3787/master/4470.jpg?width=445&dpr=1&s=none&crop=none",
+        "https://i.guim.co.uk/img/media/855b0ce2c21fa17d261f9466031cea8e9a44ab04/1290_39_3683_2948/master/3683.jpg?width=220&dpr=1&s=none&crop=5%3A4",
+        "https://i.guim.co.uk/img/media/ec9036b394dd863c4d131e14c998fda6b7a7b45d/262_0_4641_3712/master/4641.jpg?width=220&dpr=1&s=none&crop=5%3A4",
+        "https://i.guim.co.uk/img/media/818196290e39e47817eb4e9d550f4dc4a561e527/168_289_2429_1943/master/2429.jpg?width=220&dpr=1&s=none&crop=5%3A4",
+        "https://i.guim.co.uk/img/media/1756a261aab8fe47a3cc97d7651f97a6c28b3440/369_0_3288_2632/master/3288.jpg?width=220&dpr=1&s=none&crop=5%3A4",
+        "https://i.guim.co.uk/img/media/33405cec3c792f2fe5f72eb0a337d42940b1814d/0_0_5000_4000/master/5000.jpg?width=220&dpr=1&s=none&crop=5%3A4",
+        "https://i.guim.co.uk/img/media/46511176d4dde40b74b35c045fcec767260e6da8/2710_1421_3803_3044/master/3803.jpg?width=220&dpr=1&s=none&crop=5%3A4",
+        "https://i.guim.co.uk/img/media/af8d10e316deb2b06d749fd9195bb556a83e07a9/516_0_4926_3941/master/4926.jpg?width=220&dpr=1&s=none&crop=5%3A4",
+        "https://i.guim.co.uk/img/media/55e8b61a320d37c012274b1482f6013c2e45f8ec/0_0_2708_2167/master/2708.jpg?width=220&dpr=1&s=none&crop=5%3A4"
+      ],
+      "movies": [],
+      "publish_date": "2026-05-29 00:00:00",
+      "meta_description": "Inflation can be tolerated above 2% target for now ‘given context of softness in real economy’, governor says",
+      "meta_keywords": [
+        ""
+      ],
+      "meta_lang": "en",
+      "meta_data": {
+        "description": "Inflation can be tolerated above 2% target for now ‘given context of softness in real economy’, governor says",
+        "viewport": "width=device-width,minimum-scale=1,initial-scale=1",
+        "theme-color": "#052962",
+        "robots": "max-image-preview:large"
+      },
+      "canonical_link": "https://www.theguardian.com/business/2026/may/29/bank-of-england-bailey-says-no-rush-to-raise-interest-rates-amid-iran-war-uncertainty",
+      "keywords": [],
+      "summary": ""
+    }
+  },
+  {
+    "feedparser_entry": {
+      "title": "Labour poised for fresh welfare changes after scale of youth jobs crisis revealed",
+      "title_detail": {
+        "type": "text/plain",
+        "language": null,
+        "base": "https://www.theguardian.com/business/economics/rss",
+        "value": "Labour poised for fresh welfare changes after scale of youth jobs crisis revealed"
+      },
+      "links": [
+        {
+          "rel": "alternate",
+          "type": "text/html",
+          "href": "https://www.theguardian.com/business/2026/may/28/uk-risks-125bn-hit-youth-unemployment-landmark-report-alan-milburn-neets"
+        }
+      ],
+      "link": "https://www.theguardian.com/business/2026/may/28/uk-risks-125bn-hit-youth-unemployment-landmark-report-alan-milburn-neets",
+      "summary": "<p>Alan Milburn’s landmark report says unemployment among young costs UK £125bn a year and warns of ‘lost generation’ </p><ul><li><p><a href=\"https://www.theguardian.com/society/2026/may/28/a-record-of-failure-whats-in-the-first-part-of-alan-milburns-neet-report\">‘A record of failure’: what’s in first part of Milburn report?</a></p></li><li><p><a href=\"https://www.theguardian.com/money/2026/may/28/we-would-like-to-hear-from-young-people-in-the-uk-about-their-job-hunting-experience\">Tell us: we would like to hear from young people in the UK about their job hunting experience</a></p></li></ul><p>Labour is poised for a fresh attempt at changing the welfare system after a major government-backed report said youth unemployment was costing Britain more than £125bn a year.</p><p>As official figures revealed the number of young people not working or studying had surpassed a million for the first time in more than a decade, Alan Milburn said the government had a responsibility to the next generation to take action.</p> <a href=\"https://www.theguardian.com/business/2026/may/28/uk-risks-125bn-hit-youth-unemployment-landmark-report-alan-milburn-neets\">Continue reading...</a>",
+      "summary_detail": {
+        "type": "text/html",
+        "language": null,
+        "base": "https://www.theguardian.com/business/economics/rss",
+        "value": "<p>Alan Milburn’s landmark report says unemployment among young costs UK £125bn a year and warns of ‘lost generation’ </p><ul><li><p><a href=\"https://www.theguardian.com/society/2026/may/28/a-record-of-failure-whats-in-the-first-part-of-alan-milburns-neet-report\">‘A record of failure’: what’s in first part of Milburn report?</a></p></li><li><p><a href=\"https://www.theguardian.com/money/2026/may/28/we-would-like-to-hear-from-young-people-in-the-uk-about-their-job-hunting-experience\">Tell us: we would like to hear from young people in the UK about their job hunting experience</a></p></li></ul><p>Labour is poised for a fresh attempt at changing the welfare system after a major government-backed report said youth unemployment was costing Britain more than £125bn a year.</p><p>As official figures revealed the number of young people not working or studying had surpassed a million for the first time in more than a decade, Alan Milburn said the government had a responsibility to the next generation to take action.</p> <a href=\"https://www.theguardian.com/business/2026/may/28/uk-risks-125bn-hit-youth-unemployment-landmark-report-alan-milburn-neets\">Continue reading...</a>"
+      },
+      "tags": [
+        {
+          "term": "UK unemployment and employment statistics",
+          "scheme": "https://www.theguardian.com/business/uk-unemployment-and-employment-statistics",
+          "label": null
+        },
+        {
+          "term": "Young people",
+          "scheme": "https://www.theguardian.com/society/youngpeople",
+          "label": null
+        },
+        {
+          "term": "Economic growth (GDP)",
+          "scheme": "https://www.theguardian.com/business/economicgrowth",
+          "label": null
+        },
+        {
+          "term": "Business",
+          "scheme": "https://www.theguardian.com/business/business",
+          "label": null
+        },
+        {
+          "term": "Unemployment",
+          "scheme": "https://www.theguardian.com/society/unemployment",
+          "label": null
+        },
+        {
+          "term": "Society",
+          "scheme": "https://www.theguardian.com/society/society",
+          "label": null
+        },
+        {
+          "term": "Economic policy",
+          "scheme": "https://www.theguardian.com/politics/economy",
+          "label": null
+        },
+        {
+          "term": "Education",
+          "scheme": "https://www.theguardian.com/education/education",
+          "label": null
+        },
+        {
+          "term": "Economics",
+          "scheme": "https://www.theguardian.com/business/economics",
+          "label": null
+        },
+        {
+          "term": "Politics",
+          "scheme": "https://www.theguardian.com/politics/politics",
+          "label": null
+        },
+        {
+          "term": "Office for National Statistics",
+          "scheme": "https://www.theguardian.com/uk/office-for-national-statistics",
+          "label": null
+        },
+        {
+          "term": "UK news",
+          "scheme": "https://www.theguardian.com/uk/uk",
+          "label": null
+        }
+      ],
+      "published": "Thu, 28 May 2026 18:45:21 GMT",
+      "published_parsed": [
+        2026,
+        5,
+        28,
+        18,
+        45,
+        21,
+        3,
+        148,
+        0
+      ],
+      "id": "https://www.theguardian.com/business/2026/may/28/uk-risks-125bn-hit-youth-unemployment-landmark-report-alan-milburn-neets",
+      "guidislink": false,
+      "media_content": [
+        {
+          "width": "140",
+          "url": "https://i.guim.co.uk/img/media/3ee4730c8f19ce6a11e4508f6dddc51c18df4da9/65_401_3556_2845/master/3556.jpg?width=140&quality=85&auto=format&fit=max&s=3af7f43eef9b3000f8c94802e5870a4f"
+        },
+        {
+          "width": "460",
+          "url": "https://i.guim.co.uk/img/media/3ee4730c8f19ce6a11e4508f6dddc51c18df4da9/65_401_3556_2845/master/3556.jpg?width=460&quality=85&auto=format&fit=max&s=03e933a7baefc02c975fcbbafb2d30ff"
+        },
+        {
+          "width": "700",
+          "url": "https://i.guim.co.uk/img/media/3ee4730c8f19ce6a11e4508f6dddc51c18df4da9/65_401_3556_2845/master/3556.jpg?width=700&quality=85&auto=format&fit=max&s=9eacc4cbfd07fb7e3e50310b522ac290"
+        }
+      ],
+      "media_credit": [
+        {
+          "scheme": "urn:ebu",
+          "content": "Photograph: Bloomberg/Getty Images"
+        },
+        {
+          "scheme": "urn:ebu",
+          "content": "Photograph: Bloomberg/Getty Images"
+        },
+        {
+          "scheme": "urn:ebu",
+          "content": "Photograph: Bloomberg/Getty Images"
+        }
+      ],
+      "credit": "Photograph: Bloomberg/Getty Images",
+      "authors": [
+        {
+          "name": "Richard Partington and Peter Walker"
+        }
+      ],
+      "author": "Richard Partington and Peter Walker",
+      "author_detail": {
+        "name": "Richard Partington and Peter Walker"
+      },
+      "updated": "2026-05-28T18:45:21Z",
+      "updated_parsed": [
+        2026,
+        5,
+        28,
+        18,
+        45,
+        21,
+        3,
+        148,
+        0
+      ]
+    },
+    "newspaper_article": {
+      "url": "https://www.theguardian.com/business/2026/may/28/uk-risks-125bn-hit-youth-unemployment-landmark-report-alan-milburn-neets",
+      "title": "Labour poised for fresh welfare changes after scale of youth jobs crisis revealed",
+      "text": "Labour is poised for a fresh attempt at changing the welfare system after a major government-backed report said youth unemployment was costing Britain more than £125bn a year.\n\nAs official figures revealed the number of young people not working or studying had surpassed a million for the first time in more than a decade, Alan Milburn said the government had a responsibility to the next generation to take action.\n\nLaunching his landmark review of Britain’s youth jobs crisis, the former Labour cabinet minister said Keir Starmer’s government had shown a renewed desire to overhaul the benefits system as part of changes to tackle soaring youth unemployment and inactivity.\n\n“As I’ve spoken to cabinet ministers about it, my sense is that there is an appetite to go back into this, and to go back into it in the right way,” he said.\n\nHis report comes with overall unemployment in Britain at its highest level since the outbreak of the Covid pandemic, with young people bearing the brunt as businesses warn about the impact of tax increases and an economic downturn from the Iran war.\n\nThe prime minister said Labour was taking action to address the “sobering” findings in Milburn’s report by ploughing money into a “youth guarantee” and funding more work experience and job placements.\n\nSpeaking on a visit to a training facility for apprentices in west London on Thursday, Starmer acknowledged further steps were required. “Clearly we need to do more,” he said.\n\n“We will now work with Alan on what more needs to be done. I’m pleased that some of the measures we’ve already put in place are coming on train next month.”\n\nLabour has faced fierce criticism from opposition leaders and business groups who say its policy decisions, including tax increases and a rising minimum wage, have added to Britain’s crisis in youth jobs.\n\nIn the first phase of his review before making final recommendations to the government this autumn, Milburn said Britain was exposed to £125bn in annual losses from a youth jobs crisis that far outstripped almost any other country in Europe.\n\nThe report showed the lost contribution to the economy and cost to the exchequer from supporting young people through the benefits system was leaving a multibillion-pound financial hole, which he said meant a “whole system reset” involving schools, welfare and employers was needed.\n\nIt said the lifetime cost to the exchequer from a young person not in education, employment or training (Neet) between the ages of 18 and 24 was £29,000 a year on average.\n\nHighlighting the long-term damage, the report found an individual who was Neet in the period of early adulthood could lose out on £52,000 on average over the course of their working life for every year spent Neet.\n\nLaunching his report, Milburn said Britain was on track for a 25% rise in the number of Neets to 1.25 million within five years’ time unless urgent action was taken to avoid creating a “lost generation”.\n\nHe said six out of 10 young Neets were not looking for a job, and a similar number had never worked amid a sharp rise in mental ill health for a “bedroom generation” of young people glued to their smartphones.\n\nUrging ministers to consider changes to the welfare system, Milburn’s review showed the government currently spent about £8.1bn a year on benefits support for young people – with more than half going to Neets – and about £3.2bn on health and disability benefits.\n\nThe former health secretary under Tony Blair criticised the government for its botched handling of welfare changes last year which led Starmer into a chaotic U-turn to fend off a Labour backbench rebellion.\n\n“If you frame welfare reform as all about cost-out, and taking money away from people – particularly those who are sick and disabled – you are going to get an appropriate response – and that is what has happened,” he said.\n\nHe urged Labour not to shy away from a fresh attempt, suggesting that welfare savings could be reinvested in employment support. For every £25 currently spent on welfare the state spent £1 on job support, which was shocking and shameful, he said.\n\n“The sustainable way to reduce the benefits bill is not by plucking an arbitrary figure out of thin air and saying we’re going to cut it. The way to do it is to get more young people into work.”\n\nAs the prime minister battles to hold on to power amid the threat of a Labour leadership challenge and against the backdrop of the cost of living crisis, any fresh drive to overhaul the welfare system would come at a delicate moment.\n\nCharity leaders and campaigners urged ministers to resist any move to weaponise the benefits system to punish or shame young people into finding work.\n\nThe chief executive of the Mental Health Foundation, Mark Rowland, said: “Pushing young people who are too unwell to work into financial hardship will worsen their mental health, while failing to adequately support a return to work can be equally damaging.”\n\nOne obvious complication would be the fact that Starmer could be ousted from Downing Street as early as the autumn, especially if Andy Burnham wins next month’s Makerfield byelection and triggers a leadership race.\n\nNone of the possible hopefuls to replace Starmer have said they would change course on overhauling benefits, but a change of leader and cabinet could well slow it down.\n\nLabour’s first attempt to change welfare ended in a humiliating climbdown after backbench MPs threatened to rebel, and many are watching warily for what the revised proposals will involve.\n\nMost of the party’s MPs accept, however, that not only does something need to be done, but also that Downing Street is engaging more closely this time.\n\nThe major proposals will not emerge before the second part of Milburn’s review is published, and after a report into disability benefits by the social security minister, Stephen Timms, which is also expected in the autumn.\n\nOfficials stress that in the interim, other schemes to help with the issues Milburn describes are already being introduced, such as the so-called youth guarantee for 18- to 21-year-olds over education, training or apprenticeship schemes.\n\nSpeaking at the launch of the report, the work and pensions secretary, Pat McFadden, said the government had made a “major and important start” to address youth worklessness.\n\n“I could see in the first few weeks after being appointed as the secretary of state what was happening, both in human and in financial terms, and I knew we had to get properly under the bonnet of this problem,” he said.\n\nThis article was amended on 29 May 2026. An earlier version said that someone who was Neet in the period of early adulthood “could lose out on £52,000 a year on average over the course of their working life”. That figure is not an annual amount; it is the total over the whole of their working life for every year spent Neet.",
+      "authors": [
+        "Richard Partington",
+        "Peter Walker",
+        "www.theguardian.com",
+        "richard-partington"
+      ],
+      "top_image": "https://i.guim.co.uk/img/media/3ee4730c8f19ce6a11e4508f6dddc51c18df4da9/65_401_3556_2845/master/3556.jpg?width=1200&height=630&quality=85&auto=format&fit=crop&precrop=40:21,offset-x50,offset-y0&overlay-align=bottom%2Cleft&overlay-width=100p&overlay-base64=L2ltZy9zdGF0aWMvb3ZlcmxheXMvdGctZGVmYXVsdC5wbmc&enable=upscale&s=7d3f7554a6ececedf4b5cfc65b1ad06a",
+      "images": [
+        "https://sb.scorecardresearch.com/p?c1=2&c2=6035250&cv=2.0&cj=1&cs_ucfr=0&comscorekw=business",
+        "https://i.guim.co.uk/img/media/3ee4730c8f19ce6a11e4508f6dddc51c18df4da9/65_401_3556_2845/master/3556.jpg?width=465&dpr=1&s=none&crop=none",
+        "https://i.guim.co.uk/img/media/d03e42a546edc533a398b5a131bfcd4fb1546b84/1490_58_3210_2568/master/3210.jpg?width=445&dpr=1&s=none&crop=none",
+        "https://i.guim.co.uk/img/media/3047c73f29091af6f16924ef36181249427eed6e/400_77_4871_3501/master/4871.jpg?width=445&dpr=1&s=none&crop=none",
+        "https://i.guim.co.uk/img/media/703c542525c452b3e3773ffcfeed3b48fe2f379e/0_0_5000_4000/master/5000.jpg?width=220&dpr=1&s=none&crop=5%3A4",
+        "https://i.guim.co.uk/img/media/66281b81367d255b075a5f242e6383361e33045c/752_0_3760_3008/master/3760.jpg?width=220&dpr=1&s=none&crop=5%3A4",
+        "https://i.guim.co.uk/img/media/b11f036735f33e3554d9860c0af21d79a43dbb43/61_0_5600_4480/master/5600.jpg?width=220&dpr=1&s=none&crop=5%3A4",
+        "https://i.guim.co.uk/img/media/f4dc200e143a4d8dc87044e874c5441ac45f9b5d/508_0_2921_2336/master/2921.jpg?width=220&dpr=1&s=none&crop=5%3A4",
+        "https://i.guim.co.uk/img/media/1f81c51b39c37a2cc5661653add8f9ead00c6f2f/488_0_4269_3416/master/4269.jpg?width=220&dpr=1&s=none&crop=5%3A4",
+        "https://i.guim.co.uk/img/media/e12b584d7ed45a62b4056ef8342935e905a427e9/418_0_4800_3840/master/4800.jpg?width=220&dpr=1&s=none&crop=5%3A4",
+        "https://i.guim.co.uk/img/media/b25af67520744cd8c091b98467fe655b0ae92dba/773_0_5148_4119/master/5148.jpg?width=220&dpr=1&s=none&crop=5%3A4",
+        "https://i.guim.co.uk/img/media/0e8ff4f01fc4811357b49a330e1972c671e6c2bb/257_0_2430_1945/master/2430.jpg?width=220&dpr=1&s=none&crop=5%3A4"
+      ],
+      "movies": [],
+      "publish_date": "2026-05-28 00:00:00",
+      "meta_description": "Alan Milburn’s landmark report says unemployment among young costs UK £125bn a year and warns of ‘lost generation’",
+      "meta_keywords": [
+        ""
+      ],
+      "meta_lang": "en",
+      "meta_data": {
+        "description": "Alan Milburn’s landmark report says unemployment among young costs UK £125bn a year and warns of ‘lost generation’",
+        "viewport": "width=device-width,minimum-scale=1,initial-scale=1",
+        "theme-color": "#052962",
+        "robots": "max-image-preview:large"
+      },
+      "canonical_link": "https://www.theguardian.com/business/2026/may/28/uk-risks-125bn-hit-youth-unemployment-landmark-report-alan-milburn-neets",
+      "keywords": [],
+      "summary": ""
+    }
+  }
+]

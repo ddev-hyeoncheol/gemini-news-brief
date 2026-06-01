@@ -1,0 +1,429 @@
+[
+  {
+    "feedparser_entry": {
+      "title": "Another company shuts down Bitcoin treasury",
+      "title_detail": {
+        "type": "text/plain",
+        "language": null,
+        "base": "https://finance.yahoo.com/news/rssindex",
+        "value": "Another company shuts down Bitcoin treasury"
+      },
+      "links": [
+        {
+          "rel": "alternate",
+          "type": "text/html",
+          "href": "https://finance.yahoo.com/markets/crypto/articles/another-company-shuts-down-bitcoin-160000343.html"
+        }
+      ],
+      "link": "https://finance.yahoo.com/markets/crypto/articles/another-company-shuts-down-bitcoin-160000343.html",
+      "published": "2026-05-30T16:00:00Z",
+      "published_parsed": [
+        2026,
+        5,
+        30,
+        16,
+        0,
+        0,
+        5,
+        150,
+        0
+      ],
+      "source": {
+        "href": "https://www.thestreet.com/",
+        "title": "TheStreet"
+      },
+      "id": "another-company-shuts-down-bitcoin-160000343.html",
+      "guidislink": false,
+      "media_content": [
+        {
+          "height": "86",
+          "url": "https://media.zenfs.com/en/thestreet_881/aa23a6fc3776768b03cf7ece58c2afc6",
+          "width": "130"
+        }
+      ],
+      "media_credit": [
+        {
+          "role": "publishing company"
+        }
+      ],
+      "credit": ""
+    },
+    "newspaper_article": {
+      "url": "https://finance.yahoo.com/markets/crypto/articles/another-company-shuts-down-bitcoin-160000343.html",
+      "title": "Another company shuts down Bitcoin treasury",
+      "text": "Sequans Communications (NYSE: SQNS), a leading provider of 5G/4G cellular IoT semiconductor solutions, announced on May 28 that it has completed the redemption of all remaining debt tied to its Bitcoin (BTC) treasury.\n\nThe Paris-based company said it was the sale of nearly 80% of its total Bitcoin holdings that funded the debt redemption.\n\nRelated: Michael Saylor finally wants to sell Bitcoin\n\nThe company will now transition to a near debt-free balance sheet with increased financial flexibility and focus only on its core IoT and cellular semiconductor business, it said.\n\nAs of now, Sequans holds approximately 658 Bitcoin, now fully unencumbered, on its balance sheet. Though the company said it is planning to \"monetize\" its remaining Bitcoin over time, it didn't reveal any further details.\n\nPopular on TheStreet Roundtable:\n\nScott Bessent shares new information on stunning Iranian seizure\n\nChina, Japan, UAE, India sell billions in U.S. Treasuries\n\nXRP traders withdraw millions of dollars in 24 hours\n\nSequans' short Bitcoin journey\n\nSequans said in June 2025 that it planned to raise $384 million via a combination of debt and equity instruments to create a Bitcoin treasury.\n\nThe next month, it announced the acquisition of 370 Bitcoin and said it planned to acquire 3,000 Bitcoin within \"weeks.\"\n\nSequans indeed acquired as much as 3,000 Bitcoin by the end of July and kept buying more at regular intervals. But the flash crash on Oct. 10 made the company reconsider the decision.\n\nThe company first sold 970 BTC in November 2025, and then 1,025 BTC in the first quarter of 2026. It cut the holdings to 1,114 BTC as of April 30, and the latest update shows it now holds approximately 658 Bitcoin.\n\n\"Looking ahead, we do not intend to further pursue our treasury strategy,\" CEO Georges Karam had revealed during the Q1 2026 earnings call.\n\nBitcoin, which reached the record high price of $126,080 on Oct. 6, 2025, is currently trading 40% lower at $73,467.\n\nRelated: Popular crypto stock rises after Bitcoin sale of $1.1 billion",
+      "authors": [
+        "Anand Sinha"
+      ],
+      "top_image": "https://s.yimg.com/ny/api/res/1.2/J_ZIWxie_Gi5TkCkrbzYPw--/YXBwaWQ9aGlnaGxhbmRlcjt3PTEyMDA7aD04MDA-/https://media.zenfs.com/en/thestreet_881/aa23a6fc3776768b03cf7ece58c2afc6",
+      "images": [
+        "https://s.yimg.com/eo/images/d4abe4135bab6ed75faaec4c10a888e996af6482167687cccf1a8670aa54bd7b.png",
+        "https://s.yimg.com/eo/images/7e705dda07277ff3daa238a479f65cb890e4ad1faf76db4dc80ba09dd7303428.jpg",
+        "https://s.yimg.com/ny/api/res/1.2/RO6M7dCx66XiY4IQt9d9gA--/YXBwaWQ9aGlnaGxhbmRlcjt3PTE0NDtoPTQ4/https://s.yimg.com/os/creatr-uploaded-images/2024-01/843fa1d0-c429-11ee-9ffc-fcd336cb7829",
+        "https://s.yimg.com/ny/api/res/1.2/._IsBl1Yy_tGSRYIkKuBxg--/YXBwaWQ9aGlnaGxhbmRlcjt3PTk2MDtoPTYwOQ--/https://media.zenfs.com/en/thestreet_881/fd80f7ff03e9148476452db43c7db01f"
+      ],
+      "movies": [],
+      "publish_date": "2026-05-30 16:00:00+00:00",
+      "meta_description": "Sequans Communications (NYSE: SQNS), a leading provider of 5G/4G cellular IoT semiconductor solutions, announced on May 28 that it has completed the redemption of all remaining debt tied to its Bitcoin (BTC) treasury. The Paris-based company said it was the sale of nearly 80% of ...",
+      "meta_keywords": [
+        "Bitcoin",
+        "Paris-based company",
+        "Sequans Communications"
+      ],
+      "meta_lang": "en",
+      "meta_data": {
+        "title": "Another company shuts down Bitcoin treasury",
+        "description": "Sequans Communications (NYSE: SQNS), a leading provider of 5G/4G cellular IoT semiconductor solutions, announced on May 28 that it has completed the redemption of all remaining debt tied to its Bitcoin (BTC) treasury. The Paris-based company said it was the sale of nearly 80% of ...",
+        "keywords": "Bitcoin, Paris-based company, Sequans Communications",
+        "viewport": "width=device-width, initial-scale=1",
+        "theme-color": "#037B66",
+        "robots": "max-image-preview:large",
+        "apple-itunes-app": "app-id=328412701, affiliate-data=ct=us.fin.mbl.smart-banner&pt=9029, app-argument=https://yfinance.onelink.me/3068494570?pid=SmartBanner&c=US_Acquisition_YMktg_337__&af_sub1=Acquisition&af_sub2=US_YMktg&af_sub3=&af_sub4=100000591&af_sub5=YahooFinanceApp__SmartBanner_"
+      },
+      "canonical_link": "https://www.thestreet.com/crypto/markets/another-company-shuts-down-bitcoin-treasury",
+      "keywords": [],
+      "summary": ""
+    }
+  },
+  {
+    "feedparser_entry": {
+      "title": "Warren Buffett's Berkshire dumps entire stake in dividend stock",
+      "title_detail": {
+        "type": "text/plain",
+        "language": null,
+        "base": "https://finance.yahoo.com/news/rssindex",
+        "value": "Warren Buffett's Berkshire dumps entire stake in dividend stock"
+      },
+      "links": [
+        {
+          "rel": "alternate",
+          "type": "text/html",
+          "href": "https://finance.yahoo.com/markets/stocks/articles/warren-buffetts-berkshire-dumps-entire-203300760.html"
+        }
+      ],
+      "link": "https://finance.yahoo.com/markets/stocks/articles/warren-buffetts-berkshire-dumps-entire-203300760.html",
+      "published": "2026-05-30T20:33:00Z",
+      "published_parsed": [
+        2026,
+        5,
+        30,
+        20,
+        33,
+        0,
+        5,
+        150,
+        0
+      ],
+      "source": {
+        "href": "https://www.thestreet.com/",
+        "title": "TheStreet"
+      },
+      "id": "warren-buffetts-berkshire-dumps-entire-203300760.html",
+      "guidislink": false,
+      "media_content": [
+        {
+          "height": "86",
+          "url": "https://media.zenfs.com/en/thestreet_881/1456bad0d36ff0954d1e01b6f6c57229",
+          "width": "130"
+        }
+      ],
+      "media_credit": [
+        {
+          "role": "publishing company"
+        }
+      ],
+      "credit": ""
+    },
+    "newspaper_article": {
+      "url": "https://finance.yahoo.com/markets/stocks/articles/warren-buffetts-berkshire-dumps-entire-203300760.html",
+      "title": "Warren Buffett's Berkshire dumps entire stake in dividend stock",
+      "text": "When Warren Buffett builds a position in a company, Wall Street pays attention. His firm, Berkshire Hathaway, doesn't typically accumulate an 8.3% stake in a business unless it believes deeply in what that company does and where it's headed.\n\nThat's what made Berkshire's investment in Pool Corp so noteworthy and the exit equally striking.\n\nBerkshire quietly unwound its entire position in Pool (POOL) during the first quarter of 2026.\n\nThe stake, which had been worth roughly $650 million, is now gone. And the stock itself tells a painful story: it's sitting nearly 70% below its all-time highs.\n\nWhy did Warren Buffett invest in Pool stock?\n\nPool is the world's largest wholesale distributor of swimming pool supplies, equipment, and related products.\n\nThink of it like the middleman between manufacturers and the roughly 120,000 contractors, retailers, and service companies that keep America's backyard pools running.\n\nThe business model is built around recurring, nondiscretionary spending on pool chemicals, filters, and pumps, which aren't skipped just because the economy slows.\n\nRelated: Warren Buffett's Berkshire dumps entire stake in iconic fintech giant\n\nThe business ticked most boxes for Warren Buffett, given predictable demand, pricing power, and a strong network that’s difficult to replicate.\n\nPool Corp also pays a dividend, which adds to its appeal for long-term income investors. Down almost 70% from all-time highs, POOL stock currently offers a yield of 2.8%.\n\nNew pool construction boomed during the COVID era as Americans poured money into their homes. That surge in demand eventually cooled, and new unit construction by pool builders fell sharply.\n\nAccording to Pool Corp's first-quarter 2026 earnings call, new pool units for 2025 totaled 58,000, a fraction of the pandemic-era peak.\n\nPool posted solid Q1 2026 results\n\nFor the first quarter of 2026, the company reported:\n\nNet sales growth of 6% compared to the same period last year.\n\nOperating income grew by 7% as the operating margin expanded by 10 basis points.\n\nPresident and CEO Peter Arvan pointed to broad-based growth across product categories.\n\nChemicals grew by 8%, driven in part by strong demand for the company's private-label brands.\n\nEquipment grew by 7% and building materials were up 5%.\n\nGeographically, California grew 10%, and Texas grew 7%, boosted by favorable weather and strong maintenance demand.\n\nDuring the earnings call, Arvan stated:\n\n\"We are off to a solid start in 2026, with net sales up 6% and operating income growing 7% year-over-year. Maintenance demand remained resilient, and we saw continued, though still gradual, recovery in discretionary categories.\"\n\nManagement also confirmed full-year diluted earnings per share guidance of $10.87 to $11.17, representing 2-3% growth over the prior year.\n\nThe installed base is key for the dividend stock\n\nOne of the most important things to understand about Pool is where its revenue originates from.\n\nThere are about 5.5 million in-ground pools across the United States that require weekly chemical treatment.\n\nMoreover, pumps and filters wear out and need replacing, and equipment gets upgraded. That installed base generates steady, recurring demand that does not depend on new construction.\n\n\"Our growth thesis does not require a recovery in new pool units,\" Arvan said during the earnings call, according to a company statement.\n\nThe company operates 455 sales centers.\n\nIt has a digital ordering platform called POOL360, which now accounts for 13% of net sales, up from 12.5% a year ago.\n\nIt also runs the Pinch A Penny franchise network, which added seven new independently owned locations in the first quarter alone.\n\nPool Corp has been investing in private-label chemical products, including its Regal and E-Z Clor lines, which carry higher margins and have been gaining traction with independent retailers.\n\nA growing dividend with a sustainable payout\n\nPool has raised its annualized dividend from $0.56 per share in 2011 to $5 per share in 2026, indicating a compounded annual growth rate of 15.7% over the last 15 years.\n\nThe annual dividend expense for the mid-cap stock is around $182 million, while it is forecast to report a free cash flow of $354 million this year.\n\nGiven a payout ratio of 51%, POOL stock has enough room to grow its dividend while reinvesting in growth and acquisitions.\n\nMore dividend stocks:\n\nCostco quietly bumps its quarterly dividend by 13%\n\nEarly SCHD ETF investors now earn a 12.5% dividend yield on cost\n\nS&P 500 index dividend yield hits nearly 50-year low\n\nBerkshire's decision to sell does not necessarily mean Pool Corp is a broken business. The fundamentals, as Q1 shows, remain intact.\n\nBut it does reflect a shift in conviction. When a position the size of Berkshire's gets exited entirely, it suggests the expected return no longer meets the bar, at least for now.\n\nFor dividend investors still holding POOL, the core question is simpler: does the installed-base thesis hold, and can management continue to expand margins as new construction remains muted?\n\nThe first-quarter numbers suggest the answer leans yes. Whether that is enough to win back Buffett-sized confidence is another matter entirely.\n\nRelated: Down 63 percent, Warren Buffett dividend stock signals opportunity\n\nThis story was originally published by TheStreet on May 30, 2026, where it first appeared in the Investing section. Add TheStreet as a Preferred Source by clicking here.",
+      "authors": [
+        "Aditya Raghunath"
+      ],
+      "top_image": "https://s.yimg.com/os/en/thestreet_881/1456bad0d36ff0954d1e01b6f6c57229",
+      "images": [
+        "https://s.yimg.com/ny/api/res/1.2/RO6M7dCx66XiY4IQt9d9gA--/YXBwaWQ9aGlnaGxhbmRlcjt3PTE0NDtoPTQ4/https://s.yimg.com/os/creatr-uploaded-images/2024-01/843fa1d0-c429-11ee-9ffc-fcd336cb7829"
+      ],
+      "movies": [],
+      "publish_date": "2026-05-30 20:33:00+00:00",
+      "meta_description": "When Warren Buffett builds a position in a company, Wall Street pays attention. His firm, Berkshire Hathaway, doesn't typically accumulate an 8.3% stake in a business unless it believes deeply in what that company does and where it's headed. That's what made Berkshire's investment in Pool Corp so ...",
+      "meta_keywords": [
+        "Warren Buffett",
+        "Berkshire Hathaway",
+        "Pool Corp",
+        "dividend stock",
+        "swimming pool supplies"
+      ],
+      "meta_lang": "en",
+      "meta_data": {
+        "title": "Warren Buffett's Berkshire dumps entire stake in dividend stock",
+        "description": "When Warren Buffett builds a position in a company, Wall Street pays attention. His firm, Berkshire Hathaway, doesn't typically accumulate an 8.3% stake in a business unless it believes deeply in what that company does and where it's headed. That's what made Berkshire's investment in Pool Corp so ...",
+        "keywords": "Warren Buffett, Berkshire Hathaway, Pool Corp, dividend stock, swimming pool supplies",
+        "viewport": "width=device-width, initial-scale=1",
+        "theme-color": "#037B66",
+        "robots": "max-image-preview:large",
+        "apple-itunes-app": "app-id=328412701, affiliate-data=ct=us.fin.mbl.smart-banner&pt=9029, app-argument=https://yfinance.onelink.me/3068494570?pid=SmartBanner&c=US_Acquisition_YMktg_337__&af_sub1=Acquisition&af_sub2=US_YMktg&af_sub3=&af_sub4=100000591&af_sub5=YahooFinanceApp__SmartBanner_"
+      },
+      "canonical_link": "https://www.thestreet.com/investing/stocks/warren-buffetts-berkshire-dumps-entire-stake-in-dividend-stock",
+      "keywords": [],
+      "summary": ""
+    }
+  },
+  {
+    "feedparser_entry": {
+      "title": "Claude AI Says You Shoud Buy Inter (INTR) On The Dip",
+      "title_detail": {
+        "type": "text/plain",
+        "language": null,
+        "base": "https://finance.yahoo.com/news/rssindex",
+        "value": "Claude AI Says You Shoud Buy Inter (INTR) On The Dip"
+      },
+      "links": [
+        {
+          "rel": "alternate",
+          "type": "text/html",
+          "href": "https://finance.yahoo.com/markets/stocks/articles/claude-ai-says-shoud-buy-151959229.html"
+        }
+      ],
+      "link": "https://finance.yahoo.com/markets/stocks/articles/claude-ai-says-shoud-buy-151959229.html",
+      "published": "2026-05-30T15:19:59Z",
+      "published_parsed": [
+        2026,
+        5,
+        30,
+        15,
+        19,
+        59,
+        5,
+        150,
+        0
+      ],
+      "source": {
+        "href": "http://www.insidermonkey.com",
+        "title": "Insider Monkey"
+      },
+      "id": "claude-ai-says-shoud-buy-151959229.html",
+      "guidislink": false,
+      "media_content": [
+        {
+          "height": "86",
+          "url": "https://media.zenfs.com/en/insidermonkey.com/e13eafb879d337f843e648dbb91ec2ea",
+          "width": "130"
+        }
+      ],
+      "media_credit": [
+        {
+          "role": "publishing company"
+        }
+      ],
+      "credit": ""
+    },
+    "newspaper_article": {
+      "url": "https://finance.yahoo.com/markets/stocks/articles/claude-ai-says-shoud-buy-151959229.html",
+      "title": "Claude AI Says You Shoud Buy Inter (INTR) On The Dip",
+      "text": "We just covered the Claude Stock Portfolio: Top 10 Stocks to Buy According to AI Chatbot. Inter & Co (NASDAQ:INTR) ranks #10 (see Claude Stock Portfolio: Top 5 Stocks to Buy According to AI Chatbot).\n\nNumber of Hedge Funds: 18\n\nInter & Co (NASDAQ:INTR), a Latin American digital bank that offers banking, lending, investing and payments services, recently became a new position in Claude’s portfolio. The chatbot said it is the first Latin American stock it has owned since inception.\n\nClaude said the investment case emerged after Inter & Co (NASDAQ:INTR) shares fell 14.5% following first-quarter results that investors interpreted as signs of worsening credit quality. Non-performing loans that were overdue by more than 90 days rose 40 basis points from the previous quarter to 5.1%, triggering a selloff.\n\nHowever, Claude argued the market missed the bigger picture: Inter still grew its loan portfolio by more than 25% year over year even as bad loans increased modestly. According to Claude, that reflects the cost of rapid growth in a high-interest-rate environment rather than the beginning of a broader credit problem.\n\nThe chatbot also said the sharp selloff made the valuation attractive. After the decline, Inter & Co (NASDAQ:INTR) was trading at about 8.1 times expected 2026 earnings and 6.2 times expected 2027 earnings, which Claude viewed as cheap for a bank still growing loans above 25%.\n\nphoto by Business-laptop-campaign-creators on Unsplash\n\nWhile we acknowledge the potential of INTR as an investment, we believe certain AI stocks offer greater upside potential and carry less downside risk. If you're looking for an extremely undervalued AI stock that also stands to benefit significantly from Trump-era tariffs and the onshoring trend, see our free report on the best short-term AI stock.\n\nREAD NEXT: 33 Stocks That Should Double in 3 Years and Cathie Wood 2026 Portfolio: 10 Best Stocks to Buy.\n\nDisclosure: None. Follow Insider Monkey on Google News.\n\nRecommended Stories",
+      "authors": [
+        "Fahad Saleem"
+      ],
+      "top_image": "https://s.yimg.com/os/en/insidermonkey.com/e13eafb879d337f843e648dbb91ec2ea",
+      "images": [
+        "https://s.yimg.com/ny/api/res/1.2/ztUvb5bBfSnEzDduOrwWyA--/YXBwaWQ9aGlnaGxhbmRlcjt3PTEyNjtoPTQ4/https://s.yimg.com/os/creatr-uploaded-images/2020-12/d7df1000-34e4-11eb-b6ae-ac87660fe5ee",
+        "https://s.yimg.com/ny/api/res/1.2/6O5g0_qXTlCDaqDtv_1JIw--/YXBwaWQ9aGlnaGxhbmRlcjt3PTk2MDtoPTY0MA--/https://media.zenfs.com/en/insidermonkey.com/e13eafb879d337f843e648dbb91ec2ea"
+      ],
+      "movies": [],
+      "publish_date": "2026-05-30 15:19:59+00:00",
+      "meta_description": "We just covered the Claude Stock Portfolio: Top 10 Stocks to Buy According to AI Chatbot. Inter & Co (NASDAQ:INTR) ranks #10 (see Claude Stock Portfolio: Top 5 Stocks to Buy According to AI Chatbot). Number of Hedge Funds: 18 Inter & Co (NASDAQ:INTR), a Latin American digital bank that offers banking, lending, investing and […]",
+      "meta_keywords": [
+        "AI Chatbot",
+        "Claude",
+        "Inter & Co",
+        "AI stock"
+      ],
+      "meta_lang": "en",
+      "meta_data": {
+        "title": "Claude AI Says You Shoud Buy Inter (INTR) On The Dip",
+        "description": "We just covered the Claude Stock Portfolio: Top 10 Stocks to Buy According to AI Chatbot. Inter & Co (NASDAQ:INTR) ranks #10 (see Claude Stock Portfolio: Top 5 Stocks to Buy According to AI Chatbot). Number of Hedge Funds: 18 Inter & Co (NASDAQ:INTR), a Latin American digital bank that offers banking, lending, investing and […]",
+        "keywords": "AI Chatbot, Claude, Inter & Co, AI stock",
+        "viewport": "width=device-width, initial-scale=1",
+        "theme-color": "#037B66",
+        "robots": "max-image-preview:large",
+        "apple-itunes-app": "app-id=328412701, affiliate-data=ct=us.fin.mbl.smart-banner&pt=9029, app-argument=https://yfinance.onelink.me/3068494570?pid=SmartBanner&c=US_Acquisition_YMktg_337__&af_sub1=Acquisition&af_sub2=US_YMktg&af_sub3=&af_sub4=100000591&af_sub5=YahooFinanceApp__SmartBanner_"
+      },
+      "canonical_link": "https://finance.yahoo.com/markets/stocks/articles/claude-ai-says-shoud-buy-151959229.html",
+      "keywords": [],
+      "summary": ""
+    }
+  },
+  {
+    "feedparser_entry": {
+      "title": "Should You Buy Ardelyx (ARDX)?",
+      "title_detail": {
+        "type": "text/plain",
+        "language": null,
+        "base": "https://finance.yahoo.com/news/rssindex",
+        "value": "Should You Buy Ardelyx (ARDX)?"
+      },
+      "links": [
+        {
+          "rel": "alternate",
+          "type": "text/html",
+          "href": "https://finance.yahoo.com/markets/stocks/articles/buy-ardelyx-ardx-151801858.html"
+        }
+      ],
+      "link": "https://finance.yahoo.com/markets/stocks/articles/buy-ardelyx-ardx-151801858.html",
+      "published": "2026-05-30T15:18:01Z",
+      "published_parsed": [
+        2026,
+        5,
+        30,
+        15,
+        18,
+        1,
+        5,
+        150,
+        0
+      ],
+      "source": {
+        "href": "http://www.insidermonkey.com",
+        "title": "Insider Monkey"
+      },
+      "id": "buy-ardelyx-ardx-151801858.html",
+      "guidislink": false,
+      "media_content": [
+        {
+          "height": "86",
+          "url": "https://media.zenfs.com/en/insidermonkey.com/4e214c1f7a12cfb1d5e12dbbbb9be0d2",
+          "width": "130"
+        }
+      ],
+      "media_credit": [
+        {
+          "role": "publishing company"
+        }
+      ],
+      "credit": ""
+    },
+    "newspaper_article": {
+      "url": "https://finance.yahoo.com/markets/stocks/articles/buy-ardelyx-ardx-151801858.html",
+      "title": "Should You Buy Ardelyx (ARDX)?",
+      "text": "Sign in to access your portfolio\n\nSign in",
+      "authors": [
+        "Fahad Saleem"
+      ],
+      "top_image": "https://s.yimg.com/os/en/insidermonkey.com/4e214c1f7a12cfb1d5e12dbbbb9be0d2",
+      "images": [
+        "https://s.yimg.com/ny/api/res/1.2/ztUvb5bBfSnEzDduOrwWyA--/YXBwaWQ9aGlnaGxhbmRlcjt3PTEyNjtoPTQ4/https://s.yimg.com/os/creatr-uploaded-images/2020-12/d7df1000-34e4-11eb-b6ae-ac87660fe5ee",
+        "https://s.yimg.com/ny/api/res/1.2/cQauiI4_FjCCEzCgWXpXkg--/YXBwaWQ9aGlnaGxhbmRlcjt3PTk2MDtoPTYzOA--/https://media.zenfs.com/en/insidermonkey.com/4e214c1f7a12cfb1d5e12dbbbb9be0d2"
+      ],
+      "movies": [],
+      "publish_date": "2026-05-30 15:18:01+00:00",
+      "meta_description": "We just covered the Claude Stock Portfolio: Top 10 Stocks to Buy According to AI Chatbot. Ardelyx Inc. (NASDAQ:ARDX) ranks #9 (see Claude Stock Portfolio: Top 5 Stocks to Buy According to AI Chatbot). Number of Hedge Funds: 30 Biotech company Ardelyx Inc. (NASDAQ:ARDX) is one of the recent additions in the Claude portfolio. Anthropic’s […]",
+      "meta_keywords": [
+        "Ardelyx Inc.",
+        "AI Chatbot",
+        "Biotech company"
+      ],
+      "meta_lang": "en",
+      "meta_data": {
+        "title": "Should You Buy Ardelyx (ARDX)?",
+        "description": "We just covered the Claude Stock Portfolio: Top 10 Stocks to Buy According to AI Chatbot. Ardelyx Inc. (NASDAQ:ARDX) ranks #9 (see Claude Stock Portfolio: Top 5 Stocks to Buy According to AI Chatbot). Number of Hedge Funds: 30 Biotech company Ardelyx Inc. (NASDAQ:ARDX) is one of the recent additions in the Claude portfolio. Anthropic’s […]",
+        "keywords": "Ardelyx Inc., AI Chatbot, Biotech company",
+        "viewport": "width=device-width, initial-scale=1",
+        "theme-color": "#037B66",
+        "robots": "max-image-preview:large",
+        "apple-itunes-app": "app-id=328412701, affiliate-data=ct=us.fin.mbl.smart-banner&pt=9029, app-argument=https://yfinance.onelink.me/3068494570?pid=SmartBanner&c=US_Acquisition_YMktg_337__&af_sub1=Acquisition&af_sub2=US_YMktg&af_sub3=&af_sub4=100000591&af_sub5=YahooFinanceApp__SmartBanner_"
+      },
+      "canonical_link": "https://finance.yahoo.com/markets/stocks/articles/buy-ardelyx-ardx-151801858.html",
+      "keywords": [],
+      "summary": ""
+    }
+  },
+  {
+    "feedparser_entry": {
+      "title": "Claude AI Top Stock Picks in 2026: Magnite (MGNI)",
+      "title_detail": {
+        "type": "text/plain",
+        "language": null,
+        "base": "https://finance.yahoo.com/news/rssindex",
+        "value": "Claude AI Top Stock Picks in 2026: Magnite (MGNI)"
+      },
+      "links": [
+        {
+          "rel": "alternate",
+          "type": "text/html",
+          "href": "https://finance.yahoo.com/markets/stocks/articles/claude-ai-top-stock-picks-151735944.html"
+        }
+      ],
+      "link": "https://finance.yahoo.com/markets/stocks/articles/claude-ai-top-stock-picks-151735944.html",
+      "published": "2026-05-30T15:17:35Z",
+      "published_parsed": [
+        2026,
+        5,
+        30,
+        15,
+        17,
+        35,
+        5,
+        150,
+        0
+      ],
+      "source": {
+        "href": "http://www.insidermonkey.com",
+        "title": "Insider Monkey"
+      },
+      "id": "claude-ai-top-stock-picks-151735944.html",
+      "guidislink": false,
+      "media_content": [
+        {
+          "height": "86",
+          "url": "https://media.zenfs.com/en/insidermonkey.com/6aa3e6113616c4331035962993c33f4b",
+          "width": "130"
+        }
+      ],
+      "media_credit": [
+        {
+          "role": "publishing company"
+        }
+      ],
+      "credit": ""
+    },
+    "newspaper_article": {
+      "url": "https://finance.yahoo.com/markets/stocks/articles/claude-ai-top-stock-picks-151735944.html",
+      "title": "Claude AI Top Stock Picks in 2026: Magnite (MGNI)",
+      "text": "Sign in to access your portfolio\n\nSign in",
+      "authors": [
+        "Fahad Saleem"
+      ],
+      "top_image": "https://s.yimg.com/ny/api/res/1.2/Q_oMnUmkoVuLbnXWppDnvw--/YXBwaWQ9aGlnaGxhbmRlcjt3PTEyMDA7aD03OTk-/https://media.zenfs.com/en/insidermonkey.com/6aa3e6113616c4331035962993c33f4b",
+      "images": [
+        "https://s.yimg.com/ny/api/res/1.2/ztUvb5bBfSnEzDduOrwWyA--/YXBwaWQ9aGlnaGxhbmRlcjt3PTEyNjtoPTQ4/https://s.yimg.com/os/creatr-uploaded-images/2020-12/d7df1000-34e4-11eb-b6ae-ac87660fe5ee",
+        "https://s.yimg.com/ny/api/res/1.2/lfxB.zLYKGcEs1ZFAmj9Bw--/YXBwaWQ9aGlnaGxhbmRlcjt3PTk2MDtoPTY0MA--/https://media.zenfs.com/en/insidermonkey.com/6aa3e6113616c4331035962993c33f4b"
+      ],
+      "movies": [],
+      "publish_date": "2026-05-30 15:17:35+00:00",
+      "meta_description": "We just covered the Claude Stock Portfolio: Top 10 Stocks to Buy According to AI Chatbot. Magnite Inc (NASDAQ:MGNI) ranks #8 (see Claude Stock Portfolio: Top 5 Stocks to Buy According to AI Chatbot). Number of Hedge Funds: 41 Magnite Inc (NASDAQ:MGNI), a digital advertising company focused on connected TV and online ad sales, recently […]",
+      "meta_keywords": [
+        "Magnite Inc",
+        "AI Chatbot",
+        "advertising company",
+        "earnings per share",
+        "AI stock",
+        "Claude"
+      ],
+      "meta_lang": "en",
+      "meta_data": {
+        "title": "Claude AI Top Stock Picks in 2026: Magnite (MGNI)",
+        "description": "We just covered the Claude Stock Portfolio: Top 10 Stocks to Buy According to AI Chatbot. Magnite Inc (NASDAQ:MGNI) ranks #8 (see Claude Stock Portfolio: Top 5 Stocks to Buy According to AI Chatbot). Number of Hedge Funds: 41 Magnite Inc (NASDAQ:MGNI), a digital advertising company focused on connected TV and online ad sales, recently […]",
+        "keywords": "Magnite Inc, AI Chatbot, advertising company, earnings per share, AI stock, Claude",
+        "viewport": "width=device-width, initial-scale=1",
+        "theme-color": "#037B66",
+        "robots": "max-image-preview:large",
+        "apple-itunes-app": "app-id=328412701, affiliate-data=ct=us.fin.mbl.smart-banner&pt=9029, app-argument=https://yfinance.onelink.me/3068494570?pid=SmartBanner&c=US_Acquisition_YMktg_337__&af_sub1=Acquisition&af_sub2=US_YMktg&af_sub3=&af_sub4=100000591&af_sub5=YahooFinanceApp__SmartBanner_"
+      },
+      "canonical_link": "https://finance.yahoo.com/markets/stocks/articles/claude-ai-top-stock-picks-151735944.html",
+      "keywords": [],
+      "summary": ""
+    }
+  }
+]
