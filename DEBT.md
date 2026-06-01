@@ -7,16 +7,16 @@
 ### [Security] Cloud Run Allows Unauthenticated Calls
 
 - **설명**: 현재 `cloudbuild/cloudbuild.yml`에서 API와 Worker Cloud Run 서비스 모두 `--allow-unauthenticated` 인자로 배포됩니다.
-- **영향**: Worker가 공개되면 악의적인 무단 호출로 파이프라인 비용이 청구되거나 데이터 수집이 오작동할 위험이 있습니다. API 공개가 의도된 설계인지도 별도로 확정해야 합니다.
-- **해결 방안**: Worker 서비스는 `--no-allow-unauthenticated`로 전환하고, 호출 트리거 주체(Cloud Scheduler, Pub/Sub 등)에 OIDC 토큰 인증 정보를 부여합니다. API 서비스의 공개 여부는 제품 요구에 맞춰 명시적으로 결정합니다.
+- **영향**: Worker가 공개되면 악의적인 무단 호출로 파이프라인 비용이 청구되거나 데이터 수집이 오작동할 위험이 있습니다. API 공개는 현재 제품 요구에 맞춘 의도된 선택입니다.
+- **해결 방안**: Worker 수동 테스트 흐름과 Cloud Scheduler OIDC 호출 구성이 정리되면 Worker 서비스는 `--no-allow-unauthenticated`로 전환하고, 호출 주체에 `roles/run.invoker` 권한을 부여합니다.
+
+### [Deployment] Terraform Apply Trigger Separation
+
+- **설명**: 로컬에서 `terraform plan`을 확인한 뒤 push하더라도, push trigger에서 `terraform apply`까지 자동 실행하면 Cloud Build 실행 시점의 원격 state, 권한, provider 환경 차이를 다시 확인하지 못합니다.
+- **영향**: 실수로 push된 Terraform 변경이나 원격 state 차이가 즉시 GCP 인프라에 반영되어 BigQuery schema, 리소스, 비용 변경이 의도보다 빠르게 적용될 수 있습니다.
+- **해결 방안**: 자동 push trigger는 `terraform init`, `terraform validate`, `terraform plan`까지 실행하고, `terraform apply`는 Cloud Build 수동 trigger 또는 plan 출력 확인 후 승인 단계로 분리합니다.
 
 ## Source Ingestion
-
-### [Contract] RSS updated_at Parsing Alignment
-
-- **설명**: `YahooFinanceSource`는 RSS entry의 `updated_parsed`가 있어도 읽지 않아 Bronze `updated_at`에 원천 업데이트 시각을 보존하지 못합니다.
-- **영향**: 소스가 별도 update timestamp를 제공하는 경우 Bronze lookup이 실제 기사 갱신을 감지하지 못해 재수집 대상에서 빠질 수 있습니다.
-- **해결 방안**: Yahoo Finance `run_fetch()`에서 `updated_parsed`가 있으면 `updated_at`으로 파싱하고, 없거나 유효하지 않으면 Bronze nullable 계약에 따라 `None`으로 저장합니다.
 
 ### [Cleanup] Deferred Source Schema Metadata Cleanup
 
