@@ -10,73 +10,63 @@ class SilverNewsModel(BaseModel):
     """
 
     model_config = ConfigDict(
-        str_strip_whitespace=True,
-        frozen=True,
-        # Silently ignore extra fields (e.g. 'loaded_at') returned by BigQuery queries.
+        # 'loaded_at' is excluded from the model. BigQueryProvider.execute_load_json injects it at load time.
+        # extra="ignore" accepts queried BigQuery rows that include the injected column.
         extra="ignore",
+        frozen=True,
+        str_strip_whitespace=True,
     )
 
-    # 1. Partition Key
+    # Identity & Partitioning
     executed_at: AwareDatetime = Field(description="Batch execution timestamp")
+    news_id: str = Field(description="Stable article URL-based news item identifier")
+    source: str = Field(description="News item source identifier")
 
-    # 2. Identification Keys
-    news_id: str = Field(description="Stable unique news item identifier")
-
-    # 3. Clustering Keys (Order: Low Cardinality to High Cardinality)
-    category: str = Field(description="News item category")
-    source: str = Field(description="News source identifier")
+    # News Item Fields
+    title: str = Field(description="News item title")
+    url: str = Field(description="News item representative URL")
     published_at: AwareDatetime = Field(description="News item publication timestamp")
+    updated_at: AwareDatetime | None = Field(default=None, description="News item update timestamp")
 
-    # 4. Core Data Fields
-    title: str = Field(description="Original news item title")
-    author_raw: str | None = Field(default=None, description="Raw news item author")
-    url: str = Field(description="Source news item URL")
-    content_raw: str = Field(description="Raw news item body text")
+    # Bronze Raw Fields
+    raw_authors: str | None = Field(default=None, description="Bronze raw pipe-delimited author names")
+    raw_content: str = Field(description="Bronze raw article body text")
 
-    # 5. Supplementary Data Fields
-    image_url: str | None = Field(default=None, description="News feed image URL")
-    thumbnail_url: str | None = Field(
-        default=None, description="News item thumbnail URL"
-    )
-    updated_at: AwareDatetime | None = Field(
-        default=None, description="News item update timestamp"
-    )
-    # 'loaded_at' is excluded from the model. StoreBase.execute_load_json injects it at load time.
+    # News Item Metadata
+    image_url: str | None = Field(default=None, description="News item representative image URL")
+    thumbnail_url: str | None = Field(default=None, description="News item thumbnail image URL")
+    language: str | None = Field(default=None, description="News item language code")
 
     @classmethod
     def from_bronze_news(cls, bronze_news: BronzeNewsModel) -> "SilverNewsModel | None":
         """
         Transform a Bronze tier news item into a Silver tier news item.
-        Return None if the source item failed to fetch non-empty content.
+        Return None unless the Bronze item is successful.
         """
-        if bronze_news.status_code != 200 or not bronze_news.content:
+        # Success means status_code == 200 and raw content is present.
+        # Keep the explicit content check for Pyright type narrowing.
+        if bronze_news.status != "success" or bronze_news.content is None:
             return None
 
         return cls(
             executed_at=bronze_news.executed_at,
             news_id=bronze_news.news_id,
-            category=bronze_news.category,
             source=bronze_news.source,
-            published_at=bronze_news.published_at,
             title=bronze_news.title,
-            author_raw=bronze_news.author,
-            url=bronze_news.url,
-            content_raw=bronze_news.content,
+            url=bronze_news.canonical_url or bronze_news.entry_url,
+            published_at=bronze_news.published_at,
+            updated_at=bronze_news.updated_at,
+            raw_authors=bronze_news.authors,
+            raw_content=bronze_news.content,
             image_url=bronze_news.image_url,
             thumbnail_url=bronze_news.thumbnail_url,
-            updated_at=bronze_news.updated_at,
+            language=bronze_news.language,
         )
 
     @classmethod
-    def from_bronze_news_list(
-        cls, bronze_news_list: list[BronzeNewsModel]
-    ) -> list["SilverNewsModel"]:
+    def from_bronze_news_list(cls, bronze_news_list: list[BronzeNewsModel]) -> list["SilverNewsModel"]:
         """
         Transform Bronze tier news items into Silver tier news items.
         Filter out items that failed to fetch content.
         """
-        return [
-            silver
-            for bronze_news in bronze_news_list
-            if (silver := cls.from_bronze_news(bronze_news)) is not None
-        ]
+        return [silver for bronze_news in bronze_news_list if (silver := cls.from_bronze_news(bronze_news)) is not None]

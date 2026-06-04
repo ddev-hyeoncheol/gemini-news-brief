@@ -78,7 +78,7 @@ resource "google_bigquery_table" "table-silver-news-augmented" {
     {
       name = "ai_market_entities", type = "RECORD", mode = "REPEATED", description = "AI-extracted market entities",
       fields = [
-        { name = "entity_type", type = "STRING", mode = "NULLABLE", description = "AI-classified market entity type" },
+        { name = "entity_type", type = "STRING", mode = "REQUIRED", description = "AI-classified market entity type" },
         { name = "name", type = "STRING", mode = "NULLABLE", description = "AI-identified market entity name" },
         { name = "symbol", type = "STRING", mode = "NULLABLE", description = "AI-identified ticker or market symbol" },
       ]
