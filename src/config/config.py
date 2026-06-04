@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -10,19 +12,23 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    # Cloud Run injects the PORT environment variable dynamically. Fallback to 8080.
+    # Application HTTP port. Cloud Run provides PORT; local runs use the same default.
     port: int = 8080
-    log_level: str = "INFO"
+
+    # Application log level.
+    log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
 
     # Cloud Run automatically sets K_SERVICE; use it to detect GCP environment.
     k_service: str | None = None
 
-    # GCP Credentials for local development or explicit service account.
+    # Explicit credentials for local BigQuery access.
     google_application_credentials: str | None = None
+
+    # GCP project identifiers. Cloud Build sets GOOGLE_CLOUD_PROJECT; GCP_PROJECT is a fallback.
     google_cloud_project: str | None = None
     gcp_project: str | None = None
 
-    # Gemini API Keys (Injected via .env locally, or GCP Secret Manager in Cloud Run)
+    # Gemini API keys configured from local .env or Cloud Run secrets.
     gemini_api_key_free: str | None = None
     gemini_api_key_paid: str | None = None
 
