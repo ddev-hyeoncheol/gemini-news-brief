@@ -3,7 +3,6 @@ import logging
 from datetime import datetime, timezone
 
 from src.config.config import settings
-from src.core.request_context import get_gcp_trace, get_span_id
 
 _IS_GCP = settings.is_gcp
 _LOG_LEVEL = settings.log_level.upper()
@@ -43,10 +42,6 @@ class _GcpJsonFormatter(logging.Formatter):
                 "function": record.funcName,
             },
         }
-        if gcp_trace := get_gcp_trace():
-            payload["logging.googleapis.com/trace"] = gcp_trace
-        if span_id := get_span_id():
-            payload["logging.googleapis.com/spanId"] = span_id
         if record.exc_info:
             payload["exception"] = self.formatException(record.exc_info)
         return json.dumps(payload, ensure_ascii=False)

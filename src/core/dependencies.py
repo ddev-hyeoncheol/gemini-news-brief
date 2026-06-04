@@ -8,23 +8,17 @@ from src.providers.gemini import GeminiProvider
 
 def get_source_semaphore(request: Request) -> asyncio.Semaphore:
     """
-    Retrieve the shared source collection semaphore from the FastAPI application state.
-    Throttle concurrent outgoing web requests.
+    Return the shared source collection semaphore from FastAPI app state.
+    Limit concurrent outgoing web requests across source plugins.
     """
     return request.app.state.source_semaphore
 
 
 def get_bigquery_provider(request: Request) -> BigQueryProvider:
-    """
-    Retrieve the BigQueryProvider instance from the FastAPI application state.
-    This serves as a bridge between the framework's state and the application logic.
-    """
+    """Return the shared BigQueryProvider from FastAPI app state."""
     return request.app.state.bigquery_provider
 
 
 def get_gemini_provider(request: Request) -> GeminiProvider:
-    """
-    Retrieve the GeminiProvider instance from the FastAPI application state.
-    This serves as a bridge between the framework's state and the application logic.
-    """
+    """Return the shared GeminiProvider from FastAPI app state."""
     return request.app.state.gemini_provider
