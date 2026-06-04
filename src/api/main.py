@@ -4,7 +4,6 @@ from fastapi import FastAPI
 
 from src.config.config import settings
 from src.core.logger import configure_uvicorn_loggers, get_logger
-from src.core.middleware import trace_context_middleware
 
 logger = get_logger(__name__)
 
@@ -19,24 +18,32 @@ async def lifespan(app: FastAPI):
     logger.info("App shutdown completed | app: api")
 
 
-app = FastAPI(title="Gemini News Brief API", lifespan=lifespan)
-
-app.middleware("http")(trace_context_middleware)
+app = FastAPI(title="Gemini News Brief API App", lifespan=lifespan)
 
 
 @app.get("/")
 async def root():
     """Return the welcome message."""
-    return {"message": "Welcome to Gemini News Brief API"}
+    return {"message": "Welcome to Gemini News Brief API App"}
 
 
 @app.get("/health")
 async def health_check():
     """Return health status for Cloud Run and Load Balancers to verify service availability."""
-    return {"status": "health", "version": "1.0.0"}
+    return {"status": "healthy", "version": "1.0.0"}
+
+
+def run_app() -> None:
+    """Run the API application with configured runtime settings."""
+    import uvicorn
+
+    uvicorn.run(
+        "src.api.main:app",
+        host="0.0.0.0",
+        port=settings.port,
+        reload=not settings.is_gcp,
+    )
 
 
 if __name__ == "__main__":
-    import uvicorn
-
-    uvicorn.run("src.api.main:app", host="0.0.0.0", port=settings.port, reload=False)
+    run_app()
