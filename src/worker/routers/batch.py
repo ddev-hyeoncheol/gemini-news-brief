@@ -19,6 +19,7 @@ router = APIRouter(prefix="/batch", tags=["batch"])
 @router.post(
     "/run",
     response_model=BatchPipelineResponse,
+    response_model_exclude_none=True,
     responses={
         status.HTTP_200_OK: {"description": "Batch request completed successfully."},
         status.HTTP_207_MULTI_STATUS: {"description": "Batch request completed with partial success."},
@@ -51,6 +52,7 @@ async def run_batch_pipeline(
 @router.post(
     "/{layer}/{target}",
     response_model=BatchResponse,
+    response_model_exclude_none=True,
     responses={
         status.HTTP_200_OK: {"description": "Batch request completed successfully."},
         status.HTTP_207_MULTI_STATUS: {"description": "Batch request completed with partial success."},
