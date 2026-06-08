@@ -24,13 +24,19 @@ class Settings(BaseSettings):
     # Explicit credentials for local BigQuery access.
     google_application_credentials: str | None = None
 
-    # GCP project identifiers. Cloud Build sets GOOGLE_CLOUD_PROJECT; GCP_PROJECT is a fallback.
+    # GCP project identifier from environment; GCP_PROJECT is a fallback.
     google_cloud_project: str | None = None
     gcp_project: str | None = None
 
     # Gemini API keys configured from local .env or Cloud Run secrets.
     gemini_api_key_free: str | None = None
     gemini_api_key_paid: str | None = None
+
+    # HTTP User-Agent header used for RSS feed fetching and scraping.
+    user_agent: str = (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+    )
 
     @property
     def is_gcp(self) -> bool:
