@@ -2,40 +2,34 @@ from datetime import datetime, timezone
 
 from src.core.logger import get_logger
 from src.models.entities.bronze_news import BronzeNewsModel
-from src.models.schemas.sources.yahoo_finance import YahooFinanceEntrySchema
+from src.models.schemas.sources.cnbc import CnbcEntrySchema
 from src.worker.plugins.source import SourcePlugin
 
 logger = get_logger(__name__)
 
 
-class YahooFinanceSource(SourcePlugin):
-    """News source for Yahoo Finance RSS feed."""
+class CnbcSource(SourcePlugin):
+    """News source for CNBC RSS feed."""
 
     @property
     def source(self) -> str:
-        return "yahoo_finance"
+        return "cnbc"
 
     @property
     def RSS_URL(self) -> str:
-        return "https://finance.yahoo.com/rss/"
+        return "https://search.cnbc.com/rs/search/combinedcms/view.xml" "?partnerId=wrss01&id=15839069"
 
     @property
     def RSS_ENTRY_STORAGE_FIELDS(self) -> set[str]:
-        return {"title", "link", "published_parsed", "media_content"}
+        return {"link", "title", "published_parsed"}
 
     @property
     def RSS_ENTRY_METADATA_FIELDS(self) -> set[str]:
-        return {"source", "id"}
+        return {"id", "metadata_type", "metadata_sponsored", "summary"}
 
     @property
     def RSS_ENTRY_IGNORED_FIELDS(self) -> set[str]:
-        return {"title_detail", "links", "published", "guidislink", "media_credit", "credit"}
-
-    @property
-    def BOILERPLATE_CONTENTS(self) -> set[str]:
-        return {
-            "Sign in to access your portfolio\n\nSign in",
-        }
+        return {"links", "guidislink", "metadata_id", "title_detail", "summary_detail", "published"}
 
     async def run_fetch(self, executed_at: datetime) -> list[BronzeNewsModel]:
         """Fetch raw RSS feed and map to BronzeNewsModel entities without enrichment."""
@@ -51,7 +45,7 @@ class YahooFinanceSource(SourcePlugin):
                 continue
 
             try:
-                entry = YahooFinanceEntrySchema.model_validate(entry_data)
+                entry = CnbcEntrySchema.model_validate(entry_data)
             except Exception as e:
                 logger.warning(
                     "Skipping invalid RSS entry | source: %s, error: %s, entry: %s",
@@ -67,12 +61,6 @@ class YahooFinanceSource(SourcePlugin):
             if published_at is None:
                 continue
 
-            thumbnail_url = None
-            if entry.media_content:
-                first_media = entry.media_content[0]
-                if first_media.url:
-                    thumbnail_url = first_media.url
-
             metadata_payload = entry.model_dump(exclude=self.RSS_ENTRY_STORAGE_FIELDS, mode="json")
 
             results.append(
@@ -84,14 +72,13 @@ class YahooFinanceSource(SourcePlugin):
                     title=entry.title,
                     entry_url=entry.link,
                     published_at=published_at,
-                    thumbnail_url=thumbnail_url,
                     metadata=metadata_payload,
                 )
             )
 
         return results
 
-    def _parse_published_at(self, entry: YahooFinanceEntrySchema) -> datetime | None:
+    def _parse_published_at(self, entry: CnbcEntrySchema) -> datetime | None:
         """Return the RSS publication timestamp as a UTC datetime."""
         published_parsed = entry.published_parsed
         if not isinstance(published_parsed, (list, tuple)):
