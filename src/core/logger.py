@@ -18,7 +18,7 @@ _SEVERITY_MAP = {
 
 # Local plain-text format.
 _DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
-_LOCAL_FORMAT = "%(asctime)s - %(levelname)-8s - %(name)s - %(message)s"
+_LOCAL_FORMAT = "[%(asctime)s] %(levelname)-8s : %(name)s - %(message)s"
 
 
 class _GcpJsonFormatter(logging.Formatter):
