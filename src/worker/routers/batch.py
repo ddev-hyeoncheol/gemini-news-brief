@@ -32,20 +32,12 @@ async def run_batch_pipeline(
     batch_service: BatchService = Depends(get_batch_service),
 ) -> BatchPipelineResponse:
     """Run the full batch pipeline."""
-    logger.info(
-        "Router request received | endpoint: batch/run, executed_at: %s",
-        request.executed_at.isoformat(),
-    )
+    logger.info("BatchRouter batch_pipeline started | endpoint: batch/run")
 
     result = await batch_service.run_pipeline(executed_at=request.executed_at)
     _set_batch_response_status(response=response, batch_status=result.status)
 
-    status_code = response.status_code or status.HTTP_200_OK
-    logger.info(
-        "Router response completed | endpoint: batch/run, status: %s, status_code: %d",
-        result.status,
-        status_code,
-    )
+    logger.info("BatchRouter batch_pipeline completed | endpoint: batch/run, status: %s", result.status)
     return result
 
 
@@ -68,12 +60,7 @@ async def run_batch(
     batch_service: BatchService = Depends(get_batch_service),
 ) -> BatchResponse:
     """Run a batch target for the requested layer and target."""
-    logger.info(
-        "Router request received | endpoint: batch/%s/%s, executed_at: %s",
-        layer.value,
-        target.value,
-        request.executed_at.isoformat(),
-    )
+    logger.info("BatchRouter batch started | endpoint: batch/%s/%s", layer.value, target.value)
 
     # Validate the supported layer/target combination.
     if (layer, target) not in VALID_BATCH_COMBINATIONS:
@@ -89,13 +76,8 @@ async def run_batch(
     )
     _set_batch_response_status(response=response, batch_status=result.status)
 
-    status_code = response.status_code or status.HTTP_200_OK
     logger.info(
-        "Router response completed | endpoint: batch/%s/%s, status: %s, status_code: %d",
-        layer.value,
-        target.value,
-        result.status,
-        status_code,
+        "BatchRouter batch completed | endpoint: batch/%s/%s, status: %s", layer.value, target.value, result.status
     )
     return result
 

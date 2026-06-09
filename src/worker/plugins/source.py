@@ -102,7 +102,7 @@ class SourcePlugin(ABC):
         """
         if not items:
             logger.info(
-                "Plugin run_enrich skipped | source: %s, reason: no items",
+                "SourcePlugin enrich skipped | source: %s, reason: no items",
                 self.source,
             )
             return []
@@ -158,13 +158,13 @@ class SourcePlugin(ABC):
                 unique_candidates[news_id] = new_item
 
         deduplicated_items = list(unique_candidates.values())
-        succeeded_count = sum(1 for item in deduplicated_items if item.status == "success")
+        success_count = sum(1 for item in deduplicated_items if item.status == "success")
         failed_count = sum(1 for item in deduplicated_items if item.status != "success")
         logger.info(
-            "Plugin run_enrich completed | source: %s, total_unique: %d, succeeded: %d, failed_count: %d",
+            "SourcePlugin enrich completed | source: %s, count: %d, success_count: %d, failed_count: %d",
             self.source,
             len(deduplicated_items),
-            succeeded_count,
+            success_count,
             failed_count,
         )
         return deduplicated_items
@@ -225,28 +225,17 @@ class SourcePlugin(ABC):
         normalized_url = urlunsplit((parts.scheme.lower(), parts.netloc.lower(), parts.path, parts.query, ""))
         return str(uuid.uuid5(_NAMESPACE_UUID, normalized_url))
 
-    def _is_valid_rss_entry(self, entry_data: object, seen_unknowns: set[str]) -> bool:
-        """Return True for mapping RSS entries and warn once for unknown fields."""
-        if not isinstance(entry_data, Mapping):
-            logger.warning(
-                "Plugin _is_valid_rss_entry failed | source: %s, reason: %s, entry: %s",
-                self.source,
-                f"TypeError::expected mapping entry, got {type(entry_data).__name__}",
-                str(entry_data),
-            )
-            return False
-
+    def _warn_unknown_fields(self, entry_data: Mapping, seen_unknowns: set[str]) -> None:
+        """Warn once for newly encountered RSS fields not present in defined schemas."""
         unknown_fields = entry_data.keys() - self.RSS_ENTRY_KNOWN_FIELDS
         new_unknowns = unknown_fields - seen_unknowns
         if new_unknowns:
             logger.warning(
-                "Plugin _is_valid_rss_entry [unknown_fields] detected | source: %s, fields: %s",
+                "SourcePlugin fetch unknown_fields detected | source: %s, fields: %s",
                 self.source,
                 sorted(new_unknowns),
             )
             seen_unknowns.update(new_unknowns)
-
-        return True
 
     def _parse_article_html(self, url: str, html: str) -> SourceEnrichedArticleSchema:
         """Extract text and metadata from raw HTML synchronously using newspaper4k."""

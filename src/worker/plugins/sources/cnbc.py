@@ -1,3 +1,4 @@
+from collections.abc import Mapping
 from datetime import datetime, timezone
 
 from src.core.logger import get_logger
@@ -41,18 +42,12 @@ class CnbcSource(SourcePlugin):
         seen_unknowns: set[str] = set()
 
         for entry_data in entries_data:
-            if not self._is_valid_rss_entry(entry_data=entry_data, seen_unknowns=seen_unknowns):
-                continue
-
             try:
+                if isinstance(entry_data, Mapping):
+                    self._warn_unknown_fields(entry_data=entry_data, seen_unknowns=seen_unknowns)
+
                 entry = CnbcEntrySchema.model_validate(entry_data)
-            except Exception as e:
-                logger.warning(
-                    "Skipping invalid RSS entry | source: %s, error: %s, entry: %s",
-                    self.source,
-                    f"{type(e).__name__}::{e}",
-                    str(entry_data),
-                )
+            except Exception:
                 continue
 
             entry_id = self._make_id(entry.link)
@@ -76,6 +71,16 @@ class CnbcSource(SourcePlugin):
                 )
             )
 
+        success_count = len(results)
+        total_count = len(entries_data)
+
+        logger.info(
+            "SourcePlugin fetch completed | source: %s, count: %d, total_count: %d, skipped_count: %d",
+            self.source,
+            success_count,
+            total_count,
+            total_count - success_count,
+        )
         return results
 
     def _parse_published_at(self, entry: CnbcEntrySchema) -> datetime | None:
