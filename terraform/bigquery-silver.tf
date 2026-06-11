@@ -95,7 +95,7 @@ resource "google_bigquery_table" "table-silver-news-augmented" {
     { name = "ai_content_ko", type = "STRING", mode = "NULLABLE", description = "AI-translated article body text in Korean" },
 
     # Processing Diagnostics
-    { name = "batch_id", type = "STRING", mode = "REQUIRED", description = "Deterministic LLM chunk batch identifier" },
+    { name = "batch_id", type = "STRING", mode = "NULLABLE", description = "Deterministic LLM chunk batch identifier" },
     { name = "status", type = "STRING", mode = "REQUIRED", description = "AI augmentation processing status" },
     { name = "error_message", type = "STRING", mode = "NULLABLE", description = "AI augmentation error message" },
 

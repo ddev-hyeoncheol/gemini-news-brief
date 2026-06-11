@@ -58,6 +58,6 @@ class SilverNewsAugmentedModel(BaseModel):
     ai_content_ko: str | None = Field(default=None, description="AI-translated article body text in Korean")
 
     # Processing Diagnostics
-    batch_id: str = Field(description="Deterministic LLM chunk batch identifier")
+    batch_id: str | None = Field(default=None, description="Deterministic LLM chunk batch identifier")
     status: Literal["success", "failed"] = Field(description="AI augmentation processing status")
     error_message: str | None = Field(default=None, description="AI augmentation error message")
