@@ -25,12 +25,6 @@ class BigQueryProvider:
         self._semaphore = semaphore
         self._client = self._init_client()
 
-    def get_client(self) -> bigquery.Client:
-        """Return the BigQuery client, raising RuntimeError if not initialized."""
-        if self._client is None:
-            raise RuntimeError("BigQuery client is not initialized. Check GCP credentials.")
-        return self._client
-
     async def execute_query(
         self,
         query: str,
@@ -64,16 +58,22 @@ class BigQueryProvider:
         has_explicit_creds = settings.has_explicit_creds
 
         if not is_gcp and not has_explicit_creds:
+            logger.warning(
+                "BigQueryProvider initialize failed | reason: GCP environment or explicit credentials not set"
+            )
             return None
 
         try:
             return bigquery.Client(project=settings.gcp_project_id)
         except Exception as e:
-            logger.warning(
-                "Provider initialize failed | provider: bigquery, error: %s",
-                str(e),
-            )
+            logger.warning("BigQueryProvider initialize failed | error: %s", str(e))
             return None
+
+    def _get_client(self) -> bigquery.Client:
+        """Return the BigQuery client, raising RuntimeError if not initialized."""
+        if self._client is None:
+            raise RuntimeError("BigQuery client is not initialized. Check GCP credentials.")
+        return self._client
 
     def _run_query_sync(
         self,
@@ -81,7 +81,7 @@ class BigQueryProvider:
         job_config: bigquery.QueryJobConfig | None = None,
     ) -> Any:
         """Execute a BigQuery query synchronously."""
-        query_job = self.get_client().query(query, job_config=job_config)
+        query_job = self._get_client().query(query, job_config=job_config)
         return query_job.result()
 
     def _run_load_json_sync(
@@ -91,7 +91,7 @@ class BigQueryProvider:
         job_config: bigquery.LoadJobConfig | None = None,
     ) -> Any:
         """Execute a BigQuery JSON load job synchronously."""
-        load_job = self.get_client().load_table_from_json(
+        load_job = self._get_client().load_table_from_json(
             json_rows=json_rows, destination=table_id, job_config=job_config
         )
         return load_job.result()
