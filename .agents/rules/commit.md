@@ -1,12 +1,12 @@
 # Commit Rules
 
-커밋 메시지 규칙의 원본은 `CONTRIBUTING.md`입니다.
+커밋 요청을 처리할 때 적용하는 에이전트 전용 안전 규칙입니다.
 
 ## Scope
 
-- 이 파일은 에이전트가 커밋 요청을 처리할 때 필요한 참조 순서와 실행 점검만 정의합니다.
-- 커밋 메시지 형식, Type, Body, Footer는 `CONTRIBUTING.md`의 `Commit Message Convention`만 따릅니다.
-- 이 파일에서 별도 Type, 예시, footer 규칙을 재정의하지 않습니다.
+- 이 파일은 커밋 요청의 참조 순서와 stage 점검만 정의합니다.
+- 메시지 형식, Type, Body, Footer는 `CONTRIBUTING.md`의 `Commit Message Convention`만 따릅니다.
+- 별도 Type, 예시, footer 규칙을 재정의하지 않습니다.
 - 커밋 실행 권한과 git 안전 규칙은 `.agents/rules/core.md`를 따릅니다.
 
 ## Checks

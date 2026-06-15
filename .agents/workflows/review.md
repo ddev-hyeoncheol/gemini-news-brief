@@ -7,17 +7,17 @@
 - 지적 사항을 먼저 제시하고 심각도 순서로 정렬합니다.
 - 각 지적 사항은 파일과 줄 번호, 실제 영향에 근거합니다.
 - 문제가 없으면 명확히 말하고 남은 테스트 공백이나 잔여 위험을 언급합니다.
-- 요약, 질문, 변경 설명은 지적 사항 뒤에만 둡니다.
+- 요약, 질문, 변경 제안은 지적 사항 뒤에만 둡니다.
 
 ## Procedure
 
-1. 파일 단위 리뷰는 대상 파일을 중심으로 하고, 인접 파일은 필요한 규칙 확인에만 최소로 읽습니다.
-2. 리뷰 대상 diff와 현재 파일을 확인합니다.
+1. 파일 단위 리뷰는 대상 파일을 중심으로 하고, 인접 파일은 계약 확인에 필요한 범위에서만 읽습니다.
+2. 리뷰 대상의 현재 파일과 diff를 확인합니다.
 3. `.agents/index.md`에서 대상 변경에 맞는 domain rules와 cross-cutting rules를 추가로 선택합니다.
 4. 버그, 동작 회귀, 데이터 손실, 책임 경계 위반, 위험한 모호성을 먼저 찾습니다.
-5. 하네스 문서 리뷰는 `harness-doc.md`의 File Roles, Size & Duplication, Writing Style & Severity를 우선 확인합니다.
-6. 코드 리뷰는 architecture, pipeline, data contract, provider, style 규칙 중 영향받은 항목만 확인합니다.
-7. compile, import, test 검증이 변경 위험도와 맞는지 확인합니다.
+5. 하네스 문서 리뷰는 `.agents/rules/harness-doc.md`의 File Roles, Size & Duplication, Writing Style & Severity를 확인합니다.
+6. 코드 리뷰는 선택한 rules 파일 중 영향받은 항목만 확인합니다.
+7. compile, import, test 검증 여부가 변경 위험도와 맞는지 확인합니다.
 
 ## Boundaries
 
