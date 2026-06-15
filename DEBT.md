@@ -16,14 +16,6 @@
 - **영향**: 실수로 push된 Terraform 변경이나 원격 state 차이가 즉시 GCP 인프라에 반영되어 BigQuery schema, 리소스, 비용 변경이 의도보다 빠르게 적용될 수 있습니다.
 - **해결 방안**: 자동 push trigger는 `terraform init`, `terraform validate`, `terraform plan`까지 실행하고, `terraform apply`는 Cloud Build 수동 trigger 또는 plan 출력 확인 후 승인 단계로 분리합니다.
 
-## Source Ingestion
-
-### [Cleanup] Deferred Source Schema Metadata Cleanup
-
-- **설명**: CNBC, BBC Business, The Guardian 등 타 source 스키마에는 현재 수집 대상이 아닌 불필요/중복 RSS 메타데이터 필드가 남아 있습니다.
-- **영향**: 새 source 확장 시 schema 기준이 흐려지고, metadata 정리 범위가 source 작업과 섞일 수 있습니다.
-- **해결 방안**: 각 source를 실제 수집 대상으로 활성화할 때 Bronze RSS 필드와 `metadata` 보존 기준에 맞춰 schema 필드를 정리합니다.
-
 ## Data Contract & Ingestion
 
 ### [Configuration] Hardcoded Store Physical Table IDs
@@ -36,6 +28,6 @@
 
 ### [Gaps] Missing Core Logic Automated Tests
 
-- **설명**: `src/simple_test.py`는 단순 Feedparser 및 Newspaper 모듈의 연동 테스트 스크립트일 뿐, FastAPI 라우터, Batch 파이프라인 서비스, DB 플러그인 등 핵심 워크플로를 검증하는 단위/통합 테스트가 존재하지 않습니다.
+- **설명**: 현재 FastAPI 라우터, Batch 파이프라인 서비스, DB 플러그인 등 핵심 워크플로 및 데이터 정제 파이프라인을 검증하는 단위/통합 테스트가 존재하지 않습니다.
 - **영향**: 코드베이스를 변경하거나 리팩토링할 때, 예외 처리 흐름이나 데이터 정제 파이프라인의 오작동 및 회귀 버그를 감지하기 어렵습니다.
 - **해결 방안**: `pytest` 및 `httpx.AsyncClient`를 도입하여, 각 라우터 엔드포인트의 입력 검증, 모의(Mocking) DB/Gemini 동작, 그리고 멱등성 데이터 적재 흐름을 검증하는 테스트 코드를 구축해야 합니다.

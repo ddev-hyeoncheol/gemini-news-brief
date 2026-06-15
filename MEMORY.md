@@ -4,7 +4,8 @@
 
 ## Current Focus
 
-- Batch path target 검증의 잔여 영향을 확인합니다.
-- `AiPlugin`/Store 책임 경계와 Entity/Terraform description 동기화 상태를 이어서 확인합니다.
+-
 
 ## Temporary Notes
+
+-
