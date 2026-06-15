@@ -10,7 +10,7 @@ logger = get_logger(__name__)
 
 
 class CnbcSource(SourcePlugin):
-    """News source for CNBC RSS feed."""
+    """News source for CNBC RSS feed with source-specific boilerplate support."""
 
     @property
     def source(self) -> str:
@@ -31,6 +31,11 @@ class CnbcSource(SourcePlugin):
     @property
     def RSS_ENTRY_IGNORED_FIELDS(self) -> set[str]:
         return {"links", "guidislink", "metadata_id", "title_detail", "summary_detail", "published"}
+
+    @property
+    def BOILERPLATE_CONTENTS(self) -> dict[str, str]:
+        """Return known CNBC non-article boilerplates keyed by diagnostic name."""
+        return {}
 
     async def run_fetch(self, executed_at: datetime) -> list[BronzeNewsModel]:
         """Fetch raw RSS feed and map to BronzeNewsModel entities without enrichment."""

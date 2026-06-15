@@ -13,8 +13,9 @@
 7. `run_fetch()`는 `_warn_unknown_fields()`를 사용하여 신규 RSS 필드 유입(Drift)을 로깅하고, DTO 검증 후 RSS item을 `BronzeNewsModel` 리스트로 매핑합니다.
 8. URL 기반 식별자는 `SourcePlugin._make_id()`로 생성합니다.
 9. source별 부가 값은 기존 필드에 맞추고, 새 저장 필드가 아니면 `metadata`에 둡니다.
-10. 기본 helper는 `SourcePlugin._fetch_feed()`를 우선 사용하고, date/image 파싱은 source 내부 helper로 제한합니다.
-11. 배포 대상 source만 `get_batch_service()`의 `source_plugins` 리스트에 등록합니다.
+10. 반복 비본문 content는 `BOILERPLATE_CONTENTS`에 diagnostic key와 exact content로 정의합니다.
+11. 기본 helper는 `SourcePlugin._fetch_feed()`를 우선 사용하고, date/image 파싱은 source 내부 helper로 제한합니다.
+12. 배포 대상 source만 `get_batch_service()`의 `source_plugins` 리스트에 등록합니다.
 
 ## Boundaries
 

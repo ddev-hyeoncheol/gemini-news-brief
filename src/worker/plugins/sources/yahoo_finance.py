@@ -10,7 +10,7 @@ logger = get_logger(__name__)
 
 
 class YahooFinanceSource(SourcePlugin):
-    """News source for Yahoo Finance RSS feed."""
+    """News source for Yahoo Finance RSS feed with source-specific boilerplate support."""
 
     @property
     def source(self) -> str:
@@ -33,9 +33,17 @@ class YahooFinanceSource(SourcePlugin):
         return {"title_detail", "links", "published", "guidislink", "media_credit", "credit"}
 
     @property
-    def BOILERPLATE_CONTENTS(self) -> set[str]:
+    def BOILERPLATE_CONTENTS(self) -> dict[str, str]:
+        """Return known Yahoo Finance non-article boilerplates keyed by diagnostic name."""
         return {
-            "Sign in to access your portfolio\n\nSign in",
+            "yahoo_login": "Sign in to access your portfolio\n\nSign in",
+            "coinbase_ad": (
+                "Trading disclosure\n\n"
+                "The above button links to Coinbase. Yahoo Finance is not a broker-dealer or "
+                "investment adviser and does not offer securities or cryptocurrencies for sale "
+                "or facilitate trading. Coinbase pays us for certain activity generated through "
+                "this link. Prices displayed are informational."
+            ),
         }
 
     async def run_fetch(self, executed_at: datetime) -> list[BronzeNewsModel]:

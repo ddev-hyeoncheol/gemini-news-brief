@@ -72,15 +72,18 @@ class SourcePlugin(ABC):
         return self.RSS_ENTRY_STORAGE_FIELDS | self.RSS_ENTRY_METADATA_FIELDS | self.RSS_ENTRY_IGNORED_FIELDS
 
     @property
-    def BOILERPLATE_CONTENTS(self) -> set[str]:
-        """Return a set of known non-article boilerplates to filter out."""
-        return set()
+    def BOILERPLATE_CONTENTS(self) -> dict[str, str]:
+        """Return exact non-article boilerplate content keyed by diagnostic name."""
+        return {}
 
-    def _is_boilerplate_content(self, content: str | None) -> bool:
-        """Return True if extracted content is a known non-article boilerplate."""
+    def _find_matching_boilerplate(self, content: str | None) -> str | None:
+        """Return the diagnostic name for exact boilerplate content matches."""
         if content is None:
-            return False
-        return content in self.BOILERPLATE_CONTENTS
+            return None
+        for name, boilerplate in self.BOILERPLATE_CONTENTS.items():
+            if content == boilerplate:
+                return name
+        return None
 
     def __init__(self, semaphore: asyncio.Semaphore) -> None:
         """Initialize with a shared semaphore to limit concurrent enrich requests."""
@@ -98,7 +101,8 @@ class SourcePlugin(ABC):
         Enrich targeted items with full article content in parallel.
 
         HTTP and parsing errors are isolated into top-level diagnostics,
-        allowing other successful items to proceed.
+        known source boilerplates are marked as failed item diagnostics,
+        and other successful items continue.
         """
         if not items:
             logger.info(
@@ -120,10 +124,10 @@ class SourcePlugin(ABC):
             if content is not None:
                 content = content.strip() or None
 
-            if self._is_boilerplate_content(content):
+            if (bp_name := self._find_matching_boilerplate(content)) is not None:
                 content = None
                 if error_message is None:
-                    error_message = "Content extraction failed::boilerplate content"
+                    error_message = f"Content unavailable::boilerplate content::{bp_name}"
 
             if status_code == 200 and content:
                 status = "success"

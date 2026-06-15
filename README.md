@@ -211,6 +211,8 @@ curl -X POST "http://localhost:8080/batch/run" \
 4. `run_fetch(executed_at: datetime)`에서 DTO 검증 후 RSS 항목을 `BronzeNewsModel` 리스트로 매핑합니다.
 5. 배포 대상 source만 `src/worker/services/batch.py`의 `get_batch_service()`에 등록합니다.
 
+아래 코드는 핵심 흐름만 보여주는 최소 예시이며, 실제 source에서는 날짜 파싱 helper와 로그를 기존 구현과 맞춰 보강합니다.
+
 ```python
 from collections.abc import Mapping
 from datetime import datetime, timezone
