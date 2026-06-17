@@ -2,6 +2,12 @@ name: Sync Labels
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/labels.yml
+      - .github/workflows/labels.yml
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -13,8 +19,13 @@ jobs:
       contents: read
       issues: write
     steps:
-      - uses: actions/checkout@v6
-      - uses: EndBug/label-sync@v2
+      - name: Checkout label config
+        uses: actions/checkout@v6
+        with:
+          sparse-checkout: .github/labels.yml
+          sparse-checkout-cone-mode: false
+      - name: Sync labels
+        uses: EndBug/label-sync@v2
         with:
           config-file: .github/labels.yml
           delete-other-labels: true
