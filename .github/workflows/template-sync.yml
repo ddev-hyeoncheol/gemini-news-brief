@@ -1,0 +1,103 @@
+name: Sync Template
+
+on:
+  workflow_dispatch:
+
+env:
+  TEMPLATE_REPOSITORY: ddev-hyeoncheol/template-repository
+  TEMPLATE_BRANCH: main
+  SYNC_BRANCH: chore/template-sync
+
+jobs:
+  sync:
+    name: ${{ matrix.repo }}
+    if: github.repository == 'ddev-hyeoncheol/template-repository'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        repo:
+          - ddev-hyeoncheol/gemini-news-brief
+          - ddev-hyeoncheol/dbt-airflow-lineage
+
+    steps:
+      - name: Checkout template repository
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ env.TEMPLATE_BRANCH }}
+          path: template
+
+      - name: Sync template changes
+        env:
+          GH_TOKEN: ${{ secrets.TEMPLATE_SYNC_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${GH_TOKEN}" ]]; then
+            echo "::error::TEMPLATE_SYNC_TOKEN secret is required."
+            exit 1
+          fi
+
+          gh auth setup-git
+          gh repo clone "${{ matrix.repo }}" target -- --quiet
+
+          template_dir="${GITHUB_WORKSPACE}/template"
+          target_dir="${GITHUB_WORKSPACE}/target"
+          template_sha="$(git -C "${template_dir}" rev-parse --short=12 HEAD)"
+          default_branch="$(gh repo view "${{ matrix.repo }}" --json defaultBranchRef --jq '.defaultBranchRef.name')"
+          pr_title="[CI] 템플릿 변경 사항 동기화"
+          commit_message="[CI] 템플릿 변경 사항 동기화 (${template_sha})"
+
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git -C "${target_dir}" switch -C "${SYNC_BRANCH}" "origin/${default_branch}"
+
+          rsync -a --delete \
+            --exclude ".git/" \
+            "${template_dir}/" \
+            "${target_dir}/"
+
+          git -C "${target_dir}" add -A
+
+          if git -C "${target_dir}" diff --cached --quiet; then
+            echo "No template changes for ${{ matrix.repo }}."
+            exit 0
+          fi
+
+          git -C "${target_dir}" commit -m "${commit_message}"
+          git -C "${target_dir}" push --force-with-lease origin "HEAD:${SYNC_BRANCH}"
+
+          pr_body="$(cat <<BODY
+          템플릿 저장소의 최신 변경 사항을 동기화합니다.
+
+          - Source: ${TEMPLATE_REPOSITORY}@${template_sha}
+          - Target: ${{ matrix.repo }}
+
+          이 PR은 ${TEMPLATE_REPOSITORY}의 중앙 템플릿 동기화 workflow에서 생성되었습니다.
+          BODY
+          )"
+
+          existing_pr="$(gh pr list \
+            --repo "${{ matrix.repo }}" \
+            --head "${SYNC_BRANCH}" \
+            --state open \
+            --json number \
+            --jq '.[0].number // empty')"
+
+          if [[ -n "${existing_pr}" ]]; then
+            gh pr edit "${existing_pr}" \
+              --repo "${{ matrix.repo }}" \
+              --title "${pr_title}" \
+              --body "${pr_body}"
+          else
+            gh pr create \
+              --repo "${{ matrix.repo }}" \
+              --head "${SYNC_BRANCH}" \
+              --base "${default_branch}" \
+              --title "${pr_title}" \
+              --body "${pr_body}"
+          fi
