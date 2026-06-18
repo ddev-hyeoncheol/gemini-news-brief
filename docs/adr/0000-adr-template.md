@@ -1,8 +1,8 @@
 # [ADR-000X] ADR 제목
 
-- **상태:** `Proposed` | `Accepted` | `Superseded by ADR-000Y`
+- **상태:** `Proposed` | `Accepted` | `Deprecated` | `Superseded by ADR-000Y`
 - **날짜:** YYYY-MM-DD
-- **작성자:** @ddev-hyeoncheol
+- **작성자:** @[github-username]
 
 ---
 
@@ -13,7 +13,7 @@
 
 ## 2. 결정 (What)
 
-- [ ] 선택한 기술/방식:
+- 선택한 기술/방식:
 
 ## 3. 득과 실 (Trade-offs)
 
