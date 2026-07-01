@@ -11,17 +11,17 @@
 - **[CRITICAL]** 사용자가 만든 변경을 되돌리지 않습니다. 관련 없는 변경은 무시하고, 관련 변경은 읽고 맞춰갑니다.
 - **[CRITICAL]** destructive git 명령, commit, push는 사용자의 명시 요청 없이는 수행하지 않습니다.
 - **[CRITICAL]** 의존성 설치, 네트워크 접근, 외부 서비스 호출은 사용자 승인 없이 절대 수행하지 않습니다.
-- **[CRITICAL]** 로컬 검증이나 실행 중 `ModuleNotFoundError` 또는 패키지 누락 에러가 발생하면 `pip`, `conda`, `poetry`, `apt` 같은 설치 명령을 실행하지 않습니다. 추가 실행 검증을 중단하고, 사용자에게 에러 로그와 필요한 의존성 설치 승인을 요청합니다.
+- **[CRITICAL]** 로컬 검증이나 실행 중 `ModuleNotFoundError` 또는 패키지 누락 에러가 발생하면 `pip`, `poetry`, `apt` 같은 설치 명령을 실행하지 않습니다. 추가 실행 검증을 중단하고, 사용자에게 에러 로그와 필요한 의존성 설치 승인을 요청합니다.
 
 ## Validation
 
-로컬 검증은 conda 환경 `gemini-news-brief`를 사용합니다.
+로컬 검증은 저장소 루트의 Python 3.12 가상환경 `.venv`를 사용합니다.
 
 자주 쓰는 명령:
 
 ```bash
-conda run -n gemini-news-brief python -m compileall src
-conda run -n gemini-news-brief python -m compileall <changed-python-path>
+.venv/bin/python -m compileall src
+.venv/bin/python -m compileall <changed-python-path>
 ```
 
-API import 또는 OpenAPI 검증이 필요하면 같은 conda 환경에서 실행합니다.
+API import 또는 OpenAPI 검증이 필요하면 같은 `.venv` 환경에서 실행합니다.
