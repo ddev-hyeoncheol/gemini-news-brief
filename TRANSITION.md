@@ -427,6 +427,7 @@ terraform/
   dataform.tf
   bigquery-connection-vertex.tf   # Dataform SQL의 Vertex AI remote model 연결
   cloud-run-ingest.tf
+  cloud-run-serving.tf
   cloud-run-augment.tf            # SQL 네이티브 검증 실패 시에만 유지 (fallback)
   cloud-scheduler.tf
   artifact-registry.tf
@@ -438,7 +439,7 @@ terraform/
 ```text
 terraform/
   modules/
-    shared/
+    core/
     ingest/
     warehouse/
     enrichment/   # SQL 네이티브 검증 실패 시에만 생성 (fallback)
@@ -556,6 +557,8 @@ gemini-news-serving-prod
 작업:
 
 ```text
+- src/worker/ → src/ingest/, src/api/ → src/serving/ 디렉토리 리네이밍
+- src/core/dependencies.py에서 service별 provider 의존성을 ingest/serving 각자의 dependencies.py로 분리
 - CloudStorageProvider 추가
 - BronzeLakeStore 추가
 - FirestoreProvider 및 중복 필터 로직 추가
@@ -568,6 +571,7 @@ gemini-news-serving-prod
 완료 기준:
 
 ```text
+- src/ingest, src/serving, src/core 구조로 재편됨 (13절 참고)
 - BigQuery bronze.news에 쓰지 않음
 - GCS에 batch별 JSONL 생성
 - Firestore에 수집 이력 기록 및 중복 필터 작동
@@ -711,7 +715,7 @@ gemini-news-serving-prod
 ```text
 - Terraform modules 분리
 - envs/dev, envs/prod 구성
-- shared / ingest / warehouse / enrichment / serving module 정리
+- core / ingest / warehouse / enrichment / serving module 정리
 - remote state 분리 검토
 - GCP project 분리 검토
 - cross-project IAM 구성
@@ -808,7 +812,60 @@ SQL로 표현하기 어려운 LLM/embedding/model 워크로드인가?
   → Serving
 
 공통 schema나 utility인가?
-  → shared package
+  → core package
 ```
 
 이 기준을 유지하면 프로젝트가 커져도 책임 경계가 무너지지 않는다.
+
+---
+
+## 13. 코드 디렉토리 구조
+
+Warehouse와 Enrichment(SQL 네이티브 채택 시)는 Dataform SQL과 Terraform 리소스로만 구성되고 별도 Python 코드가 거의 없다. 따라서 `src/` 아래에는 Ingest, Serving, 그리고 둘의 공통 유틸을 담는 `core`만 존재한다.
+
+```text
+src/
+  core/                # 기존 그대로 유지 — Ingest/Serving 공통 인프라 유틸
+    config.py
+    logger.py
+    transient.py
+
+  ingest/              # 기존 worker/ 대체
+    main.py
+    dependencies.py    # source_semaphore, StorageProvider, FirestoreProvider 주입
+    routers/
+    services/
+    plugins/
+      source.py
+      sources/
+      stores/          # gcs.py, firestore.py (BigQuery 기반 BronzeStore 대체)
+    providers/
+      storage.py
+      firestore.py
+    models/
+      entities/
+        bronze_news.py
+      schemas/
+
+  serving/             # 기존 api/ 대체
+    main.py
+    dependencies.py    # Serving 전용 조회 provider 주입
+    routers/
+    services/
+    providers/
+      firestore.py     # Ingest 중복 검사용 Firestore와 별도 collection/용도
+    models/
+      entities/
+      schemas/
+```
+
+명명 원칙은 다음과 같다.
+
+```text
+- "shared"라는 새 이름을 만들지 않는다. 기존 src/core/가 이미 공통 유틸 역할이므로 그대로 확장한다.
+- core에는 Ingest/Serving이 동일하게 쓰는 것(설정 로딩, 로거, transient 판별)만 남긴다.
+- BigQueryProvider/GeminiProvider처럼 service별 provider 의존성은 core/dependencies.py가 아니라 각 서비스의 dependencies.py로 옮긴다.
+- Warehouse/Enrichment 전용 src/ 디렉토리는 미리 만들지 않는다. Enrichment fallback(3c)이 실제로 채택될 때만 src/enrichment/를 새로 만든다.
+```
+
+`src/worker/` → `src/ingest/`, `src/api/` → `src/serving/` 리네이밍은 코드 경로뿐 아니라 `Dockerfile`, `cloudbuild.yml`의 이미지/서비스 이름, uvicorn 실행 경로(`src.worker.main:app` 등), Terraform Cloud Run 리소스 이름에도 함께 반영한다.
