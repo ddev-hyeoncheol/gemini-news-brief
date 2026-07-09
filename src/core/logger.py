@@ -90,6 +90,6 @@ def get_logger(name: str) -> logging.Logger:
     Usage:
         from src.core.logger import get_logger
         logger = get_logger(__name__)
-        logger.info("DbPlugin extract_bronze_news completed | count: %d", len(items))
+        logger.info("BatchService bronze_news completed | count: %d", len(items))
     """
     return logging.getLogger(name)

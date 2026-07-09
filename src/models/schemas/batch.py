@@ -5,28 +5,24 @@ from typing import Literal
 from pydantic import AwareDatetime, BaseModel, Field
 
 BatchStatus = Literal["success", "partial", "failed"]
-BatchPhase = Literal["fetch", "entry_lookup", "enrich", "news_lookup", "extract", "transform", "load"]
+BatchPhase = Literal["fetch", "entry_lookup", "enrich", "news_lookup", "load"]
 
 
 class BatchLayer(str, Enum):
     """Supported batch database layers."""
 
     BRONZE = "bronze"
-    SILVER = "silver"
 
 
 class BatchTarget(str, Enum):
     """Supported batch logic targets."""
 
     NEWS = "news"
-    NEWS_AUGMENTED = "news-augmented"
 
 
 # Supported layer/target combinations.
 VALID_BATCH_COMBINATIONS: set[tuple[BatchLayer, BatchTarget]] = {
     (BatchLayer.BRONZE, BatchTarget.NEWS),
-    (BatchLayer.SILVER, BatchTarget.NEWS),
-    (BatchLayer.SILVER, BatchTarget.NEWS_AUGMENTED),
 }
 
 

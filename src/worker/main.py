@@ -5,8 +5,6 @@ from fastapi import FastAPI
 
 from src.config.config import settings
 from src.core.logger import configure_uvicorn_loggers, get_logger
-from src.providers.bigquery import BigQueryProvider
-from src.providers.gemini import GeminiProvider
 from src.worker.routers import batch
 
 logger = get_logger(__name__)
@@ -20,8 +18,6 @@ async def lifespan(app: FastAPI):
     # Initialize shared resources on startup.
     # All semaphores are created here to ensure they are bound to the correct event loop.
     app.state.source_semaphore = asyncio.Semaphore(10)
-    app.state.bigquery_provider = BigQueryProvider(semaphore=asyncio.Semaphore(10))
-    app.state.gemini_provider = GeminiProvider(semaphore=asyncio.Semaphore(10))
 
     logger.info("App startup completed | app: worker")
     yield

@@ -4,14 +4,8 @@ from datetime import datetime, timezone
 
 from fastapi import Depends
 
-from src.core.dependencies import (
-    get_bigquery_provider,
-    get_gemini_provider,
-    get_source_semaphore,
-)
+from src.core.dependencies import get_source_semaphore
 from src.core.logger import get_logger
-from src.models.entities.bronze_news import BronzeNewsModel
-from src.models.entities.silver_news import SilverNewsModel
 from src.models.schemas.batch import (
     BatchLayer,
     BatchPhase,
@@ -20,14 +14,8 @@ from src.models.schemas.batch import (
     BatchSourceResult,
     BatchTarget,
 )
-from src.providers.bigquery import BigQueryProvider
-from src.providers.gemini import GeminiProvider
-from src.worker.plugins.ai import AiPlugin
-from src.worker.plugins.db import DbPlugin
 from src.worker.plugins.source import SourcePlugin
 from src.worker.plugins.sources.yahoo_finance import YahooFinanceSource
-from src.worker.plugins.stores.bronze import BronzeStore
-from src.worker.plugins.stores.silver import SilverStore
 
 logger = get_logger(__name__)
 
@@ -38,13 +26,9 @@ class BatchService:
     def __init__(
         self,
         source_plugins: Sequence[SourcePlugin],
-        db_plugin: DbPlugin,
-        ai_plugin: AiPlugin,
     ) -> None:
         """Initialize the batch service with required plugins/dependencies."""
         self.source_plugins = source_plugins
-        self.db_plugin = db_plugin
-        self.ai_plugin = ai_plugin
 
     async def run_pipeline(self, executed_at: datetime) -> BatchPipelineResponse:
         """Run the news batch pipeline."""
@@ -54,11 +38,7 @@ class BatchService:
 
         tasks: list[BatchResponse] = []
 
-        pipeline_tasks = (
-            (BatchLayer.BRONZE, BatchTarget.NEWS),
-            (BatchLayer.SILVER, BatchTarget.NEWS),
-            (BatchLayer.SILVER, BatchTarget.NEWS_AUGMENTED),
-        )
+        pipeline_tasks = ((BatchLayer.BRONZE, BatchTarget.NEWS),)
 
         for layer, target in pipeline_tasks:
             tasks.append(await self.run(layer=layer, target=target, executed_at=executed_at))
@@ -99,12 +79,6 @@ class BatchService:
 
         if (layer, target) == (BatchLayer.BRONZE, BatchTarget.NEWS):
             return await self._run_bronze_news(executed_at=executed_at)
-
-        if (layer, target) == (BatchLayer.SILVER, BatchTarget.NEWS):
-            return await self._run_silver_news(executed_at=executed_at)
-
-        if (layer, target) == (BatchLayer.SILVER, BatchTarget.NEWS_AUGMENTED):
-            return await self._run_silver_news_augmented(executed_at=executed_at)
 
         raise ValueError(f"Unsupported batch execution: {layer.value}/{target.value}")
 
@@ -149,130 +123,6 @@ class BatchService:
             elapsed_seconds=elapsed_seconds,
             details=source_results,
         )
-
-    async def _run_silver_news(self, executed_at: datetime) -> BatchResponse:
-        """Normalize successful Bronze news into Silver news."""
-        started_at = datetime.now(tz=timezone.utc)
-        current_phase: BatchPhase = "extract"
-
-        try:
-            # 1. Extract
-            current_phase = "extract"
-            extracted_items = await self.db_plugin.run_extract_bronze_news(executed_at=executed_at)
-
-            # 2. Transform
-            current_phase = "transform"
-            transformed_items = self._transform_silver_news(executed_at=executed_at, items=extracted_items)
-
-            # 3. Load
-            current_phase = "load"
-            await self.db_plugin.run_load_silver_news(executed_at=executed_at, items=transformed_items)
-
-            status = "success"
-            completed_at = datetime.now(tz=timezone.utc)
-            elapsed_seconds = (completed_at - started_at).total_seconds()
-            logger.info(
-                "BatchService silver_news completed | executed_at: %s, status: %s, count: %d, elapsed: %.2fs",
-                executed_at.isoformat(),
-                status,
-                len(transformed_items),
-                elapsed_seconds,
-            )
-
-            return BatchResponse(
-                layer=BatchLayer.SILVER,
-                target=BatchTarget.NEWS,
-                executed_at=executed_at,
-                status=status,
-                count=len(transformed_items),
-                started_at=started_at,
-                completed_at=completed_at,
-                elapsed_seconds=elapsed_seconds,
-            )
-        except Exception as e:
-            completed_at = datetime.now(tz=timezone.utc)
-            elapsed_seconds = (completed_at - started_at).total_seconds()
-            logger.exception(
-                "BatchService silver_news failed | executed_at: %s, failed_phase: %s, elapsed: %.2fs, error: %s",
-                executed_at.isoformat(),
-                current_phase,
-                elapsed_seconds,
-                str(e),
-            )
-            return self._create_failed_response(
-                layer=BatchLayer.SILVER,
-                target=BatchTarget.NEWS,
-                executed_at=executed_at,
-                started_at=started_at,
-                completed_at=completed_at,
-                failed_phase=current_phase,
-                error_message=f"{type(e).__name__}::{e}",
-            )
-
-    async def _run_silver_news_augmented(self, executed_at: datetime) -> BatchResponse:
-        """Augment Silver news and load Silver news augmented records."""
-        started_at = datetime.now(tz=timezone.utc)
-        current_phase: BatchPhase = "extract"
-
-        try:
-            # 1. Extract
-            current_phase = "extract"
-            extracted_items = await self.db_plugin.run_extract_silver_news(executed_at=executed_at)
-
-            # 2. Transform
-            current_phase = "transform"
-            transformed_items = await self.ai_plugin.run_transform_silver_news_augmented(
-                executed_at=executed_at,
-                items=extracted_items,
-            )
-
-            # 3. Load
-            current_phase = "load"
-            await self.db_plugin.run_load_silver_news_augmented(
-                executed_at=executed_at,
-                items=transformed_items,
-            )
-
-            status = "partial" if any(item.status != "success" for item in transformed_items) else "success"
-            completed_at = datetime.now(tz=timezone.utc)
-            elapsed_seconds = (completed_at - started_at).total_seconds()
-            logger.info(
-                "BatchService silver_news_augmented completed | executed_at: %s, status: %s, count: %d, elapsed: %.2fs",
-                executed_at.isoformat(),
-                status,
-                len(transformed_items),
-                elapsed_seconds,
-            )
-
-            return BatchResponse(
-                layer=BatchLayer.SILVER,
-                target=BatchTarget.NEWS_AUGMENTED,
-                executed_at=executed_at,
-                status=status,
-                count=len(transformed_items),
-                started_at=started_at,
-                completed_at=completed_at,
-                elapsed_seconds=elapsed_seconds,
-            )
-        except Exception as e:
-            completed_at = datetime.now(tz=timezone.utc)
-            elapsed_seconds = (completed_at - started_at).total_seconds()
-            logger.exception(
-                "BatchService silver_news_augmented failed | executed_at: %s, failed_phase: %s, elapsed: %.2fs, error: %s",
-                executed_at.isoformat(),
-                current_phase,
-                elapsed_seconds,
-                str(e),
-            )
-            return self._create_failed_response(
-                layer=BatchLayer.SILVER,
-                target=BatchTarget.NEWS_AUGMENTED,
-                executed_at=executed_at,
-                started_at=started_at,
-                completed_at=completed_at,
-                failed_phase=current_phase,
-                error_message=f"{type(e).__name__}::{e}",
-            )
 
     async def _run_bronze_news_source(self, source_plugin: SourcePlugin, executed_at: datetime) -> BatchSourceResult:
         """Process a single source pipeline from RSS fetch to Bronze load."""
@@ -365,18 +215,6 @@ class BatchService:
                 error_message=f"{type(e).__name__}::{e}",
             )
 
-    def _transform_silver_news(self, executed_at: datetime, items: list[BronzeNewsModel]) -> list[SilverNewsModel]:
-        """Transform successful Bronze news items into Silver news items."""
-        transformed_items = SilverNewsModel.from_bronze_news_list(items)
-        logger.info(
-            "BatchService transform_silver_news completed | executed_at: %s, count: %d, total_count: %d, skipped_count: %d",
-            executed_at.isoformat(),
-            len(transformed_items),
-            len(items),
-            len(items) - len(transformed_items),
-        )
-        return transformed_items
-
     def _resolve_executed_at(self, executed_at: datetime) -> datetime:
         """Return the normalized batch execution time floored to the nearest 10-minute UTC."""
         utc_dt = executed_at.astimezone(timezone.utc)
@@ -437,22 +275,10 @@ class BatchService:
 
 def get_batch_service(
     source_semaphore: asyncio.Semaphore = Depends(get_source_semaphore),
-    bigquery_provider: BigQueryProvider = Depends(get_bigquery_provider),
-    gemini_provider: GeminiProvider = Depends(get_gemini_provider),
 ) -> BatchService:
     """Provide FastAPI dependency for BatchService."""
     source_plugins = [
         YahooFinanceSource(semaphore=source_semaphore),
     ]
 
-    bronze_store = BronzeStore(provider=bigquery_provider)
-    silver_store = SilverStore(provider=bigquery_provider)
-    db_plugin = DbPlugin(bronze_store=bronze_store, silver_store=silver_store)
-
-    ai_plugin = AiPlugin(gemini_provider=gemini_provider)
-
-    return BatchService(
-        source_plugins=source_plugins,
-        db_plugin=db_plugin,
-        ai_plugin=ai_plugin,
-    )
+    return BatchService(source_plugins=source_plugins)
