@@ -41,6 +41,7 @@
 기술 부채 파악 및 아키텍처 리팩토링 검토 시 다음 파일을 읽습니다.
 
 - `DEBT.md`
+- `TRANSITION.md`
 
 ## Domain Rules
 
