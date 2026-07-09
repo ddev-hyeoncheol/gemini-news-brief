@@ -4,6 +4,7 @@
 
 ## File Roles
 
+- `CLAUDE.md`: Claude Code 자동 로드 진입점. `AGENTS.md`로 라우팅만 담당 (내용 중복 금지).
 - `AGENTS.md`: 하네스 진입점. 항상 읽을 최소 포인터만 안내 (20줄 이하).
 - `.agents/index.md`: 트리거 조건 기반의 작업별 라우터. 라우팅만 담으며 60줄 제한 예외.
 - `.agents/rules/`: 오래가는 영구적 제약 조건(Constraints) 보관.
