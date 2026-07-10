@@ -4,19 +4,21 @@
 
 ## File Roles
 
-- `CLAUDE.md`: Claude Code 자동 로드 진입점. `AGENTS.md`로 라우팅만 담당 (내용 중복 금지).
-- `AGENTS.md`: 하네스 진입점. 항상 읽을 최소 포인터만 안내 (20줄 이하).
+- `AGENTS.md`: 하네스의 논리적 진입점. 매 턴 읽을 최소 포인터와 로드 순서만 안내 (20줄 이하).
+- `CLAUDE.md`: 도구(Claude Code)가 세션 시작 시 자동 로드하는 물리적 진입점. `AGENTS.md`를 import해 하네스로 넘기는 역할만 하며 규칙을 직접 정의하지 않습니다.
 - `.agents/index.md`: 트리거 조건 기반의 작업별 라우터. 라우팅만 담으며 60줄 제한 예외.
 - `.agents/rules/`: 오래가는 영구적 제약 조건(Constraints) 보관.
 - `.agents/workflows/`: 순서가 중요한 작업 절차(Process) 보관.
 - `.agents/guides/`: 도메인 고유의 컴포넌트 확장 지침(Guide) 보관.
 - `MEMORY.md`: 현재 포커스, 임시 결정 등 동적 상태(State) 보관.
 - `DEBT.md`: 장기 기술 부채 및 아키텍처 백로그 대장 보관.
+- `TRANSITION.md`: 진행 중인 아키텍처 전환 계획과 단계별 로드맵 보관. 전환이 끝나면 제거하는 한시적 문서.
 - `CONTRIBUTING.md`: 사람과 AI 공통 기여 규칙의 Canonical 원본.
 
 ## Writing Style & Severity
 
-- Markdown 헤더는 영어, 본문 설명은 한국어로 작성합니다.
+- Markdown 제목 헤더(`#`, `##` 등)는 영어로 쓰고, 표 헤더를 포함한 본문 설명은 한국어로 작성합니다.
+- 규칙과 역할은 한 줄 `-` bullet 으로 원자적으로 작성하고(부연은 하위 bullet), 섹션 도입 산문은 한 문장 이내로 제한합니다. 표와 코드 블록은 예외입니다.
 - 규칙은 명령문(~하십시오)이 아닌 단호한 규정문(~합니다, ~지킵니다)으로 작성합니다.
 - 데이터 유실, 보안 취약점, 비용 급증, 사용자 변경 훼손 위험이 있는 규칙에만 **[CRITICAL]** 태그를 붙입니다.
 
@@ -27,12 +29,12 @@
 
 ## Size & Duplication
 
-- 개별 rule/workflow/guide 파일은 60줄 이하로 유지합니다. 초과 시 역할 기준으로 분리합니다.
+- 개별 rule/workflow/guide 파일은 60줄 이하로 유지합니다. 초과 시 역할 기준으로 분리하며, 분리가 불가능한 예외는 File Roles에 사유와 함께 명시합니다 (예: `index.md`는 라우터라 예외).
 - 중복 작성 금지. 타 파일 규칙은 링크나 포인터로만 참조합니다.
 - 일시적 상태는 `MEMORY.md`, 공통 기여 규칙은 `CONTRIBUTING.md`로 일원화합니다.
 
 ## Maintenance
 
-- 파일 추가·삭제·이동 시 `.agents/index.md` 라우팅 구조를 동시 수정합니다.
+- 하네스 문서를 추가·삭제·이동하면 `.agents/index.md` 라우팅 구조와 이 파일의 File Roles 표를 함께 갱신합니다.
 - 파일명·규칙명 변경 시 전역 검색을 수행하여 고아 참조(Stale Reference)를 제거합니다.
 - `MEMORY.md`는 작업 결과에 직접 영향을 주는 맥락이 존재할 때만 읽도록 라우팅합니다.

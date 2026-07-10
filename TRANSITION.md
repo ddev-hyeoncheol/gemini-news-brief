@@ -1,4 +1,21 @@
-# Gemini News Brief 프로젝트 장기 전환 계획
+# Briefolio Transition Plan
+
+## Project Identity
+
+- 제품 표시 이름은 `Briefolio`입니다.
+- 저장소 및 리소스에 사용하는 기술 식별자는 `briefolio`입니다.
+- 기존 `Gemini News Brief` 명칭은 전환 과정에서 순차적으로 제거합니다.
+- 프로젝트 이름은 특정 AI provider나 저장 계층을 포함하지 않습니다.
+- `Briefolio Intelligence`는 기존 Warehouse와 Enrichment 책임을 하나의 경계로 통합합니다.
+
+| 경계 | 프로젝트 명칭 | 프로젝트 ID | 핵심 책임 |
+| :--- | :------------ | :---------- | :-------- |
+| Ingest | `Briefolio Ingest` | `briefolio-ingest` | 외부 금융 뉴스 수집, 중복 상태 관리, 본문 추출, GCS landing 적재 |
+| Intelligence | `Briefolio Intelligence` | `briefolio-intelligence` | BigQuery/Dataform 정제, AI 보강, serving용 mart 생성 |
+| Serving | `Briefolio Serving` | `briefolio-serving` | 사용자 API, 검색, 캐시, 조회 저장소 관리 |
+
+- 프로젝트 ID는 목표 식별자이며 실제 GCP project 생성 전에 전역 사용 가능 여부를 확인합니다.
+- 개발·운영 환경을 별도 GCP project로 분리할 때는 프로젝트 ID 끝에 `-dev`, `-prod` 환경 접미사를 추가합니다.
 
 ## 1. 전체 방향성
 
@@ -11,17 +28,17 @@
 최종 목표 구조는 다음과 같다.
 
 ```text
-Ingest Project
+Briefolio Ingest (briefolio-ingest)
   → Cloud Storage Bronze Data Lake
 
-Warehouse Project
+Briefolio Intelligence (briefolio-intelligence)
   → BigQuery staging (GCS JSONL을 load job으로 적재, External Table 미사용)
   → Dataform
   → silver.news
   → silver.news_augmented
   → mart / serving export
 
-Serving Project
+Briefolio Serving (briefolio-serving)
   → Firestore / Search / Vector DB
   → Cloud Run API
   → User-facing service
@@ -36,14 +53,14 @@ Serving Project
 장기적으로 프로젝트는 최소 3개 경계로 나눈다.
 
 ```text
-1. Ingest
-2. Warehouse
-3. Serving
+1. Briefolio Ingest (briefolio-ingest)
+2. Briefolio Intelligence (briefolio-intelligence)
+3. Briefolio Serving (briefolio-serving)
 ```
 
-AI augmentation은 BigQuery에서 Vertex AI remote model을 직접 호출하는 Dataform SQL 스텝으로 처리하면, 별도 실행 서비스 없이 Warehouse 안에 계속 남는다. 즉 Enrichment는 기본적으로 별도 경계로 분리하지 않는다.
+AI augmentation은 BigQuery에서 Vertex AI remote model을 직접 호출하는 Dataform SQL 스텝으로 처리하면, 별도 실행 서비스 없이 Briefolio Intelligence 안에 계속 남는다.
 
-다만 다음 경우에는 별도 `enrichment` 프로젝트/서비스가 다시 필요해질 수 있다.
+다음과 같이 SQL 밖의 커스텀 로직이 필요해져도 Cloud Run fallback을 Briefolio Intelligence 안에서 운영하며 별도 프로젝트 경계를 추가하지 않는다.
 
 ```text
 - BigQuery 구조화된 출력 함수가 silver.news_augmented의 nested/다중 필드 스키마를 지원하지 못하는 경우
@@ -51,19 +68,15 @@ AI augmentation은 BigQuery에서 Vertex AI remote model을 직접 호출하는 
 - Vertex AI 사용량, 재시도, fallback 구조가 SQL 밖의 커스텀 로직을 필요로 할 정도로 커지는 경우
 ```
 
-따라서 단계별 목표는 다음과 같다.
-
 ```text
-기본 목표:
-  Ingest / Warehouse / Serving 3개 경계
-
-예외 경로 (BigQuery SQL 네이티브가 불가능할 때만):
-  Ingest / Warehouse / Enrichment / Serving 4개 경계
+Briefolio Ingest
+  → Briefolio Intelligence
+  → Briefolio Serving
 ```
 
 ---
 
-## 3. Ingest Project 계획
+## 3. Briefolio Ingest 계획
 
 ### 3.1 역할
 
@@ -133,13 +146,13 @@ Ingest는 다음 조건을 만족하면 완료된 것으로 본다.
 
 ---
 
-## 4. Warehouse Project 계획
+## 4. Briefolio Intelligence 계획
 
 ### 4.1 역할
 
-Warehouse는 Cloud Storage Bronze raw를 BigQuery 분석 계층으로 정제하는 영역이다.
+Intelligence는 Cloud Storage Bronze raw를 BigQuery 분석 계층으로 정제하고 AI로 보강하는 영역이다.
 
-Warehouse가 담당할 작업은 다음이다.
+Intelligence가 담당할 작업은 다음이다.
 
 ```text
 - GCS Bronze JSONL을 BigQuery staging table로 적재하는 load job 구성 (External Table 미사용 — BigQuery를 SoT로 유지해 조회 안정성/멱등성 확보)
@@ -224,9 +237,9 @@ QUALIFY ROW_NUMBER() OVER (
 ) = 1
 ```
 
-### 4.5 Warehouse 완료 기준
+### 4.5 Intelligence 완료 기준
 
-Warehouse는 다음 조건을 만족하면 완료된 것으로 본다.
+Intelligence는 다음 조건을 만족하면 완료된 것으로 본다.
 
 ```text
 - GCS Bronze JSONL이 BigQuery staging table로 적재됨
@@ -270,7 +283,7 @@ BigQuery silver.news
   → silver.news_augmented (Dataform incremental/MERGE)
 ```
 
-이 구조가 성립하면 AI augmentation은 별도 Cloud Run 서비스 없이 Warehouse Dataform 파이프라인의 한 SQL 스텝으로 흡수된다.
+이 구조가 성립하면 AI augmentation은 별도 Cloud Run 서비스 없이 Intelligence Dataform 파이프라인의 한 SQL 스텝으로 흡수된다.
 
 **검증 필요 항목** — 채택 전에 다음을 프로토타입으로 먼저 확인한다.
 
@@ -348,7 +361,7 @@ Vertex AI로 전환하더라도 `model_provider = "vertex_ai"` 또는 `model_pro
 
 ---
 
-## 6. Serving Project 계획
+## 6. Briefolio Serving 계획
 
 ### 6.1 역할
 
@@ -366,7 +379,7 @@ Serving이 담당할 작업은 다음이다.
 - cache
 ```
 
-Serving이 직접 BigQuery `silver` 전체를 읽는 구조는 피한다. 대신 Warehouse에서 serving 전용 mart/export를 만든다.
+Serving이 직접 BigQuery `silver` 전체를 읽는 구조는 피한다. 대신 Intelligence에서 serving 전용 mart/export를 만든다.
 
 ```text
 BigQuery mart.latest_news
@@ -441,8 +454,7 @@ terraform/
   modules/
     core/
     ingest/
-    warehouse/
-    enrichment/   # SQL 네이티브 검증 실패 시에만 생성 (fallback)
+    intelligence/
     serving/
 
   envs/
@@ -461,8 +473,7 @@ terraform/
     prod/
       foundation/
       ingest/
-      warehouse/
-      enrichment/   # SQL 네이티브 검증 실패 시에만 생성 (fallback)
+      intelligence/
       serving/
 ```
 
@@ -472,54 +483,42 @@ state 분리는 운영 안정성이 필요해진 뒤 진행한다.
 
 ```text
 1. foundation
-2. warehouse
+2. intelligence
 3. ingest
 4. serving
-5. enrichment (SQL 네이티브 검증 실패 시에만 추가)
 ```
 
 ---
 
 ## 8. GCP Project 분리 계획
 
-처음에는 하나의 GCP project 안에서 논리적으로 분리한다.
+목표 GCP project는 Project Identity에 정의한 3개 경계로 구성한다.
 
 ```text
-gemini-news-brief-dev
-  - Cloud Run ingest
-  - Cloud Run augment
-  - GCS data lake
-  - BigQuery
-  - Dataform
-  - Firestore
-```
-
-장기적으로는 다음처럼 분리한다. 다만 `gemini-news-enrichment-prod`는 AI augmentation이 BigQuery SQL 네이티브로 유지되는 한 만들지 않는다 — Vertex AI remote model 연결은 `gemini-news-warehouse-prod`의 BigQuery/Dataform IAM 범위 안에서 관리한다. SQL 네이티브 검증에 실패해 별도 서비스가 필요할 때만 아래 4번째 project를 생성한다.
-
-```text
-gemini-news-ingest-prod
+Briefolio Ingest
+project_id: briefolio-ingest
   - Cloud Run Ingest
   - Cloud Scheduler
   - source secrets
+  - Firestore ingestion state
+  - GCS landing data
 
-gemini-news-warehouse-prod
-  - GCS Data Lake
+Briefolio Intelligence
+project_id: briefolio-intelligence
   - BigQuery
   - Dataform
-  - Vertex AI remote model 연결 (SQL 네이티브 채택 시)
+  - Vertex AI remote model 연결
+  - Cloud Run AI augmentation fallback
+  - GCS landing read IAM
 
-gemini-news-enrichment-prod   # fallback 채택 시에만 생성
-  - Vertex AI
-  - Cloud Run AI orchestrator
-  - enrichment service account
-
-gemini-news-serving-prod
+Briefolio Serving
+project_id: briefolio-serving
   - Cloud Run API
-  - Firestore
+  - Firestore serving data
   - Search / Vector DB
 ```
 
-다만 4개 project 분리는 최종 단계다. 처음부터 나누면 IAM, Terraform, 배포 복잡도가 너무 커진다.
+물리적인 GCP project 분리는 운영 경계가 실제로 필요해질 때 적용하며, 초기에는 기존 project 안에서 동일한 책임 경계를 논리적으로 유지할 수 있다.
 
 ---
 
@@ -701,7 +700,7 @@ gemini-news-serving-prod
 ```text
 - 사용자는 BigQuery silver를 직접 조회하지 않음
 - Serving API가 Firestore/search index를 통해 응답
-- Warehouse 장애와 Serving 장애가 분리됨
+- Intelligence 장애와 Serving 장애가 분리됨
 ```
 
 ---
@@ -715,7 +714,7 @@ gemini-news-serving-prod
 ```text
 - Terraform modules 분리
 - envs/dev, envs/prod 구성
-- core / ingest / warehouse / enrichment / serving module 정리
+- core / ingest / intelligence / serving module 정리
 - remote state 분리 검토
 - GCP project 분리 검토
 - cross-project IAM 구성
@@ -724,9 +723,9 @@ gemini-news-serving-prod
 완료 기준:
 
 ```text
-- ingest 변경이 warehouse 리소스를 직접 건드리지 않음
-- serving 배포가 ingest/warehouse와 독립됨
-- Vertex AI 권한이 enrichment 영역에 격리됨
+- ingest 변경이 intelligence 리소스를 직접 건드리지 않음
+- serving 배포가 ingest/intelligence와 독립됨
+- Vertex AI 권한이 intelligence 영역에 격리됨
 ```
 
 ---
@@ -755,24 +754,20 @@ Serving이나 GCP project 분리는 나중에 해도 된다.
 최종적으로 프로젝트는 다음 구조를 지향한다.
 
 ```text
-[Ingest]
+[Briefolio Ingest]
 Cloud Scheduler
   → Cloud Run Ingest (Firestore로 중복 체크)
   → GCS Bronze JSONL
 
-[Warehouse]
+[Briefolio Intelligence]
 Dataform
   → BigQuery bronze staging (native load, SoT 유지)
   → BigQuery silver.news (Overwrite 멱등성 보장)
-  → BigQuery mart.*
-
-[Enrichment] (기본: Warehouse에 흡수, SQL 네이티브 실패 시에만 별도 유지)
-Dataform SQL
-  → BigQuery silver.news
   → BigQuery remote model 호출 (Vertex AI Gemini)
   → BigQuery silver.news_augmented
+  → BigQuery mart.*
 
-[Serving]
+[Briefolio Serving]
 Export Job
   → Firestore / Search / Vector DB
   → Cloud Run API
@@ -784,7 +779,7 @@ Export Job
 - Bronze는 Data Lake이며, BigQuery에는 External Table이 아닌 load job으로 복제해 SoT와 조회 안정성을 유지
 - Ingest 중복 관리는 Firestore를 활용해 BigQuery 완전 분리 (Firestore에는 entry_id/news_id별 최신 status만 저장)
 - Silver는 BigQuery 정제 계층
-- Augmented는 기본적으로 Warehouse Dataform SQL 안에서 Vertex AI remote model로 생성하며, 별도 Enrichment 서비스는 SQL 네이티브가 불가능할 때만 유지 (repeated/RECORD 필드는 이 경로에서만 생성되며 GCS/Bronze 적재와 무관)
+- Augmented는 기본적으로 Intelligence Dataform SQL 안에서 Vertex AI remote model로 생성하며, SQL 네이티브가 불가능하면 같은 프로젝트의 Cloud Run fallback을 사용 (repeated/RECORD 필드는 이 경로에서만 생성되며 GCS/Bronze 적재와 무관)
 - Mart는 serving 준비 계층
 - Serving은 별도 low-latency 조회 계층
 ```
@@ -800,13 +795,13 @@ Export Job
   → Ingest
 
 GCS/BigQuery 데이터를 SQL로 정제하는가?
-  → Warehouse / Dataform
+  → Intelligence / Dataform
 
 LLM, embedding, model provider가 SQL(BigQuery remote model)로 표현 가능한가?
-  → Warehouse / Dataform
+  → Intelligence / Dataform
 
 SQL로 표현하기 어려운 LLM/embedding/model 워크로드인가?
-  → Enrichment / Vertex AI (fallback)
+  → Intelligence / Cloud Run + Vertex AI (fallback)
 
 사용자 요청을 직접 처리하는가?
   → Serving
@@ -821,7 +816,7 @@ SQL로 표현하기 어려운 LLM/embedding/model 워크로드인가?
 
 ## 13. 코드 디렉토리 구조
 
-Warehouse와 Enrichment(SQL 네이티브 채택 시)는 Dataform SQL과 Terraform 리소스로만 구성되고 별도 Python 코드가 거의 없다. 따라서 `src/` 아래에는 Ingest, Serving, 그리고 둘의 공통 유틸을 담는 `core`만 존재한다.
+Intelligence는 SQL 네이티브 채택 시 Dataform SQL과 Terraform 리소스로만 구성되고 별도 Python 코드가 거의 없다. 따라서 `src/` 아래에는 Ingest, Serving, 그리고 둘의 공통 유틸을 담는 `core`만 존재한다.
 
 ```text
 src/
@@ -865,7 +860,7 @@ src/
 - "shared"라는 새 이름을 만들지 않는다. 기존 src/core/가 이미 공통 유틸 역할이므로 그대로 확장한다.
 - core에는 Ingest/Serving이 동일하게 쓰는 것(설정 로딩, 로거, transient 판별)만 남긴다.
 - BigQueryProvider/GeminiProvider처럼 service별 provider 의존성은 core/dependencies.py가 아니라 각 서비스의 dependencies.py로 옮긴다.
-- Warehouse/Enrichment 전용 src/ 디렉토리는 미리 만들지 않는다. Enrichment fallback(3c)이 실제로 채택될 때만 src/enrichment/를 새로 만든다.
+- Intelligence 전용 src/ 디렉토리는 미리 만들지 않는다. Cloud Run fallback(3c)이 실제로 채택될 때만 src/intelligence/를 새로 만든다.
 ```
 
 `src/worker/` → `src/ingest/`, `src/api/` → `src/serving/` 리네이밍은 코드 경로뿐 아니라 `Dockerfile`, `cloudbuild.yml`의 이미지/서비스 이름, uvicorn 실행 경로(`src.worker.main:app` 등), Terraform Cloud Run 리소스 이름에도 함께 반영한다.
