@@ -5,7 +5,7 @@ from fastapi import FastAPI
 
 from src.config.config import settings
 from src.core.logger import configure_uvicorn_loggers, get_logger
-from src.worker.routers import batch
+from src.worker.routers import ingest
 
 logger = get_logger(__name__)
 
@@ -26,7 +26,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Gemini News Brief Worker App", lifespan=lifespan)
 
-app.include_router(batch.router)
+app.include_router(ingest.router)
 
 
 @app.get("/")

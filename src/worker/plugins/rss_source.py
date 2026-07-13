@@ -30,9 +30,9 @@ _retry = retry(
 )
 
 
-class SourcePlugin(ABC):
+class RssSource(ABC):
     """
-    Abstract base plugin for all independent news source implementations.
+    Abstract base for RSS-backed news source implementations.
 
     Provides shared utilities and coordinates external news collection:
     - run_fetch(): Source-specific RSS parsing and field mapping.
@@ -106,7 +106,7 @@ class SourcePlugin(ABC):
         """
         if not items:
             logger.info(
-                "SourcePlugin enrich skipped | source: %s, reason: no items",
+                "RssSource enrich skipped | source: %s, reason: no items",
                 self.source,
             )
             return []
@@ -165,7 +165,7 @@ class SourcePlugin(ABC):
         success_count = sum(1 for item in deduplicated_items if item.status == "success")
         failed_count = sum(1 for item in deduplicated_items if item.status != "success")
         logger.info(
-            "SourcePlugin enrich completed | source: %s, count: %d, success_count: %d, failed_count: %d",
+            "RssSource enrich completed | source: %s, count: %d, success_count: %d, failed_count: %d",
             self.source,
             len(deduplicated_items),
             success_count,
@@ -235,7 +235,7 @@ class SourcePlugin(ABC):
         new_unknowns = unknown_fields - seen_unknowns
         if new_unknowns:
             logger.warning(
-                "SourcePlugin fetch unknown_fields detected | source: %s, fields: %s",
+                "RssSource fetch unknown_fields detected | source: %s, fields: %s",
                 self.source,
                 sorted(new_unknowns),
             )

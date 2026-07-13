@@ -4,12 +4,12 @@ from datetime import datetime, timezone
 from src.core.logger import get_logger
 from src.models.entities.bronze_news import BronzeNewsModel
 from src.models.schemas.sources.cnbc import CnbcEntrySchema
-from src.worker.plugins.source import SourcePlugin
+from src.worker.plugins.rss_source import RssSource
 
 logger = get_logger(__name__)
 
 
-class CnbcSource(SourcePlugin):
+class CnbcSource(RssSource):
     """News source for CNBC RSS feed with source-specific boilerplate support."""
 
     @property
@@ -80,7 +80,7 @@ class CnbcSource(SourcePlugin):
         total_count = len(entries_data)
 
         logger.info(
-            "SourcePlugin fetch completed | source: %s, count: %d, total_count: %d, skipped_count: %d",
+            "RssSource fetch completed | source: %s, count: %d, total_count: %d, skipped_count: %d",
             self.source,
             success_count,
             total_count,
