@@ -10,6 +10,7 @@
 
 | 경계 | 프로젝트 명칭 | 프로젝트 ID | 핵심 책임 |
 | :--- | :------------ | :---------- | :-------- |
+| Seed | `Briefolio Seed` | `briefolio-seed` | Terraform state 버킷 등 각 경계 project가 공통으로 의존하는 부트스트랩 인프라 관리 |
 | Ingest | `Briefolio Ingest` | `briefolio-ingest` | 외부 금융 뉴스 수집, 중복 상태 관리, 본문 추출, GCS landing 적재 |
 | Intelligence | `Briefolio Intelligence` | `briefolio-intelligence` | BigQuery/Dataform 정제, AI 보강, serving용 mart 생성 |
 | Serving | `Briefolio Serving` | `briefolio-serving` | 사용자 API, 검색, 캐시, 조회 저장소 관리 |
@@ -427,74 +428,37 @@ Firestore collections:
 
 ## 7. Terraform 전환 계획
 
-Terraform도 서비스 경계에 맞춰 나눈다.
+Terraform도 서비스 경계에 맞춰 나눈다. 각 경계는 처음부터 독립된 root와 state를 갖는다.
 
-단, 초기에는 state를 바로 나누지 않는다. 먼저 module 경계를 만든다.
-
-### 7.1 단기 구조
+### 7.1 현재 구조
 
 ```text
 terraform/
-  storage-lake.tf
-  bigquery-silver.tf
-  dataform.tf
-  bigquery-connection-vertex.tf   # Dataform SQL의 Vertex AI remote model 연결
-  cloud-run-ingest.tf
-  cloud-run-serving.tf
-  cloud-run-augment.tf            # SQL 네이티브 검증 실패 시에만 유지 (fallback)
-  cloud-scheduler.tf
-  artifact-registry.tf
-  iam.tf
+  bootstrap.sh   # briefolio-seed project/상태 버킷 생성용 1회성 수동 스크립트 (Terraform 밖에서 실행)
+  ingest/        # briefolio-ingest state root
+  intelligence/  # briefolio-intelligence state root
+  serving/       # briefolio-serving state root
 ```
 
-### 7.2 중기 구조
+각 root(`ingest/`, `intelligence/`, `serving/`)는 `main.tf`(backend), `provider.tf`, `variables.tf`로 구성되고, `briefolio-tfstate` 버킷을 공유하되 `prefix`로 state 파일을 분리한다 (`terraform/state/{경계}`).
 
-```text
-terraform/
-  modules/
-    core/
-    ingest/
-    intelligence/
-    serving/
+`seed/` root는 아직 없다. `briefolio-seed` project와 상태 버킷(`briefolio-tfstate`)은 `bootstrap.sh`로 생성했고, 현재 Terraform으로 관리할 추가 리소스가 없기 때문이다. 공유 CI/CD 같은 리소스가 필요해지면 그때 `terraform/seed/`를 추가한다.
 
-  envs/
-    dev/
-      main.tf
-      variables.tf
-      outputs.tf
-      terraform.tfvars
-```
+### 7.2 향후 구조
 
-### 7.3 장기 구조
-
-```text
-terraform/
-  envs/
-    prod/
-      foundation/
-      ingest/
-      intelligence/
-      serving/
-```
-
-state 분리는 운영 안정성이 필요해진 뒤 진행한다.
-
-권장 순서는 다음이다.
-
-```text
-1. foundation
-2. intelligence
-3. ingest
-4. serving
-```
+dev/prod처럼 여러 환경을 실제로 분리해야 하는 시점이 오면, 각 root 안에 `envs/{env}/`를 추가하는 방식으로 확장한다. 환경이 하나뿐인 지금은 미리 만들지 않는다.
 
 ---
 
 ## 8. GCP Project 분리 계획
 
-목표 GCP project는 Project Identity에 정의한 3개 경계로 구성한다.
+목표 GCP project는 Project Identity에 정의한 4개 경계로 구성한다.
 
 ```text
+Briefolio Seed
+project_id: briefolio-seed
+  - Terraform state GCS 버킷 (ingest/intelligence/serving state를 prefix로 분리 보관)
+
 Briefolio Ingest
 project_id: briefolio-ingest
   - Cloud Run Ingest
@@ -518,7 +482,7 @@ project_id: briefolio-serving
   - Search / Vector DB
 ```
 
-물리적인 GCP project 분리는 운영 경계가 실제로 필요해질 때 적용하며, 초기에는 기존 project 안에서 동일한 책임 경계를 논리적으로 유지할 수 있다.
+Seed(`briefolio-seed`)와 Ingest(`briefolio-ingest`)는 이미 실제 GCP project로 생성되었다. Intelligence/Serving은 해당 경계의 구현이 시작될 때 같은 방식으로 생성한다.
 
 ---
 
@@ -746,6 +710,8 @@ project_id: briefolio-serving
 
 즉 지금 당장 해야 할 핵심은 **Ingest 분리와 Bronze 저장소 전환 및 중복 제거 분리**이다.
 Serving이나 GCP project 분리는 나중에 해도 된다.
+
+다만 Terraform root/state 분리와 Seed/Ingest project 생성은, 1번(GCS/Firestore 연동)을 실제 GCP 리소스 위에서 구현하기 위한 선행 준비로 먼저 진행했다.
 
 ---
 
