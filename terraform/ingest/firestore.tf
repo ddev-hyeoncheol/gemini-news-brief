@@ -1,8 +1,8 @@
-resource "google_firestore_database" "ingest" {
-  name        = "(default)"
-  location_id = "us-west1"
-  type        = "FIRESTORE_NATIVE"
+resource "google_firestore_database" "state" {
+  name            = "(default)"
+  location_id     = "us-west1"
+  type            = "FIRESTORE_NATIVE"
+  deletion_policy = "DELETE"
 
-  delete_protection_state = "DELETE_PROTECTION_ENABLED"
-  depends_on              = [google_project_service.firestore]
+  depends_on = [google_project_service.firestore]
 }
